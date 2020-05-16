@@ -5,12 +5,12 @@
 
 #pragma once
 
-#include <lsc/Text/Lib.h>
+#include <Lsc/Rem/Lib.h>
 
-namespace lsc
+namespace Lsc
 {
 
-class TEXT_LIB pvlist;
+class REM_LIB pvlist;
 
 /*!
  *  @brief  Node that contains the void* pointer of the value and the linked list elements
@@ -40,7 +40,7 @@ class TEXT_LIB pvlist;
  * @note
  *    vptr::__value is the actual pointer that holds the value of the given address of the data. the destructor does not delete/free resource helds by this pointer. It is the responsability of the programmer to know what to do with this resource.
  */
-class TEXT_LIB vptr
+class REM_LIB vptr
 {
     void *__value = nullptr;
     vptr *_previous = nullptr;;
@@ -139,7 +139,7 @@ vptr &operator--(vptr &, int);
  *  @brief  vplist : Double linked list of void* pointers container
  *  @author Serge Lussier (bretzel)
  */
-class TEXT_LIB pvlist
+class REM_LIB pvlist
 {
     vptr *__first = nullptr;;
     vptr *__last = nullptr;;

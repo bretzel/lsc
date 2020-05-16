@@ -14,7 +14,7 @@
 //#include <functional> // Already loaded from String.h
 #include <any>  // Used by the Expect template class.
 
-namespace lsc
+namespace Lsc
 {
 
 class REM_LIB Rem

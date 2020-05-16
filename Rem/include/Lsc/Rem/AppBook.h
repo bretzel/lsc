@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <lsc/Text/Rem.h>
+
 
 #include <map>
 #include <fstream>
@@ -18,7 +18,7 @@
 #include <fstream>
 #include <functional>
 #include <map>
-
+#include <Lsc/Rem/Rem.h>
 
 // init text attributes/style for type/class of messages:
 // info=0, err, critical, fatal, debug, excep, notice, warnings
@@ -34,7 +34,7 @@
 
 
 
-namespace lsc
+namespace Lsc
 {
 // No namespace here. AppBook to be used so fuc'* too often.
 
@@ -327,7 +327,7 @@ enum class TextCtl : uint8_t
  * @note Single Instance.
  */
 
-class TEXT_LIB AppBook
+class REM_LIB AppBook
 {
     
     String mText; // ??
@@ -360,7 +360,7 @@ public:
     
    
     
-    struct TEXT_LIB Log
+    struct REM_LIB Log
     {
         Log* mParent = nullptr;
         Log* mChild = nullptr;
@@ -372,8 +372,8 @@ public:
         
         
         AppBook::Log &operator<<(AppBook::Prefix);
-        AppBook::Log &operator<<(lsc::TextCtl);
-        AppBook::Log &operator<<(lsc::Color);
+        AppBook::Log &operator<<(Lsc::TextCtl);
+        AppBook::Log &operator<<(Lsc::Color);
         std::string Endl();
         
         template<typename T> Log& operator << (const T& V)
