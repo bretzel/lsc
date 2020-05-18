@@ -271,5 +271,41 @@ Type::T Lexer::NumScanner::operator()() const
 
 
 
+#pragma region Scanners
+
+Lexer::ConfigData &Lexer::Config()
+{
+    return mConfig;
+}
+
+
+
+Return Lexer::Exec()
+{
+    return Lsc::Return();
+}
+
+
+void Lexer::Append(TokenData &Token_)
+{
+   if (!Token_)
+    {
+        Rem::Save() << Rem::Type::Error << ": Attempt to push a Null TokenData into the Tokens stream.";
+        return;
+    }
+    
+
+    std::size_t sz = Token_.mLoc.End - Token_.mLoc.Begin + 1;
+    Token_.mLoc.I = (ptrdiff_t)(Token_.mLoc.Begin - mCursor.B);
+    mCursor.C += sz;
+    mCursor.Col += sz;
+    mConfig.mTokensCollection->push_back(Token_);
+    ++mCursor;
+    std::cout << __PRETTY_FUNCTION__ << ":\n" << mCursor.Mark() << '\n';
+}
+
+
+#pragma endregion Scanners
+
 
 }
