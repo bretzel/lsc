@@ -25,9 +25,7 @@ list(
     APPEND INCLUDE_PATHS
     "${REM_INCLUDE_DIR}"
     "${SCRIPTURE_INCLUDE_DIR}"
-#    "${LSC_ROOT}/Rem/include" "${LSC_ROOT}/Diagnostics/include"
-#    "${LSC_ROOT}/Base/SQLite/include"
-#    "${LSC_ROOT}/Scripture/include")
+
 )
 
 
@@ -43,17 +41,9 @@ IF( EXISTS "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json" )
 			)
 ENDIF()
 
-#if(PACKAGE_TESTS)
-#    enable_testing()
-#    include(googletest)
-#    add_subdirectory(Tests)
-#endif()
-
-#set_target_properties(${PROJECT_NAME}
-#        SOVERSION
-#        )
 
 message("Scripture::INCLUDE_PATHS:" ${INCLUDE_PATHS})
+add_dependencies(${PROJECT_NAME} Rem)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
     "$<BUILD_INTERFACE:${INCLUDE_PATHS}>"

@@ -24,8 +24,7 @@ public:
     
 private:
     
-    Return  Log();
-    Return  LscObject();
+
 };
 }
 //#endif //LSC_APP_H

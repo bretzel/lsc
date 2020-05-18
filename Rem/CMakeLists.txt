@@ -19,15 +19,10 @@ add_library(
         SHARED
         ${HDRS}
         ${SRCS}
-		App/App.cpp App/App.h ../Scripture/include/Lsc/Scripture/Types.h ../Scripture/Src/Types.cpp)
-
-list(
-   APPEND LSC_INCLUDE_PATH
-   "${CMAKE_CURRENT_SOURCE_DIR}/include"
-#    "${LSC_ROOT}/Rem/include" "${LSC_ROOT}/Diagnostics/include"
-#    "${LSC_ROOT}/Base/SQLite/include"
-#    "${LSC_ROOT}/Scripture/include")
+		App/App.cpp App/App.h
 )
+
+
 
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC "${PROJECT_NAME}_DEBUG=$<CONFIG:Debug>")
@@ -53,7 +48,7 @@ ENDIF()
 #        )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
-    "$<BUILD_INTERFACE:${LSC_INCLUDE_PATH}>"
+    "$<BUILD_INTERFACE:${REM_INCLUDE_DIR}>"
         $<INSTALL_INTERFACE:include/${FrameWorkName}/${PROJECT_NAME}>  # <prefix>/include/mylib
         )
 

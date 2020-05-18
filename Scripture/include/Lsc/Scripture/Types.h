@@ -3,7 +3,7 @@
 //
 
 #pragma once
-//#include <Lsc/Scripture/Lib.h>
+#include <Lsc/Scripture/Lib.h>
 #include <Lsc/Rem/String.h>
 
 namespace Lsc
