@@ -58,6 +58,7 @@ Return App::Type()
 Return App::Tokens()
 {
     TokenData Token_ = TokenData::Scan("sin(4/2a);");
+    
     std::cout <<
         __PRETTY_FUNCTION__ << ":\n" <<
         Token_.Details();
