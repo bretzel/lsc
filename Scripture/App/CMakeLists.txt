@@ -26,7 +26,7 @@ target_include_directories(${TargetName} PUBLIC
         "$<BUILD_INTERFACE:${INCLUDES}>"
         )
 
-target_link_libraries(${TargetName} ${CMAKE_DL_LIBS} Rem)
+target_link_libraries(${TargetName} ${CMAKE_DL_LIBS} Rem Scripture)
 target_compile_features(${TargetName} PUBLIC cxx_std_20)
 
 IF (EXISTS "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json")

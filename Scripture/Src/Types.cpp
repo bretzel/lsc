@@ -9,145 +9,120 @@
 
 namespace Lsc
 {
+
 namespace Type
 {
 
-std::map<T, std::string> T_STR = {{null,        "null"},
-                                  {number,      "number"},
-                                  {text,        "text"},
-                                  {voidptr,     "voidptr"},
-                                  {any,         "any"},
-                                  {leaf,        "leaf"},
-                                  {sign,        "sign"},
-                                  {i8,          "i8"},
-                                  {i16,         "i16"},
-                                  {i32,         "i32"},
-                                  {i64,         "i64"},
-                                  {u8,          "u8"},
-                                  {u16,         "u16"},
-                                  {u32,         "u32"},
-                                  {u64,         "u64"},
-                                  {real,        "real"},
-                                  {var,         "var"},
-                                  {bloc,        "bloc"},
-                                  {filo,        "filo"},
-                                  {keyword,     "keyword"},
-                                  {unary,       "unary"},
-                                  {prefix,      "prefix"},
-                                  {postfix,     "postfix"},
-                                  {oper,        "operator"},
-                                  {binary,      "binary"},
-                                  {func,        "rtfn"},
-                                  {funcptr,     "rtfn ptr"},
-                                  {obj,         "object"},
-                                  {pointer,     "pointer"},
-                                  {type,        "t"},
-                                  {id,          "identifier"},
-                                  {ref,         "reference"},
-                                  {punctuation, "punctuation"},
-                                  {assign,      "assign"},
-                                  {boolean,     "boolean"},
-                                  {hex,         "hex"},
-                                  {bin,         "bin"},
-                                  {octal,       "oct"},
-                                  {f32,         "f32"},
-                                  {f64,         "f64"},
-                                  {f128,        "f128"},
-                                  {leftpar,     "leftpar"},
-                                  {closepar,    "closepar"},
-                                  {openabs,     "openabs"},
-                                  {closeabs,    "closeabs"},
-                                  {static_t,    "static"}};
+std::map<T, std::string> T_STR = {{Null,        "Null"},
+                                  {Number,      "Number"},
+                                  {Text,        "Text"},
+                                  {Voidptr,     "Voidptr"},
+                                  {Any,         "Any"},
+                                  {Leaf,        "Leaf"},
+                                  {Sign,        "Sign"},
+                                  {I8,          "I8"},
+                                  {I16,         "I16"},
+                                  {I32,         "I32"},
+                                  {I64,         "I64"},
+                                  {U8,          "U8"},
+                                  {U16,         "U16"},
+                                  {U32,         "U32"},
+                                  {U64,         "U64"},
+                                  {Real,        "Real"},
+                                  {Var,         "Var"},
+                                  {Bloc,        "Bloc"},
+                                  {Filo,        "Filo"},
+                                  {Keyword,     "Keyword"},
+                                  {Unary,       "Unary"},
+                                  {Prefix,      "Prefix"},
+                                  {Postfix,     "Postfix"},
+                                  {Operator,    "Operator"},
+                                  {Binary,      "Binary"},
+                                  {Function,    "Rtfn"},
+                                  {FunctionPtr, "Rtfn ptr"},
+                                  {Object,      "Object"},
+                                  {Pointer,     "Pointer"},
+                                  {TypeId,      "TypeId"},
+                                  {Id,          "Identifier"},
+                                  {Ref,         "Reference"},
+                                  {Punctuation, "Punctuation"},
+                                  {Assign,      "Assign"},
+                                  {Boolean,     "Boolean"},
+                                  {Hex,         "Hex"},
+                                  {Bin,         "Bin"},
+                                  {Octal,       "Oct"},
+                                  {F32,         "F32"},
+                                  {F64,         "F64"},
+                                  {F128,        "F128"},
+                                  {OpenPair,    "OpenPair"},
+                                  {ClosePair,   "ClosePair"},
+                                  {Static,      "Static"}};
 
-std::map<std::string, T> STR_T = {{"null",         null},
-                                  {"number",       number},
-                                  {"text",         text},
-                                  {"string",       text},
-                                  {"voidptr",      voidptr},
-                                  {"void-pointer", voidptr},
-                                  {"any",          any},
-                                  {"leaf",         leaf},
-                                  {"sign",         sign},
-                                  {"i8",           i8},
-                                  {"i16",          i16},
-                                  {"i32",          i32},
-                                  {"i64",          i64},
-                                  {"u8",           u8},
-                                  {"u16",          u16},
-                                  {"u32",          u32},
-                                  {"u64",          u64},
-                                  {"real",         real},
-                                  {"var",          var},
-                                  {"variable",     var},
-                                  {"bloc",         bloc},
-                                  {"filo",         filo},
-                                  {"stack",        filo},
-                                  {"keyword",      keyword},
-                                  {"unary",        unary},
-                                  {"prefix",       prefix},
-                                  {"postfix",      postfix},
-                                  {"oper",         oper},
-                                  {"operator",     oper},
-                                  {"binary",       binary},
-                                  {"binary-op",    binary},
-                                  {"func",         func},
-                                  {"rtfn",         func},
-                                  {"funcptr",      funcptr},
-                                  {"rtfn-pointer", funcptr},
-                                  {"obj",          obj},
-                                  {"object",       obj},
-                                  {"pointer",      pointer},
-                                  {"t",            type},
-                                  {"id",           id},
-                                  {"identifier",   id},
-                                  {"ref",          ref},
-                                  {"reference",    ref},
-                                  {"punctuation",  punctuation},
-                                  {"assign",       assign},
-                                  {"boolean",      boolean},
-                                  {"hex",          hex},
-                                  {"leftpar",      leftpar},
-                                  {"closepar",     closepar},
-                                  {"openabs",      openabs},
-                                  {"closeabs",     closeabs}};
+std::map<std::string, T> STR_T = {{"Null",         Null},
+                                  {"Number",       Number},
+                                  {"Text",         Text},
+                                  {"String",       Text},
+                                  {"Voidptr",      Voidptr},
+                                  {"Void-pointer", Voidptr},
+                                  {"Any",          Any},
+                                  {"Leaf",         Leaf},
+                                  {"Sign",         Sign},
+                                  {"I8",           I8},
+                                  {"I16",          I16},
+                                  {"I32",          I32},
+                                  {"I64",          I64},
+                                  {"U8",           U8},
+                                  {"U16",          U16},
+                                  {"U32",          U32},
+                                  {"U64",          U64},
+                                  {"Real",         Real},
+                                  {"Var",          Var},
+                                  {"Variable",     Var},
+                                  {"Bloc",         Bloc},
+                                  {"Filo",         Filo},
+                                  {"Stack",        Filo},
+                                  {"Keyword",      Keyword},
+                                  {"Unary",        Unary},
+                                  {"Prefix",       Prefix},
+                                  {"Postfix",      Postfix},
+                                  {"Operator",     Operator},
+                                  {"Binary",       Binary},
+                                  {"Binary-op",    Binary},
+                                  {"Func",         Function},
+                                  {"Rtfn",         FunctionPtr},
+                                  {"Funcptr",      FunctionPtr},
+                                  {"Rtfn-pointer", FunctionPtr},
+                                  {"Obj",          Object},
+                                  {"Object",       Object},
+                                  {"Pointer",      Pointer},
+                                  {"TypeId",       TypeId},
+                                  {"Id",           Id},
+                                  {"Identifier",   Id},
+                                  {"Ref",          Ref},
+                                  {"Reference",    Ref},
+                                  {"Punctuation",  Punctuation},
+                                  {"Assign",       Assign},
+                                  {"Boolean",      Boolean},
+                                  {"Hex",          Hex},
+                                  {"Leftpar",      OpenPair},
+                                  {"Closepar",     ClosePair}};
     
 }
-}
 
 
-Lsc::String& operator << (Lsc::String& Str_, Lsc::Type::T T_)
+std::string &operator<<(std::string &Str_, Type::T T_)
 {
     Lsc::Type::T tbm = T_;
-    int a,c,b;
+    int a, c, b;
     
-    
-    for(const auto &t : Lsc::Type::T_STR) {
+    for(const auto &t : Lsc::Type::T_STR)
+    {
         if(!tbm)
             break;
-        if(t.first & tbm) {
-            Str_ << t.second;
-            tbm &= ~t.first;
-            if(tbm)
-                Str_ << '/';
-        }
-    }
-    if(Str_.Empty())
-        Str_ << "null";
-    return Str_;
-}
-
-std::string& operator << (std::string& Str_, Lsc::Type::T T_)
-{
-    Lsc::Type::T tbm = T_;
-    int a,c,b;
-    
-    
-    for(const auto &t : Lsc::Type::T_STR) {
-        if(!tbm)
-            break;
-        if(t.first & tbm) {
+        if(t.first & tbm)
+        {
             Str_ += t.second;
-            tbm &= ~t.first;
+            tbm &= ~t.first;  // Remove the Bit from the "Sem" field.
             if(tbm)
                 Str_ += '/';
         }
@@ -156,8 +131,6 @@ std::string& operator << (std::string& Str_, Lsc::Type::T T_)
         Str_ += "null";
     return Str_;
 }
-
-
 
 /*!
  * @brief Overload input operator
@@ -173,19 +146,23 @@ std::string& operator << (std::string& Str_, Lsc::Type::T T_)
  * @param TStr_
  * @return
  */
-Lsc::Type::T &operator<<(Lsc::Type::T &T_, const std::string &TStr_)
+Type::T &operator<<(Type::T &T_, const std::string &TStr_)
 {
-    Lsc::String::Word::Collection Array;
-    Lsc::String names = TStr_;
+    String::Word::Collection Array;
+    String names = TStr_;
     
     T_ = 0;
     std::size_t count = names.Words(Array, "/", false);
-    if(count > 0) {
-        for(auto s : Array) {
+    if(count > 0)
+    {
+        for(auto s : Array)
+        {
             std::string txt = s();
             T_ |= Lsc::Type::STR_T[txt];
         }
     }
     
     return T_;
+    
+}
 }

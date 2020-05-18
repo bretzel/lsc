@@ -24,6 +24,9 @@ public:
     
 private:
     
+    Return Type();
+    
+    Return Tokens();
 
 };
 }

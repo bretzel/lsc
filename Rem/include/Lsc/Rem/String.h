@@ -352,6 +352,15 @@ public:
     
     static std::string TypeOf(std::string &&func_desc);
     
+    
+    /*!
+     * @brief "Stringify Bytes into binary representation.
+     * @tparam T  Argument of type T
+     * @param __arg Argument Value.
+     * @param padd Apdding value (number of padding 0's to fille the numberic base size in digits)
+     * @param f  Number of contiguous bits to group.
+     * @return std::string
+     */
     template<typename T> static std::string ToBinary(T __arg, bool padd = false, int f = 128)
     {
         uint8_t seq;
@@ -470,7 +479,7 @@ template<typename T> String &String::Printf(const T &_argv)
             {
                 // Special Bretzelus :
                 bool pad = fmt.F == '0';
-                BinaryStr = String::ToBinary<T>(_argv, pad, fmt.W <= 128 ? fmt.W : 128);
+                BinaryStr = String::ToBinary<T>(_argv, pad, fmt.W <= 128 ? fmt.W : 128); // Limit grouping digits to 128 ...
 
                 //std::sprintf(buf, "%s", BinaryStr.c_str());
                 fmt.Delta = (c + 1) - beg;
