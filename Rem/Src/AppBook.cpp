@@ -105,6 +105,24 @@ std::string AppBook::Text()
     return AppBook::Instance().mText();
 }
 
+
+std::string AppBook::Icon(AppBook::Prefix Prefix_)
+{
+    ///@note This is a quick pre-coding test...
+    std::map<AppBook::Prefix, std::string > mIcons = {
+        {AppBook::Debug    ,"\x1b[38;5;245m➤ "},
+        {AppBook::Info     ,"\x1b[38;5;68m⚫ "},
+        {AppBook::Error    ,"\x1b[38;5;52m✘ "},
+        {AppBook::Warning  ,"\x1b[38;5;100m⚠ "},
+        {AppBook::Exception,"\x1b[38;5;177m⚡ "},
+        {AppBook::Fatal    ,"\x1b[38;5;52m☠ "},
+        {AppBook::Success  ,"\x1b[38;5;46m✔ "},
+        {AppBook::Notice   ,"\x1b[38;5;71m✎ "}
+    };
+    return mIcons[Prefix_];
+}
+
+
 AppBook::Log &AppBook::Log::operator<<(AppBook::Prefix Prefix_)
 {
     mText << "%-30s" << AppBook::ToStr(Prefix_);
@@ -115,6 +133,7 @@ AppBook::Log &AppBook::Log::operator<<(AppBook::Prefix Prefix_)
 AppBook::Log &AppBook::Log::operator<<(Lsc::TextCtl C)
 {
     mText << AppBook::Instance().mComponentData[C];
+    mNewLine = C == TextCtl::Eol;
     return *this;
 }
 

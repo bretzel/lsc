@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 # Project name
 
-project(Rem VERSION 0.1.0 LANGUAGES CXX)
+project(Scripture VERSION 0.1.0 LANGUAGES CXX)
 
 
 include(GNUInstallDirs)
 #SET(REM_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/include)
-message("REM_INCLUDE_PATH:" ${REM_INCLUDE_DIR})
-FILE(GLOB HDRS ${REM_INCLUDE_DIR}/*)
+message("SCRIPTURE_INCLUDE_DIR:" ${SCRIPTURE_INCLUDE_DIR})
+FILE(GLOB HDRS ${SCRIPTURE_INCLUDE_DIR}/*)
 FILE(GLOB SRCS Src/*)
 SET( CMAKE_EXPORT_COMPILE_COMMANDS ON )
 
@@ -19,11 +19,12 @@ add_library(
         SHARED
         ${HDRS}
         ${SRCS}
-		App/App.cpp App/App.h ../Scripture/include/Lsc/Scripture/Types.h ../Scripture/Src/Types.cpp)
+)
 
 list(
-   APPEND LSC_INCLUDE_PATH
-   "${CMAKE_CURRENT_SOURCE_DIR}/include"
+    APPEND INCLUDE_PATHS
+    "${REM_INCLUDE_DIR}"
+    "${SCRIPTURE_INCLUDE_DIR}"
 #    "${LSC_ROOT}/Rem/include" "${LSC_ROOT}/Diagnostics/include"
 #    "${LSC_ROOT}/Base/SQLite/include"
 #    "${LSC_ROOT}/Scripture/include")
@@ -52,12 +53,14 @@ ENDIF()
 #        SOVERSION
 #        )
 
+message("Scripture::INCLUDE_PATHS:" ${INCLUDE_PATHS})
+
 target_include_directories(${PROJECT_NAME} PUBLIC
-    "$<BUILD_INTERFACE:${LSC_INCLUDE_PATH}>"
+    "$<BUILD_INTERFACE:${INCLUDE_PATHS}>"
         $<INSTALL_INTERFACE:include/${FrameWorkName}/${PROJECT_NAME}>  # <prefix>/include/mylib
         )
 
-target_link_libraries(${PROJECT_NAME} ${CMAKE_DL_LIBS} )
+target_link_libraries(${PROJECT_NAME} ${CMAKE_DL_LIBS} Rem )
 
 
 install(DIRECTORY
@@ -75,5 +78,6 @@ install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}Targets
 
 
 string(REPLACE "++" "" NS PROJECTNAME)
+
 
 add_subdirectory(App)

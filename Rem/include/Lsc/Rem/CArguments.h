@@ -19,10 +19,10 @@
 #pragma once
 
 
-#include <lsc/Text/Rem.h>
+#include <Lsc/Rem/Rem.h>
 
 
-namespace lsc
+namespace Lsc
 {
 
 

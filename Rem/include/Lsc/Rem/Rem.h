@@ -252,6 +252,8 @@ public:
     }
 };
 
+
+using Return = Expect<>;
 }
 
 //#endif //TEXT_REM_H

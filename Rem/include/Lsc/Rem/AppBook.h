@@ -365,9 +365,10 @@ public:
         Log* mParent = nullptr;
         Log* mChild = nullptr;
         //using PrefixMap = std::map<AppBook::Prefix, std::string>;
-        String mText; ///< Local Text;
+        String  mText; ///< Local Text;
         AppBook::Prefix     mPrefix = AppBook::Prefix::Notice;
-        int mIndent = 0;    ///< By 4 <spc>
+        int     mIndent = 4;    ///< By 4 <spc>
+        bool    mNewLine = false;
         //...
         
         
@@ -378,6 +379,12 @@ public:
         
         template<typename T> Log& operator << (const T& V)
         {
+            if(mNewLine)
+            {
+                mText << AppBook::Icon(mPrefix) << "    "; // Quick test...
+                mNewLine = false;
+            }
+            
             mText << V; // Uses default String Input operator.
             return *this;
         }
@@ -435,7 +442,10 @@ private:
     AppBook::ConfigData mConfig;
     static std::string ToStr(Prefix Prefix_);
     std::map<TextCtl, std::string> mComponentData;
+
     Log* mCurrentLog = nullptr;
+    
+    static std::string Icon(AppBook::Prefix Prefix_);
     
 };
 //#endif //TEXT_APPBOOK_H

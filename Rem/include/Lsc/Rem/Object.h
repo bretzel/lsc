@@ -20,12 +20,17 @@ public:
     Object() = default;
     explicit Object(Object* Parent_);
 
-    virtual ~Object() = default;
+    virtual ~Object();
 
     Object(const Object& ) = delete;
     Object(Object&& ) = delete;
 
-
+    template<typename T> T* IsClass() { return dynamic_cast<T*>(this); }
+    template<typename T=Object> T* Parent() { return (mParent? dynamic_cast<T*>(mParent):nullptr); }
+    
+    bool Detach();
+    bool RemoveChild(Object*);
+    
 private:
     virtual std::size_t AppendChild(Object* Object_);
     virtual void SetParent(Object* Object_);
