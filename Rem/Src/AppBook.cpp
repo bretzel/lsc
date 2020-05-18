@@ -90,6 +90,8 @@ std::string AppBook::ToStr(AppBook::Prefix Prefix_)
     return _[Prefix_];
 }
 
+
+
 void AppBook::End(std::function<void(const std::string &)> EndFN)
 {
     AppBook::Instance().mText << AppBook::Instance().mCurrentLog->mText;

@@ -182,6 +182,7 @@ static TokenData::Collection tokens_table = {{Mnemonic::Knull,        Type::Keyw
                                              {Mnemonic::Geq,          Type::Binary,      0x200C00000,  Type::Delta::Less,       Lexem::Gteq,         1},
                                              {Mnemonic::Eq,           Type::Binary,      0x200C00000,  Type::Delta::Less,       Lexem::Eq,           1},
                                              {Mnemonic::Neq,          Type::Binary,      0x200C00000,  Type::Delta::Less,       Lexem::Neq,          1},
+                                             {Mnemonic::Neq,          Type::Binary,      0x200C00000,  Type::Delta::Less,       "<>",                1},
                                              {Mnemonic::Add,          Type::Binary,      0x000C00000,  Type::Delta::Add,        Lexem::Add,          1},
                                              {Mnemonic::Sub,          Type::Binary,      0x000C00000,  Type::Delta::Add,        Lexem::Sub,          1},
                                              {Mnemonic::Mul,          Type::Binary,      0x000C00000,  Type::Delta::Product,    Lexem::Mul,          1},

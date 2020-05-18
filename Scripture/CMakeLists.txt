@@ -19,7 +19,7 @@ add_library(
         SHARED
         ${HDRS}
         ${SRCS}
-)
+		Src/Lexer.cpp include/Lsc/Scripture/Lexer.h)
 
 list(
     APPEND INCLUDE_PATHS

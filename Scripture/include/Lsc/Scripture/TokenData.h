@@ -14,11 +14,11 @@ namespace Lsc
 
 struct SCRIPTURE_LIB TokenData
 {
-    Mnemonic       M = Mnemonic::Noop;
-    Type::T        T = Type::Null;    ///< Primitive Type bit.
-    Type::T        S = Type::Null;    ///< Semantic Type bits field
-    Type::Delta::T D = Type::Delta::Noop;
-    void *mData = nullptr;
+    Mnemonic       M      = Mnemonic::Noop;
+    Type::T        T      = Type::Null;    ///< Primitive Type bit.
+    Type::T        S      = Type::Null;    ///< Semantic Type bits field
+    Type::Delta::T D      = Type::Delta::Noop;
+    void           *mData = nullptr;
     
     using Collection = std::vector<TokenData>;
     using Iterator = Collection::iterator;
@@ -27,20 +27,20 @@ struct SCRIPTURE_LIB TokenData
     {
         const char *Begin = nullptr;
         const char *End   = nullptr;
-        int     L = -1; ///< line number
-        int     C = -1; ///< Column number
-        int64_t I = -1; ///< Absolute Offset from the beginning of the Source Text.
+        int        L      = -1; ///< line number
+        int        C      = -1; ///< Column number
+        int64_t    I      = -1; ///< Absolute Offset from the beginning of the Source Text.
         std::string operator()();
         std::string Text();
         std::string Position();
-    }    mLoc;
+    }              mLoc;
     
     struct SCRIPTURE_LIB Flag
     {
         int8_t V: 1; ///< Pre-parsed as a value ArgToken;
         int8_t S: 1; ///< Post parsed as assignable
         int8_t M: 1; ///< Virtual multiplication operator. (...4ac...)
-    }    mFlags = {0, 0, 0};
+    }              mFlags = {0, 0, 0};
     
     static TokenData mNull;
     
@@ -95,7 +95,6 @@ struct SCRIPTURE_LIB TokenData
     { return S & Type::Postfix; }
     [[nodiscard]] bool IsInstruction() const
     { return !(S & (Type::Operator | Type::Leaf)); }
-    
     
 };
 

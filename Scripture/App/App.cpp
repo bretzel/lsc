@@ -42,7 +42,7 @@ Return App::operator()()
 Return App::Type()
 {
     Type::T T;
-    std::string Txt = "Binary/Operator/TypeId/Number/Real";
+    std::string Txt = "Binary/Operator/TypeId/Number/Float";
     T << Txt;
     String Str_  = "[%08b]\n";
     Str_ << T;
@@ -57,7 +57,7 @@ Return App::Type()
 }
 Return App::Tokens()
 {
-    TokenData Token_ = TokenData::Scan("sin+4/2a;"); // => sin(+4) / 2a;
+    TokenData Token_ = TokenData::Scan("<>;"); // => sin(+4) / 2a;
     
     std::cout <<
         __PRETTY_FUNCTION__ << ":\n" <<
