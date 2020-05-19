@@ -201,7 +201,6 @@ Lexer::InternalCursor::InternalCursor(const char *Source_)
 
 #pragma region NumScanner
 
-
 Lexer::NumScanner::NumScanner(const char *_c, const char *_eos) : B(_c), C(_c), E(nullptr), Eos(_eos)
 {}
 
@@ -266,7 +265,6 @@ Type::T Lexer::NumScanner::operator()() const
 
 #pragma endregion NumScanner
 
-
 #pragma region Scanners
 
 std::map<Lexer::InputPair, Lexer::ScannerFn> Lexer::_ProductionTable = {
@@ -291,7 +289,8 @@ std::map<Lexer::InputPair, Lexer::ScannerFn> Lexer::_ProductionTable = {
     // ----------------------------------------------------------------
     
     // (Restricted) Factor Notation Syntax:
-    {{Type::Number, Type::Null},  &Lexer::ScanFactorNotation},
+    {{Type::Number,    Type::Null},    &Lexer::ScanFactorNotation},
+    {{Type::Id,        Type::Null},    &Lexer::ScanFactorNotation}, // Required mCursor._F flag to be set.
     // --- Phase 1 association:
     //     Unary Operators:
     
@@ -300,20 +299,18 @@ std::map<Lexer::InputPair, Lexer::ScannerFn> Lexer::_ProductionTable = {
 
 Lexer::Scanner Lexer::GetScanner(Lexer::InputPair &&Pair)
 {
-    for(auto M : Lexer::_ProductionTable) if(M.first == Pair) return M.second; // That's it! :)
+    for(auto M : Lexer::_ProductionTable)
+        if(M.first == Pair)
+            return M.second; // That's it! :)
     // More to do here...
     
     return Rem::Save() << Rem::Int::Rejected << " Lexer::GetScanner : No match...";
 }
 
-
-
 Return Lexer::_InputBinaryOperator(TokenData &Token_)
 {
     return Append(Token_);
 }
-
-
 
 /*!
  * @brief Unknow Input Token.
@@ -331,7 +328,6 @@ Return Lexer::_InputDefault(TokenData &Token_)
     
     return Rem::Int::Implement;
 }
-
 
 Return Lexer::_InputUnaryOperator(TokenData &)
 {
@@ -354,26 +350,96 @@ Return Lexer::_InputHex(TokenData &)
 {
     return (Rem::Save() << Rem::Int::Implement);
 }
-Return Lexer::ScanNumber(TokenData &)
+
+
+Return Lexer::ScanNumber(TokenData &Token_)
 {
-    return (Rem::Save() << Rem::Int::Implement);
+    NumScanner Num = NumScanner(mCursor.C, mCursor.E);
+    while(Num++);
+    if(!Num)
+        return Rem::Int::Rejected;
+    
+    Token_.T = Type::Number;
+    Token_.S = Type::Number|Num();
+    Token_.mLoc.Begin = Num.C;
+    Token_.mLoc.End   = Num.E;
+    
+    if( !(Token_.S & Type::Float))
+    {
+        String str;
+        str << Token_.Attr();
+        uint64_t D=0;
+        std::istringstream i(str.c_str());
+        switch(Num.Num)
+        {
+            case NumScanner::Bin:
+                //????????? ah!
+                break;
+            case NumScanner::Oct:
+                i >> std::oct >> D;
+                break;
+            case NumScanner::Dec:
+                i >> D;
+                break;
+            case NumScanner::Hex:
+                i >> std::hex >> D;
+                break;
+            default:
+                str >> D;
+                break;
+        }
+        
+        //std::cout << __PRETTY_FUNCTION__ << " Parsed number:" << D << '\n';
+        uint64_t n = 0;
+        std::array<uint64_t,3> R = {0x100,0x10000,0x100000000};
+        while(D >= R[n])
+            ++n;
+        
+        switch(n)
+        {
+            case 0:Token_.S = (Token_.S & ~Type::U64) | Type::U8;
+                break;
+            case 1:Token_.S = (Token_.S & ~Type::U64) | Type::U16;
+                break;
+            case 2:Token_.S = (Token_.S & ~Type::U64) | Type::U32;
+                break;
+            default:Token_.S =(Token_.S & ~Type::U64) | Type::U64;
+                break;
+        }
+    }
+    return Rem::Int::Accepted;
 }
 
 
-Return Lexer::ScanIdentifier(TokenData &)
+
+Return Lexer::ScanIdentifier(TokenData &Token_)
 {
+    const char *C = mCursor.C;
+    if((!isalpha(*C)) && (*C != '_'))
+        return Rem::Int::Rejected;
+    while(*C && isalnum(*C)) ++C;
+    --C;
+    Token_.mLoc.End = C;
+    Token_.T = Type::Id;
+    Token_.S = Type::Id;
+    Token_.M = Mnemonic::Noop;
+    Token_.mFlags.V = 1; //Subject to be modified
     
-    return (Rem::Save() << Rem::Int::Implement);
+    return Rem::Int::Accepted;
 }
 
 /*!
- * @brief  Scans for std maths factor notation syntax style:
+ * @brief  Scans for std maths factor notation, RESTRICTED (limited) syntax style:
  *         4ac => 4 x a x c
  *         4(ac...) => 4 x ( a x c ...)
+ *         4pi/sin/cos/atan/asin/acos ... => 4 x p x i / 4 x s x i x n ... And NOT 4 x pi or 4 x sin ...
+ *
  *         Rejected sequences:
  *         ac4 => Id; a4c => Id ...;
+ *         4pi/sin/cos/atan/asin/acos ...;
  *
  * @note   Required that the Left hand side token is a Number and that the Input token is contiguous and of unknown type (Type::Null) to be scanned as an identifier.
+ *         Input Token_ is either scanned in the Ref Table or not.
  * @return Execp<>
  */
 Return Lexer::ScanFactorNotation(TokenData &Token_)
@@ -381,18 +447,33 @@ Return Lexer::ScanFactorNotation(TokenData &Token_)
     // Tokens stream is NOT EMPTY here.
     
     // Required that the next Token_ is contiguous ( no [white]space between lhs and Token_ ).
-    if(mCursor.C > (mConfig.Tokens->back().mLoc.End + 1 ))
+    TokenData Mul;
+    if(mCursor.C > (mConfig.Tokens->back().mLoc.End + 1))
         return Rem::Int::Rejected;
-    
     
     // Set _F "state" flag :
     if(!mCursor._F)
     {
-        // Required that the LHS is of type Number.
-        
+        // LHS is Restricted to Number, triggering the Factor notation sequence flag.
+        if(!mConfig.Tokens->back().IsNumber())
+            return Rem::Int::Rejected;
     }
     
-    return (Rem::Save() << Rem::Int::Implement);
+    // Expecting RHS to be an identifier Token
+    if(*ScanIdentifier(Token_) != Rem::Int::Accepted)
+        return Rem::Int::Rejected;
+    
+    // triggering the Factor notation sequence flag.
+    mCursor._F = true;
+    
+    Token_.mLoc.End = Token_.mLoc.Begin; // Adjust (CUT) the Identifier Attribute to ONE char.
+    Mul = Token_; // Save Topken_ properties in the incoming virtual multiply operator
+    Mul.T        = Type::Binary;
+    Mul.S        = Type::Binary | Type::Operator;
+    Mul.mFlags.M = Mul.mFlags.V = 1;
+    Mul.M        = Mnemonic::Mul;
+    (void) Append(Mul);
+    return Append(Token_);
 }
 
 Return Lexer::ScanSignPrefix(TokenData &Token_)
@@ -406,11 +487,12 @@ Return Lexer::ScanSignPrefix(TokenData &Token_)
     return _InputBinaryOperator(Token_);
 }
 
-
 Return Lexer::ScanPrefix(TokenData &)
 {
     return (Rem::Save() << Rem::Int::Implement);
 }
+
+
 Return Lexer::ScanPostfix(TokenData &)
 {
     return (Rem::Save() << Rem::Int::Implement);
@@ -426,7 +508,7 @@ Return Lexer::Append(TokenData &Token_)
     mCursor.Sync();
     Token_.mLoc.L = mCursor.L;
     Token_.mLoc.C = mCursor.Col;
-
+    
     std::size_t sz = Token_.mLoc.End - Token_.mLoc.Begin + 1;
     Token_.mLoc.I = (ptrdiff_t) (Token_.mLoc.Begin - mCursor.B);
     mCursor.C += sz;
@@ -446,6 +528,5 @@ Return Lexer::Exec()
 {
     return Rem::Int::Implement;
 }
-
 
 }
