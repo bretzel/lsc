@@ -75,8 +75,8 @@ class SCRIPTURE_LIB Lexer
 public:
     struct SCRIPTURE_LIB ConfigData
     {
-        const char *mSource = nullptr;
-        TokenData::Collection *mTokensCollection = nullptr;
+        const char *mSource           = nullptr;
+        TokenData::Collection *Tokens = nullptr;
     };
     
     
@@ -89,26 +89,43 @@ public:
     Lexer::ConfigData& Config();
     
     Return  Exec();
+    Return  operator()();
+    
+    
+    bool Empty() { return (mConfig.Tokens ? mConfig.Tokens->empty() : true); }
 private:
 
     ConfigData mConfig;
     
-    void Append(TokenData& Token_) ;
+    Return Append(TokenData& Token_) ;
     
-    
-    /*
-        (English text will follows after this)
-        Il s'agit ici de pr&eacute;-analyser une expression arith&eacute;tique par association de paires de types pris dans la table des tokens/symboles de r&eacute;f&eacute;ce.
-        En math&eacute;matiques, les op&eacute;rations et leurs pr&eacute;cedences sont universelles - donc on r&egrave;gle les erreurs de syntaxe
-        aussit&ocirc;t qu'&agrave; la phase d'analyse lexicale du code source!
-     */
-    
-    using ScannerPFn = Return(Lexer::*)(TokenData&);
+    using ScannerFn = Return(Lexer::*)(TokenData&);
     using InputPair = std::pair<Type::T, Type::T>;
-    using AssocPair = std::map<Lexer::InputPair, Lexer::ScannerPFn>;
-    static Lexer::AssocPair _AssocLexerTable;
-    static std::map<Type::T, ScannerPFn> _ProdTable;
-
+    static std::map<Lexer::InputPair , ScannerFn> _ProductionTable;
+    
+    using Scanner = Expect<Lexer::ScannerFn>;
+    
+    
+    #pragma region Scanners
+    Scanner GetScanner(InputPair && Pair);
+    
+    Return _InputBinaryOperator(TokenData&);
+    Return _InputDefault(TokenData&);
+    Return _InputUnaryOperator(TokenData&);
+    Return _InputPunctuation(TokenData&);
+    Return _InputKeyword(TokenData&);
+    Return _InputString(TokenData&);
+    Return _InputHex(TokenData&);
+    
+    Return ScanNumber(TokenData&);
+    Return ScanIdentifier(TokenData&);
+    Return ScanFactorNotation(TokenData&);
+    Return ScanSignPrefix(TokenData&);
+    Return ScanPrefix(TokenData&);
+    Return ScanPostfix(TokenData&);
+    
+    
+    #pragma endregion Scanners
 };
 
 
