@@ -301,7 +301,7 @@ std::map<Lexer::InputPair, Lexer::ScannerFn> Lexer::_ProductionTable = {
 Lexer::Scanner Lexer::GetScanner(Lexer::InputPair &&Pair)
 {
     for(auto M : Lexer::_ProductionTable)
-        if(M.first == Pair)
+        if(M.first & Pair)
             return M.second; // That's it! :)
     // More to do here...
     
@@ -314,7 +314,7 @@ Return Lexer::_InputBinaryOperator(TokenData &Token_)
 }
 
 /*!
- * @brief Unknow Input Token.
+ * @brief Unknown Input Token.
  * @return Expect<>
  */
 Return Lexer::_InputDefault(TokenData &Token_)
@@ -352,7 +352,6 @@ Return Lexer::_InputHex(TokenData &)
     return (Rem::Save() << Rem::Int::Implement);
 }
 
-
 Return Lexer::ScanNumber(TokenData &Token_)
 {
     NumScanner Num = NumScanner(mCursor.C, mCursor.E);
@@ -360,39 +359,35 @@ Return Lexer::ScanNumber(TokenData &Token_)
     if(!Num)
         return Rem::Int::Rejected;
     
-    Token_.T = Type::Number;
-    Token_.S = Type::Number|Num();
+    Token_.T          = Type::Number;
+    Token_.S          = Type::Number | Num();
     Token_.mLoc.Begin = Num.C;
     Token_.mLoc.End   = Num.E;
     
-    if( !(Token_.S & Type::Float))
+    if(!(Token_.S & Type::Float))
     {
         String str;
         str << Token_.Attr();
-        uint64_t D=0;
+        uint64_t           D = 0;
         std::istringstream i(str.c_str());
         switch(Num.Num)
         {
             case NumScanner::Bin:
                 //????????? ah!
                 break;
-            case NumScanner::Oct:
-                i >> std::oct >> D;
+            case NumScanner::Oct:i >> std::oct >> D;
                 break;
-            case NumScanner::Dec:
-                i >> D;
+            case NumScanner::Dec:i >> D;
                 break;
-            case NumScanner::Hex:
-                i >> std::hex >> D;
+            case NumScanner::Hex:i >> std::hex >> D;
                 break;
-            default:
-                str >> D;
+            default:str >> D;
                 break;
         }
         
         //std::cout << __PRETTY_FUNCTION__ << " Parsed number:" << D << '\n';
-        uint64_t n = 0;
-        std::array<uint64_t,3> R = {0x100,0x10000,0x100000000};
+        uint64_t                n = 0;
+        std::array<uint64_t, 3> R = {0x100, 0x10000, 0x100000000};
         while(D >= R[n])
             ++n;
         
@@ -404,25 +399,25 @@ Return Lexer::ScanNumber(TokenData &Token_)
                 break;
             case 2:Token_.S = (Token_.S & ~Type::U64) | Type::U32;
                 break;
-            default:Token_.S =(Token_.S & ~Type::U64) | Type::U64;
+            default:Token_.S = (Token_.S & ~Type::U64) | Type::U64;
                 break;
         }
     }
     return Rem::Int::Accepted;
 }
 
-
-
 Return Lexer::ScanIdentifier(TokenData &Token_)
 {
     const char *C = mCursor.C;
-    if((!isalpha(*C)) && (*C != '_')) return Rem::Int::Rejected;
-    while(*C && isalnum(*C)) ++C;
+    if((!isalpha(*C)) && (*C != '_'))
+        return Rem::Int::Rejected;
+    while(*C && isalnum(*C))
+        ++C;
     --C;
     Token_.mLoc.End = C;
-    Token_.T = Type::Id;
-    Token_.S = Type::Id;
-    Token_.M = Mnemonic::Noop;
+    Token_.T        = Type::Id;
+    Token_.S        = Type::Id;
+    Token_.M        = Mnemonic::Noop;
     Token_.mFlags.V = 1; //Subject to be modified
     
     return Rem::Int::Accepted;
@@ -476,8 +471,6 @@ Return Lexer::ScanFactorNotation(TokenData &Token_)
     return Append(Token_);
 }
 
-
-
 Return Lexer::ScanSignPrefix(TokenData &Token_)
 {
     if(Token_.M == Mnemonic::Add || Token_.M == Mnemonic::Sub)
@@ -488,8 +481,6 @@ Return Lexer::ScanSignPrefix(TokenData &Token_)
     }
     return _InputBinaryOperator(Token_);
 }
-
-
 
 /*!
  * @brief  Operators such as '--', '++', '!' can be prefix or postfix unary operators.
@@ -511,7 +502,6 @@ Return Lexer::ScanPostfix(TokenData &)
 {
     return (Rem::Save() << ": Lexer::ScanPostfix: " << Rem::Int::Implement);
 }
-
 
 #pragma endregion Scanners
 
@@ -541,7 +531,25 @@ Return Lexer::operator()()
 
 Return Lexer::Exec()
 {
-    return Rem::Int::Implement;
+    Return R;
+    
+    if(!mConfig)
+        return (Rem::Save() << "Lexer::Exec(): " << Rem::Type::Error << " Config Data is missing informations...");
+    //...
+    TokenData Token_;
+    
+    mCursor = Lexer::InternalCursor(mConfig.Source);
+    while(!mCursor.Eof())
+    {
+        Token_ = TokenData::Scan(mCursor.C);
+        Scanner S = GetScanner({Token_.T, Type::Null});
+        
+    }
+    return Rem::Int::Ok;
 }
 
+}
+uint64_t operator&(std::pair<Lsc::Type::T, Lsc::Type::T> L, std::pair<Lsc::Type::T, Lsc::Type::T>R)
+{
+    return (L.first & R.first)&&(L.second & R.second);
 }

@@ -5,7 +5,7 @@
 #include "App.h"
 
 
-#include <Lsc/Scripture/TokenData.h>
+#include <Lsc/Scripture/Lexer.h>
 
 
 auto main(int arc, char**argv) -> int
@@ -77,7 +77,16 @@ Return App::Tokens(std::string Txt_)
 Return App::LexerScan(std::string Txt_)
 {
     std::cout << "App::LexerScan(" << Txt_ << "):\n";
-    return Rem::Save() << "App::LexerScan(): " << Rem::Int::Implement;
+    Lexer Lex;
+    TokenData::Collection Tokens;
+    Lex.Config() =
+    {
+        .Source = Txt_.c_str(),
+        .Tokens = &Tokens
+    };
+    auto R = Lex();
+    
+    return Rem::Int::Implement;
 }
 
 } // namespace [Lsc::]Type

@@ -75,8 +75,9 @@ class SCRIPTURE_LIB Lexer
 public:
     struct SCRIPTURE_LIB ConfigData
     {
-        const char *mSource           = nullptr;
+        const char *Source            = nullptr;
         TokenData::Collection *Tokens = nullptr;
+        operator bool() const { return Source && Tokens; }
     };
     
     
@@ -131,5 +132,6 @@ private:
 
 }
 
+uint64_t operator & (std::pair<Lsc::Type::T, Lsc::Type::T>, std::pair<Lsc::Type::T, Lsc::Type::T>);
 
 //#endif //LSC_LEXER_H
