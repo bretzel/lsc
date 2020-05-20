@@ -416,8 +416,7 @@ Return Lexer::ScanNumber(TokenData &Token_)
 Return Lexer::ScanIdentifier(TokenData &Token_)
 {
     const char *C = mCursor.C;
-    if((!isalpha(*C)) && (*C != '_'))
-        return Rem::Int::Rejected;
+    if((!isalpha(*C)) && (*C != '_')) return Rem::Int::Rejected;
     while(*C && isalnum(*C)) ++C;
     --C;
     Token_.mLoc.End = C;
@@ -468,7 +467,7 @@ Return Lexer::ScanFactorNotation(TokenData &Token_)
     mCursor._F = true;
     
     Token_.mLoc.End = Token_.mLoc.Begin; // Adjust (CUT) the Identifier Attribute to ONE char.
-    Mul = Token_; // Save Topken_ properties in the incoming virtual multiply operator
+    Mul = Token_; // Save Token_ properties in the incoming virtual multiply operator
     Mul.T        = Type::Binary;
     Mul.S        = Type::Binary | Type::Operator;
     Mul.mFlags.M = Mul.mFlags.V = 1;
@@ -476,6 +475,8 @@ Return Lexer::ScanFactorNotation(TokenData &Token_)
     (void) Append(Mul);
     return Append(Token_);
 }
+
+
 
 Return Lexer::ScanSignPrefix(TokenData &Token_)
 {
@@ -488,16 +489,29 @@ Return Lexer::ScanSignPrefix(TokenData &Token_)
     return _InputBinaryOperator(Token_);
 }
 
+
+
+/*!
+ * @brief  Operators such as '--', '++', '!' can be prefix or postfix unary operators.
+ *
+ * @return
+ */
 Return Lexer::ScanPrefix(TokenData &)
 {
-    return (Rem::Save() << Rem::Int::Implement);
+    
+    return (Rem::Save() << ": Lexer::ScanPrefix: " << Rem::Int::Implement);
 }
 
-
+/*!
+ * @brief  Operators such as '--', '++', '!' can be prefix or postfix unary operators.
+ *
+ * @return
+ */
 Return Lexer::ScanPostfix(TokenData &)
 {
-    return (Rem::Save() << Rem::Int::Implement);
+    return (Rem::Save() << ": Lexer::ScanPostfix: " << Rem::Int::Implement);
 }
+
 
 #pragma endregion Scanners
 
