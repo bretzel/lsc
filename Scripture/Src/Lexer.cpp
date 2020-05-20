@@ -280,6 +280,7 @@ std::map<Lexer::InputPair, Lexer::ScannerFn> Lexer::_ProductionTable = {
     // --- Phase 1 association:
     //     Binary Operators:
     {{Type::ClosePair, Type::Binary},  &Lexer::_InputBinaryOperator},
+    {{Type::ClosePair, Type::Unary},   &Lexer::ScanPostfix},
     {{Type::Postfix,   Type::Binary},  &Lexer::_InputBinaryOperator},
     {{Type::Id,        Type::Binary},  &Lexer::_InputBinaryOperator},
     {{Type::Number,    Type::Binary},  &Lexer::_InputBinaryOperator},
