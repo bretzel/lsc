@@ -35,7 +35,7 @@ Return App::operator()()
     
     (void) App::Type("Binary/Operator/TypeId/Number/Float");
     (void) Tokens("<>;");
-    (void) LexerScan("A = 4ac(;");
+    (void) LexerScan("A = abc! >< 5 + -4ac(;");
     std::cout << "\n--------------------------------------------------------------------\n";
     return Rem::Int::Ok;
 }
@@ -90,6 +90,9 @@ Return App::LexerScan(std::string Txt_)
     };
     auto R = Lex();
     
+    Lex.Flush([](TokenData Token_) {
+       Rem::Debug() << Token_.Details();
+    });
     return Rem::Int::Implement;
 }
 

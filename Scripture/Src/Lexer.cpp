@@ -126,13 +126,11 @@ std::string Lexer::InternalCursor::Line() const
     lb = eb = C;
     while((lb > B) && (*lb != '\r') && (*lb != '\n'))
         --lb;
-    if(lb > B)
-        ++lb;
+    
     while((eb < E) && (*eb != '\r') && (*eb != '\n'))
         ++eb;
-    --eb;
     
-    for(; lb <= eb; lb++)
+    for(; lb < eb; lb++)
         Str += *lb;
     return Str;
 }
@@ -144,6 +142,7 @@ std::string Lexer::InternalCursor::Line() const
   * @note : Must be Sync()'ed before calling Mark();
  
  */
+
 std::string Lexer::InternalCursor::Mark() const
 {
     String Str = Line();
@@ -295,11 +294,14 @@ std::map<Lexer::InputPair, Lexer::ScannerFn> Lexer::_ProductionTable = {
     {{Type::Binary,       Type::Binary},      &Lexer::ScanSignPrefix},
     {{Type::Binary,       Type::Null},        &Lexer::_InputDefault},
     //...
+    {{Type::Operator,     Type::Null},        &Lexer::_InputDefault}, // Required mCursor._F flag to be set.
+    {{Type::Id,           Type::Unary},       &Lexer::_InputUnaryOperator},
     // ----------------------------------------------------------------
     
     // (Restricted) Factor Notation Syntax:
     {{Type::Number,       Type::Null},        &Lexer::ScanFactorNotation},
     {{Type::Id,           Type::Null},        &Lexer::ScanFactorNotation}, // Required mCursor._F flag to be set.
+    
     // --- Phase 1 association:
     //     Unary Operators:
     
@@ -336,7 +338,10 @@ Return Lexer::_InputDefault(TokenData &Token_)
     {
         Rem::Debug() << " Not a Number Trying ScanIdentifier:";
         if(*ScanIdentifier(Token_) != Rem::Int::Accepted)
+        {
+            Rem::Save() << mCursor.Mark() << ":";
             return Rem::Save() << Rem::Type::Fatal << ": " << Rem::Int::UnExpected << " Token type " << Token_.TypeName();
+        }
     }
     
     return Append(Token_);
@@ -344,6 +349,7 @@ Return Lexer::_InputDefault(TokenData &Token_)
 
 Return Lexer::_InputUnaryOperator(TokenData &)
 {
+    
     return (Rem::Save() << Rem::Int::Implement);
 }
 
@@ -377,7 +383,7 @@ Return Lexer::ScanNumber(TokenData &Token_)
     Token_.S          = Type::Number | Num();
     Token_.mLoc.Begin = Num.B;
     Token_.mLoc.End   = Num.E;
-    
+    Rem::Debug() << "Lexer::ScanNumber: Cursor on " << mCursor.Mark();
     if(!(Token_.S & Type::Float))
     {
         String str;
@@ -436,7 +442,7 @@ Return Lexer::ScanIdentifier(TokenData &Token_)
     Token_.S          = Type::Id;
     Token_.M          = Mnemonic::Noop;
     Token_.mFlags.V   = 1; //Subject to be modified
-    
+    Rem::Debug() << "Lexer::ScanIdentifier: Cursor on \n" << mCursor.Mark();
     return Rem::Int::Accepted;
 }
 
@@ -459,12 +465,12 @@ Return Lexer::ScanFactorNotation(TokenData &Token_)
     // Tokens stream is NOT EMPTY here.
     
     // Required that the next Token_ is contiguous ( no [white]space between lhs and Token_ ).
-    Rem::Debug() << __PRETTY_FUNCTION__  << ":";
+    Rem::Debug() << __PRETTY_FUNCTION__ << ":";
     TokenData Mul;
-    if((mCursor.C - mConfig.Tokens->back().mLoc.End) != (ptrdiff_t)1)
+    if((mCursor.C - mConfig.Tokens->back().mLoc.End) != (ptrdiff_t) 1)
     {
         Rem::Debug() << "No factor notation style seq:[ptrdiff_t:" << mCursor.C - mConfig.Tokens->back().mLoc.End << "]:\n" << mCursor.Mark();
-        Rem::Debug() << "mCursor:" << mCursor.C - mCursor.B << " <::> Tail[Begin]:" << mConfig.Tokens->back().mLoc.Begin-mCursor.B;
+        Rem::Debug() << "Lexer::ScanFactorNotation: mCursor:" << mCursor.C - mCursor.B << " <::> Tail[Begin]:" << mConfig.Tokens->back().mLoc.Begin - mCursor.B;
         return Rem::Int::Rejected;
     }
     // Set _F "state" flag :
@@ -483,12 +489,18 @@ Return Lexer::ScanFactorNotation(TokenData &Token_)
     mCursor._F = true;
     
     Token_.mLoc.End = Token_.mLoc.Begin; // Adjust (CUT) the Identifier Attribute to ONE char.
+    Rem::Debug() << "Lexer::ScanFactorNotation: " << Token_.Details(true);
     Mul = Token_; // Save Token_ properties in the incoming virtual multiply operator
     Mul.T        = Type::Binary;
     Mul.S        = Type::Binary | Type::Operator;
     Mul.mFlags.M = Mul.mFlags.V = 1;
     Mul.M        = Mnemonic::Mul;
-    (void) Append(Mul);
+    mCursor.Sync();
+    Mul.mLoc.L = mCursor.L;
+    Mul.mLoc.C = mCursor.Col;
+    mConfig.Tokens->push_back(Mul);
+    mCursor.C = Mul.mLoc.Begin;
+    Rem::Debug() << "Lexer::ScanFactorNotation: Mul Opertor:" << Mul.Details(true);
     return Append(Token_);
 }
 
@@ -536,14 +548,13 @@ Return Lexer::Append(TokenData &Token_)
     Token_.mLoc.C = mCursor.Col;
     
     std::size_t sz = Token_.mLoc.End - Token_.mLoc.Begin + 1;
-    Token_.mLoc.I = (ptrdiff_t) (Token_.mLoc.Begin - mCursor.B);
+    Token_.mLoc.I = static_cast<ptrdiff_t>(Token_.mLoc.Begin - mCursor.B);
     mCursor.C += sz;
-    mCursor.Col += sz;
     mConfig.Tokens->push_back(Token_);
-    ++mCursor;
     mCursor.SkipWS();
-    //std::cout << __PRETTY_FUNCTION__ << ":\n" << mCursor.Mark() << '\n';
-    Rem::Debug() << "Lexer::Append: TokenData " << Token_.Details(true);
+    mCursor.Sync();
+    Rem::Debug() << "Lexer::Append: Cursor:" << mCursor.Location() << '\n' << mCursor.Mark();
+    Rem::Debug() << "Lexer::Append: Size of Token:" << sz << ", TokenData " << Token_.Details(true);
     return Rem::Int::Accepted;
 }
 
@@ -570,9 +581,12 @@ Return Lexer::Exec()
     {
         if(C == mCursor.C)
             return Rem::Save() << Rem::Type::Fatal << ": Lexer::Exec() : Aborted :  Force breaking infinite loop.";
+        
         C = mCursor.C;
-        mCursor.Sync();
-        Token_                        = TokenData::Scan(mCursor.C);
+        //Rem::Debug() << "mCursor on '" << *mCursor.C << '\'';
+        
+        Token_ = TokenData::Scan(mCursor.C);
+        
         std::pair<Type::T, Type::T> P = {mConfig.Tokens->empty() ? Type::Null : mConfig.Tokens->back().S, Token_.S};
         Scanner                     S = GetScanner(P);
         if(S)
@@ -582,6 +596,13 @@ Return Lexer::Exec()
         
     }
     return Rem::Int::Ok;
+}
+
+void Lexer::Flush(std::function<void(TokenData)> F_)
+{
+    for(auto T : *mConfig.Tokens)
+        if(F_)
+            F_(T);
 }
 
 }

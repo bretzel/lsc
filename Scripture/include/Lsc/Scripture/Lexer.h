@@ -94,6 +94,7 @@ public:
     
     
     bool Empty() { return (mConfig.Tokens ? mConfig.Tokens->empty() : true); }
+    void Flush(std::function<void(TokenData)> F_);
 private:
 
     ConfigData mConfig;

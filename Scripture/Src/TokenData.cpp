@@ -297,7 +297,7 @@ TokenData TokenData::Scan(const char *C_)
         {
             if(*crs && !isspace(*crs))
             {
-                if(isalnum(*crs) || (*crs == '_')) continue;
+                if((isalnum(*crs) || (*crs == '_')) && !Tok.IsOperator()) continue;
             }
             
             Tok.mLoc.Begin = C_;

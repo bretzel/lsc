@@ -43,12 +43,7 @@ std::string Rem::operator()()
     mText.clear();
     if(mVerticalData.empty())
         return "empty"; // ?
-    
-    for(auto &R : mVerticalData)
-    {
-        mText += R;
-        mText += ' ';
-    }
+    for(auto &R : mVerticalData) mText += R;
     return mText;
 }
 
@@ -163,9 +158,9 @@ Rem::~Rem()
 
 Rem &Rem::Debug()
 {
-    Rem::_Stack.push(Rem());
-    Rem R = Rem::_Stack.top();
+    Rem R;
     R << Rem::Type::Debug << ": ";
+    Rem::_Stack.push(R);
     return Rem::_Stack.top();
 }
 

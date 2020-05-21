@@ -167,7 +167,6 @@ String &String::operator<<(const String &a_str)
     if(ScanArg() == std::string::npos)
     {
         std::ostringstream os;
-        os.precision(_Precision);
         os << a_str();
         _D += os.str();
         return *this;
