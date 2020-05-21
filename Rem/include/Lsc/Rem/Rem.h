@@ -92,7 +92,7 @@ public:
     
     static Rem& Save();
     static Rem& Get();
-    
+    static Rem& Debug();
     static Rem& Null();
     
     

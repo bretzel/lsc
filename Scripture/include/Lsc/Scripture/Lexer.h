@@ -108,7 +108,7 @@ private:
     
     
     #pragma region Scanners
-    Scanner GetScanner(InputPair && Pair);
+    Scanner GetScanner(InputPair Pair);
     
     Return _InputBinaryOperator(TokenData&);
     Return _InputDefault(TokenData&);
@@ -132,6 +132,6 @@ private:
 
 }
 
-uint64_t operator & (std::pair<Lsc::Type::T, Lsc::Type::T>, std::pair<Lsc::Type::T, Lsc::Type::T>);
+bool operator && (std::pair<Lsc::Type::T, Lsc::Type::T>, std::pair<Lsc::Type::T, Lsc::Type::T>);
 
 //#endif //LSC_LEXER_H

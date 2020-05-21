@@ -161,3 +161,11 @@ Rem::~Rem()
     mText.clear();
 }
 
+Rem &Rem::Debug()
+{
+    Rem::_Stack.push(Rem());
+    Rem R = Rem::_Stack.top();
+    R << Rem::Type::Debug << ": ";
+    return Rem::_Stack.top();
+}
+

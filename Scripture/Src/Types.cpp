@@ -107,10 +107,45 @@ std::map<std::string, T> STR_T = {{"Null",         Null},
                                   {"Leftpar",      OpenPair},
                                   {"Closepar",     ClosePair}};
     
+}}
+
+
+
+/*!
+ * @brief Overload input operator
+ *
+ * Provides building Semantic [Lsc::]Types from string:
+ *
+ * @code
+ *   //...
+ *   Lsc::Type::T Sem;
+ *   Sem << "number/real";
+ * @endcode
+ * @param T_
+ * @param TStr_
+ * @return
+ */
+Lsc::Type::T &operator<<(Lsc::Type::T &T_, const std::string &TStr_)
+{
+    Lsc::String::Word::Collection Array;
+    Lsc::String names = TStr_;
+    
+    T_ = 0;
+    std::size_t count = names.Words(Array, "/", false);
+    if(count > 0)
+    {
+        for(auto s : Array)
+        {
+            std::string txt = s();
+            T_ |= Lsc::Type::STR_T[txt];
+        }
+    }
+    
+    return T_;
+    
 }
 
-
-std::string &operator<<(std::string &Str_, Type::T T_)
+std::string &operator<<(std::string &Str_, Lsc::Type::T T_)
 {
     Lsc::Type::T tbm = T_;
     int a, c, b;
@@ -130,39 +165,4 @@ std::string &operator<<(std::string &Str_, Type::T T_)
     if(Str_.empty())
         Str_ += "null";
     return Str_;
-}
-
-/*!
- * @brief Overload input operator
- *
- * Provides building Semantic [Lsc::]Types from string:
- *
- * @code
- *   //...
- *   Lsc::Type::T Sem;
- *   Sem << "number/real";
- * @endcode
- * @param T_
- * @param TStr_
- * @return
- */
-Type::T &operator<<(Type::T &T_, const std::string &TStr_)
-{
-    String::Word::Collection Array;
-    String names = TStr_;
-    
-    T_ = 0;
-    std::size_t count = names.Words(Array, "/", false);
-    if(count > 0)
-    {
-        for(auto s : Array)
-        {
-            std::string txt = s();
-            T_ |= Lsc::Type::STR_T[txt];
-        }
-    }
-    
-    return T_;
-    
-}
 }

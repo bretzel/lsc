@@ -49,7 +49,9 @@ bool Lexer::InternalCursor::operator++(int)
 */
 [[maybe_unused]] bool Lexer::InternalCursor::SkipWS()
 {
-    return ++(*this);
+    while((C < E) && (isspace(*C)))
+        ++C;
+    return C <= E;
 }
 
 /*!
@@ -71,20 +73,24 @@ bool Lexer::InternalCursor::Eof(const char *P) const
  */
 void Lexer::InternalCursor::Sync()
 {
+    const char *C_ = C;
     L = 1;
-    while(C > B)
+    while(C_ > B)
     {
-        if((*C == '\n') || (*C == '\r'))
+        if((*C_ == '\n') || (*C_ == '\r'))
             ++L;
-        --C;
+        --C_;
     }
     
     Col = 1;
-    while((C > B) && (*C != '\n') && (*C != '\r'))
+    C_  = C;
+    while((C_ > B) && (*C_ != '\n') && (*C_ != '\r'))
     {
-        --C;
+        --C_;
         ++Col;
     }
+    
+    Rem::Debug() << __PRETTY_FUNCTION__ << ": " << Location();
 }
 
 /*!
@@ -142,7 +148,7 @@ std::string Lexer::InternalCursor::Mark() const
 {
     String Str = Line();
     Str << '\n';
-    for(int x = 0; x < Col; x++)
+    for(int x = 1; x < Col; x++)
         Str << ' ';
     Str << '^';
     return Str();
@@ -269,47 +275,53 @@ Type::T Lexer::NumScanner::operator()() const
 
 std::map<Lexer::InputPair, Lexer::ScannerFn> Lexer::_ProductionTable = {
     // Begin from empty tokens stream:
-    {{Type::Null,      Type::Null},    &Lexer::_InputDefault},
-    {{Type::Null,      Type::Unary},   &Lexer::_InputUnaryOperator},
-    {{Type::Null,      Type::Keyword}, &Lexer::_InputKeyword},
-    {{Type::Null,      Type::Binary},  &Lexer::ScanSignPrefix},
+    {{Type::Null,         Type::Null},        &Lexer::_InputDefault},
+    {{0xFFFFFFFFFFFFFFFF, Type::Punctuation}, &Lexer::_InputPunctuation},
+    {{Type::Null,         Type::Unary},       &Lexer::_InputUnaryOperator},
+    {{Type::Null,         Type::Keyword},     &Lexer::_InputKeyword},
+    {{Type::Null,         Type::Binary},      &Lexer::ScanSignPrefix},
     
     
     // -----------------------------------------------------------------
     
     // --- Phase 1 association:
     //     Binary Operators:
-    {{Type::ClosePair, Type::Binary},  &Lexer::_InputBinaryOperator},
-    {{Type::ClosePair, Type::Unary},   &Lexer::ScanPostfix},
-    {{Type::Postfix,   Type::Binary},  &Lexer::_InputBinaryOperator},
-    {{Type::Id,        Type::Binary},  &Lexer::_InputBinaryOperator},
-    {{Type::Number,    Type::Binary},  &Lexer::_InputBinaryOperator},
-    {{Type::Text,      Type::Binary},  &Lexer::_InputBinaryOperator},
-    {{Type::Binary,    Type::Binary},  &Lexer::ScanSignPrefix},
+    {{Type::ClosePair,    Type::Binary},      &Lexer::_InputBinaryOperator},
+    {{Type::ClosePair,    Type::Unary},       &Lexer::ScanPostfix},
+    {{Type::Postfix,      Type::Binary},      &Lexer::_InputBinaryOperator},
+    {{Type::Id,           Type::Binary},      &Lexer::_InputBinaryOperator},
+    {{Type::Number,       Type::Binary},      &Lexer::_InputBinaryOperator},
+    {{Type::Text,         Type::Binary},      &Lexer::_InputBinaryOperator},
+    {{Type::Binary,       Type::Binary},      &Lexer::ScanSignPrefix},
+    {{Type::Binary,       Type::Null},        &Lexer::_InputDefault},
     //...
     // ----------------------------------------------------------------
     
     // (Restricted) Factor Notation Syntax:
-    {{Type::Number,    Type::Null},    &Lexer::ScanFactorNotation},
-    {{Type::Id,        Type::Null},    &Lexer::ScanFactorNotation}, // Required mCursor._F flag to be set.
+    {{Type::Number,       Type::Null},        &Lexer::ScanFactorNotation},
+    {{Type::Id,           Type::Null},        &Lexer::ScanFactorNotation}, // Required mCursor._F flag to be set.
     // --- Phase 1 association:
     //     Unary Operators:
     
     //...
 };
 
-Lexer::Scanner Lexer::GetScanner(Lexer::InputPair &&Pair)
+Lexer::Scanner Lexer::GetScanner(Lexer::InputPair Pair)
 {
-    for(auto M : Lexer::_ProductionTable)
-        if(M.first & Pair)
-            return M.second; // That's it! :)
-    // More to do here...
     
-    return Rem::Save() << Rem::Int::Rejected << " Lexer::GetScanner : No match...";
+    for(auto M : Lexer::_ProductionTable)
+        if(M.first && Pair)
+            return M.second; // That's it! :)
+    
+    std::string F_;
+    std::string R_;
+    Rem::Debug() << "Lexer::GetScanner():\n    " << "{" << (F_ << Pair.first) << ", " << (R_ << Pair.second) << "}: NO MATCH";
+    return Rem::Save() << Rem::Int::Rejected;
 }
 
 Return Lexer::_InputBinaryOperator(TokenData &Token_)
 {
+    Rem::Debug() << __PRETTY_FUNCTION__ << ":\n";
     return Append(Token_);
 }
 
@@ -319,15 +331,15 @@ Return Lexer::_InputBinaryOperator(TokenData &Token_)
  */
 Return Lexer::_InputDefault(TokenData &Token_)
 {
-    if(!ScanNumber(Token_))
+    Rem::Debug() << ": " << __PRETTY_FUNCTION__ << ":\n";
+    if(*ScanNumber(Token_) != Rem::Int::Accepted)
     {
-        if(!ScanIdentifier(Token_))
+        Rem::Debug() << " Not a Number Trying ScanIdentifier:";
+        if(*ScanIdentifier(Token_) != Rem::Int::Accepted)
             return Rem::Save() << Rem::Type::Fatal << ": " << Rem::Int::UnExpected << " Token type " << Token_.TypeName();
     }
     
-    mCursor.Sync();
-    
-    return Rem::Int::Implement;
+    return Append(Token_);
 }
 
 Return Lexer::_InputUnaryOperator(TokenData &)
@@ -335,10 +347,12 @@ Return Lexer::_InputUnaryOperator(TokenData &)
     return (Rem::Save() << Rem::Int::Implement);
 }
 
-Return Lexer::_InputPunctuation(TokenData &)
+Return Lexer::_InputPunctuation(TokenData &Token_)
 {
-    return (Rem::Save() << Rem::Int::Implement);
+    return Append(Token_);
+    
 }
+
 Return Lexer::_InputKeyword(TokenData &)
 {
     return (Rem::Save() << Rem::Int::Implement);
@@ -361,7 +375,7 @@ Return Lexer::ScanNumber(TokenData &Token_)
     
     Token_.T          = Type::Number;
     Token_.S          = Type::Number | Num();
-    Token_.mLoc.Begin = Num.C;
+    Token_.mLoc.Begin = Num.B;
     Token_.mLoc.End   = Num.E;
     
     if(!(Token_.S & Type::Float))
@@ -408,17 +422,20 @@ Return Lexer::ScanNumber(TokenData &Token_)
 
 Return Lexer::ScanIdentifier(TokenData &Token_)
 {
+    
+    Rem::Debug() << __PRETTY_FUNCTION__ << ": ";
     const char *C = mCursor.C;
     if((!isalpha(*C)) && (*C != '_'))
         return Rem::Int::Rejected;
     while(*C && isalnum(*C))
         ++C;
     --C;
-    Token_.mLoc.End = C;
-    Token_.T        = Type::Id;
-    Token_.S        = Type::Id;
-    Token_.M        = Mnemonic::Noop;
-    Token_.mFlags.V = 1; //Subject to be modified
+    Token_.mLoc.Begin = mCursor.C;
+    Token_.mLoc.End   = C;
+    Token_.T          = Type::Id;
+    Token_.S          = Type::Id;
+    Token_.M          = Mnemonic::Noop;
+    Token_.mFlags.V   = 1; //Subject to be modified
     
     return Rem::Int::Accepted;
 }
@@ -442,10 +459,14 @@ Return Lexer::ScanFactorNotation(TokenData &Token_)
     // Tokens stream is NOT EMPTY here.
     
     // Required that the next Token_ is contiguous ( no [white]space between lhs and Token_ ).
+    Rem::Debug() << __PRETTY_FUNCTION__  << ":";
     TokenData Mul;
-    if(mCursor.C > (mConfig.Tokens->back().mLoc.End + 1))
+    if((mCursor.C - mConfig.Tokens->back().mLoc.End) != (ptrdiff_t)1)
+    {
+        Rem::Debug() << "No factor notation style seq:[ptrdiff_t:" << mCursor.C - mConfig.Tokens->back().mLoc.End << "]:\n" << mCursor.Mark();
+        Rem::Debug() << "mCursor:" << mCursor.C - mCursor.B << " <::> Tail[Begin]:" << mConfig.Tokens->back().mLoc.Begin-mCursor.B;
         return Rem::Int::Rejected;
-    
+    }
     // Set _F "state" flag :
     if(!mCursor._F)
     {
@@ -520,7 +541,9 @@ Return Lexer::Append(TokenData &Token_)
     mCursor.Col += sz;
     mConfig.Tokens->push_back(Token_);
     ++mCursor;
-    std::cout << __PRETTY_FUNCTION__ << ":\n" << mCursor.Mark() << '\n';
+    mCursor.SkipWS();
+    //std::cout << __PRETTY_FUNCTION__ << ":\n" << mCursor.Mark() << '\n';
+    Rem::Debug() << "Lexer::Append: TokenData " << Token_.Details(true);
     return Rem::Int::Accepted;
 }
 
@@ -539,17 +562,30 @@ Return Lexer::Exec()
     TokenData Token_;
     
     mCursor = Lexer::InternalCursor(mConfig.Source);
+    mCursor.SkipWS();
+    Rem::Debug() << "Lexer::Exec(): Scanning '" << mCursor.C << "':\n";
+    
+    const char *C = nullptr;
     while(!mCursor.Eof())
     {
-        Token_ = TokenData::Scan(mCursor.C);
-        Scanner S = GetScanner({Token_.T, Type::Null});
+        if(C == mCursor.C)
+            return Rem::Save() << Rem::Type::Fatal << ": Lexer::Exec() : Aborted :  Force breaking infinite loop.";
+        C = mCursor.C;
+        mCursor.Sync();
+        Token_                        = TokenData::Scan(mCursor.C);
+        std::pair<Type::T, Type::T> P = {mConfig.Tokens->empty() ? Type::Null : mConfig.Tokens->back().S, Token_.S};
+        Scanner                     S = GetScanner(P);
+        if(S)
+            R = (this->**S)(Token_);
+        
+        //...
         
     }
     return Rem::Int::Ok;
 }
 
 }
-uint64_t operator&(std::pair<Lsc::Type::T, Lsc::Type::T> L, std::pair<Lsc::Type::T, Lsc::Type::T>R)
+bool operator&&(std::pair<Lsc::Type::T, Lsc::Type::T> L, std::pair<Lsc::Type::T, Lsc::Type::T> R)
 {
-    return (L.first & R.first)&&(L.second & R.second);
+    return (L.first & R.first) && (L.second & R.second);
 }

@@ -13,7 +13,7 @@ namespace Lsc
 namespace Type
 {
 using T = uint64_t;
-constexpr T Null        = 0x000000000;
+constexpr T Null        = 0x1000000000000000;
 constexpr T Number      = 0x000000001;
 constexpr T Text        = 0x000000002;
 constexpr T Voidptr     = 0x000000004;
@@ -308,9 +308,9 @@ constexpr T Kme          = "me";
 
 }
 
-std::string SCRIPTURE_LIB &operator<<(std::string &, Type::T);
-Type::T SCRIPTURE_LIB  &operator<<(Type::T &T_, const std::string &TStr_);
+
 
 }
-
+std::string SCRIPTURE_LIB &operator<<(std::string &, Lsc::Type::T);
+Lsc::Type::T SCRIPTURE_LIB  &operator<<(Lsc::Type::T &T_, const std::string &TStr_);
 //#endif //LSC_TYPES_H

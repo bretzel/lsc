@@ -35,7 +35,7 @@ Return App::operator()()
     
     (void) App::Type("Binary/Operator/TypeId/Number/Float");
     (void) Tokens("<>;");
-    (void) LexerScan("A = 0;");
+    (void) LexerScan("A = 4ac(;");
     std::cout << "\n--------------------------------------------------------------------\n";
     return Rem::Int::Ok;
 }
@@ -68,7 +68,11 @@ Return App::Tokens(std::string Txt_)
         "App::TokenScan(" << Txt_ << "):\n" <<
         Token_.Details() << '\n';
         
-    
+    TokenData::Collection Tokens(1);
+    Token_ = Tokens.back();
+    std::cout <<
+        "App::TokenScan(From the head of an empty Tokens stream):\n" <<
+        Token_.Details() << '\n';
     return Rem::Int::Ok;
 }
 
