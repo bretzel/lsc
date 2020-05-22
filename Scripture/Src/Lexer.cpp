@@ -284,9 +284,14 @@ std::map<Lexer::InputPair, Lexer::ScannerFn> Lexer::_ProductionTable = {
     // -----------------------------------------------------------------
     
     // --- Phase 1 association:
-    //     Binary Operators:
+    //     Operators:
     {{Type::ClosePair,    Type::Binary},      &Lexer::_InputBinaryOperator},
     {{Type::ClosePair,    Type::Unary},       &Lexer::ScanPostfix},
+    {{Type::Number,       Type::Unary},       &Lexer::ScanPostfix},
+    {{Type::Id,           Type::Unary},       &Lexer::ScanPostfix},
+    {{Type::Binary,       Type::Unary},       &Lexer::ScanPrefix},
+    {{Type::Null,         Type::Unary},       &Lexer::ScanPrefix},
+    {{Type::Punctuation,  Type::Unary},       &Lexer::ScanPrefix},
     {{Type::Postfix,      Type::Binary},      &Lexer::_InputBinaryOperator},
     {{Type::Id,           Type::Binary},      &Lexer::_InputBinaryOperator},
     {{Type::Number,       Type::Binary},      &Lexer::_InputBinaryOperator},
@@ -350,19 +355,21 @@ Return Lexer::_InputDefault(TokenData &Token_)
 Return Lexer::_InputUnaryOperator(TokenData &)
 {
     
+    
     return (Rem::Save() << Rem::Int::Implement);
 }
 
 Return Lexer::_InputPunctuation(TokenData &Token_)
 {
     return Append(Token_);
-    
 }
 
-Return Lexer::_InputKeyword(TokenData &)
+Return Lexer::_InputKeyword(TokenData &Token_)
 {
-    return (Rem::Save() << Rem::Int::Implement);
+    return Append(Token_);
 }
+
+
 Return Lexer::_InputString(TokenData &)
 {
     return (Rem::Save() << Rem::Int::Implement);
@@ -383,7 +390,7 @@ Return Lexer::ScanNumber(TokenData &Token_)
     Token_.S          = Type::Number | Num();
     Token_.mLoc.Begin = Num.B;
     Token_.mLoc.End   = Num.E;
-    Rem::Debug() << "Lexer::ScanNumber: Cursor on " << mCursor.Mark();
+    Rem::Debug() << "Lexer::ScanNumber: Cursor on \n" << mCursor.Mark();
     if(!(Token_.S & Type::Float))
     {
         String str;
@@ -520,10 +527,10 @@ Return Lexer::ScanSignPrefix(TokenData &Token_)
  *
  * @return
  */
-Return Lexer::ScanPrefix(TokenData &)
+Return Lexer::ScanPrefix(TokenData &Token_)
 {
     
-    return (Rem::Save() << ": Lexer::ScanPrefix: " << Rem::Int::Implement);
+    return Append(Token_);
 }
 
 /*!
@@ -531,9 +538,14 @@ Return Lexer::ScanPrefix(TokenData &)
  *
  * @return
  */
-Return Lexer::ScanPostfix(TokenData &)
+Return Lexer::ScanPostfix(TokenData &Token_)
 {
-    return (Rem::Save() << ": Lexer::ScanPostfix: " << Rem::Int::Implement);
+    if(!((Token_.M == Mnemonic::Decr) || (Token_.M == Mnemonic::Incr) || (Token_.M == Mnemonic::Bitnot))) return Rem::Int::Rejected;
+    Token_.T = Type::Postfix;
+    Token_.S = (Token_.S & ~Type::Prefix) | Type::Postfix; // Unary/Operator ...  already set.
+    Token_.M = Mnemonic::Factorial;
+    //mCursor.Sync();
+    return Append(Token_);
 }
 
 #pragma endregion Scanners
@@ -553,7 +565,7 @@ Return Lexer::Append(TokenData &Token_)
     mConfig.Tokens->push_back(Token_);
     mCursor.SkipWS();
     mCursor.Sync();
-    Rem::Debug() << "Lexer::Append: Cursor:" << mCursor.Location() << '\n' << mCursor.Mark();
+    Rem::Debug() << "Lexer::Append: Cursor(Next Token):" << mCursor.Location() << '\n' << mCursor.Mark();
     Rem::Debug() << "Lexer::Append: Size of Token:" << sz << ", TokenData " << Token_.Details(true);
     return Rem::Int::Accepted;
 }
