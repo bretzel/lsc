@@ -2,7 +2,7 @@
 // Created by bretzel on 20-04-18.
 //
 
-#include <Lsc/Rem/AppBook.h>
+#include <Lsc/AppBook/AppBook.h>
 #include <map>
 
 
@@ -42,7 +42,7 @@ AppBook &AppBook::Init(/* ... */)
     << AppBook::mStaticInstance->mConfig.Title
     << AppBook::mStaticInstance->mComponentData[TextCtl::Eol];
     
-    if(!Book.mConfig.Filename.empty())
+    if(!Book.mConfig.Path.empty())
     {
         // Not yet ready to output to the given file.
         Book.mFile = &std::cout; // It's that simple!!
@@ -65,15 +65,19 @@ AppBook::ConfigData &AppBook::Config()
 
 AppBook::Log &AppBook::Begin(AppBook::Prefix Prefix_)
 {
-    Log* L = new AppBook::Log(Prefix_);
+    Log::Shared L = std::make_shared<AppBook::Log>(nullptr, AppBook::Prefix::Debug);
     if(AppBook::mStaticInstance->mCurrentLog)
+    {
         L->SetParent(AppBook::mStaticInstance->mCurrentLog);
+        AppBook::mStaticInstance->mCurrentLog->SetChild(L);
+    }
     
     AppBook::mStaticInstance->mCurrentLog = L;
     (*L) << Prefix_ << ':';
     //...
     return *L;
 }
+
 
 std::string AppBook::ToStr(AppBook::Prefix Prefix_)
 {
@@ -98,7 +102,7 @@ void AppBook::End(std::function<void(const std::string &)> EndFN)
     if(EndFN)
         EndFN(AppBook::Instance().mText());
     
-    delete AppBook::Instance().mCurrentLog;
+    
     delete mStaticInstance;
 }
 
@@ -144,27 +148,20 @@ AppBook::Log::~Log()
 {
     std::cout << __PRETTY_FUNCTION__ << " ⚒ \\O/\n";
     mText.Clear();
-    delete mChild;
+//    delete mChild;
 }
 
 AppBook::Log::Log(AppBook::Prefix Prefix_):mPrefix(Prefix_){}
 
 
 
-void AppBook::Log::SetParent(AppBook::Log *Parent_)
-{
-    if(!Parent_) return;
-    
-    mParent = Parent_;
-    mParent->mChild = this;
-}
 
 
-void AppBook::Log::SetChild(AppBook::Log *Child_)
+void AppBook::Log::SetChild(AppBook::Log::Shared Child_)
 {
     if(!Child_) return;
     mChild = Child_;
-    mChild->mIndent = mIndent + 4; // Hard coded indent.
+    mChild->mIndent = mIndent + 4; // Hard coded indent for now -> Will get Indent value from the AppBook::Config Data
 }
 
 
@@ -182,6 +179,12 @@ AppBook::Log &AppBook::Log::operator<<(Lsc::Color C)
 std::string AppBook::Log::Endl()
 {
     return AppBook::mStaticInstance->mComponentData[TextCtl::Eol];
+}
+
+
+void AppBook::Log::SetParent(AppBook::Log::Shared Parent_)
+{
+    mParent = Parent_;
 }
 
 }

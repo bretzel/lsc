@@ -7,7 +7,7 @@ set(FrameWorkName "Lsc")
 option(BUILD_REM "Enable building the Rem Utility library" ON)
 option(BUILD_BASE "Enable building the Base/[SQLite,...] Database support  Library" OFF)
 option(BUILD_SCRIPTURE "Enable building the Scripture interpreter Library" ON)
-option(BUILD_APPBOOK "Enable building the AppBook Library" OFF)
+option(BUILD_APPBOOK "Enable building the AppBook Library" ON)
 option(BUILD_DIAGNOSTICS "Enable building the Diagnostics Library" OFF)
 
 SET(LSC_ROOT ${CMAKE_CURRENT_SOURCE_DIR})

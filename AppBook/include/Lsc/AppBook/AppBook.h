@@ -17,8 +17,10 @@
 #include <stack>
 #include <fstream>
 #include <functional>
+#include <memory>
 #include <map>
 #include <Lsc/Rem/Rem.h>
+#include <Lsc/AppBook/Lib.h>
 
 // init text attributes/style for type/class of messages:
 // info=0, err, critical, fatal, debug, excep, notice, warnings
@@ -327,7 +329,7 @@ enum class TextCtl : uint8_t
  * @note Single Instance.
  */
 
-class REM_LIB AppBook
+class APPBOOK_LIB AppBook
 {
     
     String mText; // ??
@@ -357,17 +359,18 @@ public:
         Success,
         Notice
     };
+
     
-   
-    
-    struct REM_LIB Log
+    struct APPBOOK_LIB Log
     {
-        Log* mParent = nullptr;
-        Log* mChild = nullptr;
-        //using PrefixMap = std::map<AppBook::Prefix, std::string>;
+        using Shared = std::shared_ptr<AppBook::Log>;
+        Log::Shared mParent = nullptr;
+        Log::Shared mChild = nullptr;
+        
         String  mText; ///< Local Text;
         AppBook::Prefix     mPrefix = AppBook::Prefix::Notice;
-        int     mIndent = 4;    ///< By 4 <spc>
+        
+        int     mIndent = 0;
         bool    mNewLine = false;
         //...
         
@@ -375,6 +378,7 @@ public:
         AppBook::Log &operator<<(AppBook::Prefix);
         AppBook::Log &operator<<(Lsc::TextCtl);
         AppBook::Log &operator<<(Lsc::Color);
+        
         std::string Endl();
         
         template<typename T> Log& operator << (const T& V)
@@ -393,13 +397,16 @@ public:
         ~Log();
         
         Log(AppBook::Prefix);
+        Log(AppBook::Log::Shared Parent_, AppBook::Prefix Prefix_);
         
-        void SetParent(Log* Parent_);
-        void SetChild(Log* Child_);
+        void SetParent(Log::Shared Parent_);
+        void SetChild(Log::Shared  Child_);
+        
         
         //void Detach();
         void End();
     };
+    
     ~AppBook();
     
     static AppBook& Instance();
@@ -408,14 +415,29 @@ public:
     // Let's try a config struct
     struct ConfigData
     {
-        std::string Title;
-        std::string Filename;
-        int          Mode;
-        std::string  DbName; ///< Name part of the SQLITE[3] Database File ( [.../]AppBook.Config.$DbName.sqlite3 ).
-        //std::string  DbPasswd;
+        std::string Title;       ///< Application Book's Title
+        std::string Path;        ///< Specific AppBook SQLite Files Path.
+        std::string CfgDbName;   ///< Name part of the SQLITE[3] AppBook Configurations Database File ( [%{Path}/]AppBook.Config.%{DbName}.sqlite3 ).
+        int          Mode   = AppBook::Mode::Ansi;
+        int          Indent = 4;
         
         //...
     };
+    
+    struct LogTopic
+    {
+        std::string ID;         ///< Will be SQLite PrimaryKey Column Value.
+        std::string Name;       ///< Name Identifier for Accessing the Log [Topic] Instance.
+        std::string Title;      ///< Topic Title
+        std::string Filename;   ///< Path and name of the File if specified.
+        AppBook::Mode Mode = AppBook::Mode::Ansi;
+        using Collection = std::map<std::string_view, LogTopic>;
+        
+        
+        
+    };
+    
+    LogTopic::Collection mTopics;
     
     
     /*!
@@ -433,6 +455,7 @@ public:
      */
     static AppBook::ConfigData& Config();
     static Log& Begin(AppBook::Prefix);
+    static Log& Create(std::string Name_);
     static void End(std::function<void(const std::string&)> EndFN=nullptr);
     
     
@@ -443,7 +466,7 @@ private:
     static std::string ToStr(Prefix Prefix_);
     std::map<TextCtl, std::string> mComponentData;
 
-    Log* mCurrentLog = nullptr;
+    Log::Shared mCurrentLog = nullptr;
     
     static std::string Icon(AppBook::Prefix Prefix_);
     

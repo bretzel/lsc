@@ -6,7 +6,6 @@
 //#define LSC_APP_H
 #pragma once
 #include <Lsc/Rem/Rem.h>
-#include <Lsc/Rem/AppBook.h>
 #include <Lsc/Rem/Object.h>
 
 
@@ -25,7 +24,7 @@ public:
     
 private:
     
-    Return  Log();
+    //Return  Log();
     Return  LscObject();
 };
 }
