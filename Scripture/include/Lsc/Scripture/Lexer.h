@@ -99,7 +99,7 @@ private:
 
     ConfigData mConfig;
     
-    Return Append(TokenData& Token_) ;
+    Return Push(TokenData& Token_) ;
     
     using ScannerFn = Return(Lexer::*)(TokenData&);
     using InputPair = std::pair<Type::T, Type::T>;

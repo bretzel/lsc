@@ -90,7 +90,7 @@ void Lexer::InternalCursor::Sync()
         ++Col;
     }
     
-    Rem::Debug() << __PRETTY_FUNCTION__ << ": " << Location();
+    //Rem::Debug() << __PRETTY_FUNCTION__ << ": " << Location();
 }
 
 /*!
@@ -329,7 +329,7 @@ Lexer::Scanner Lexer::GetScanner(Lexer::InputPair Pair)
 Return Lexer::_InputBinaryOperator(TokenData &Token_)
 {
     Rem::Debug() << __PRETTY_FUNCTION__ << ":\n";
-    return Append(Token_);
+    return Push(Token_);
 }
 
 /*!
@@ -349,7 +349,7 @@ Return Lexer::_InputDefault(TokenData &Token_)
         }
     }
     
-    return Append(Token_);
+    return Push(Token_);
 }
 
 Return Lexer::_InputUnaryOperator(TokenData &)
@@ -361,12 +361,12 @@ Return Lexer::_InputUnaryOperator(TokenData &)
 
 Return Lexer::_InputPunctuation(TokenData &Token_)
 {
-    return Append(Token_);
+    return Push(Token_);
 }
 
 Return Lexer::_InputKeyword(TokenData &Token_)
 {
-    return Append(Token_);
+    return Push(Token_);
 }
 
 
@@ -448,6 +448,8 @@ Return Lexer::ScanIdentifier(TokenData &Token_)
     Token_.T          = Type::Id;
     Token_.S          = Type::Id;
     Token_.M          = Mnemonic::Noop;
+    Token_.mLoc.L     = mCursor.L;
+    Token_.mLoc.C     = mCursor.Col;
     Token_.mFlags.V   = 1; //Subject to be modified
     Rem::Debug() << "Lexer::ScanIdentifier: Cursor on \n" << mCursor.Mark();
     return Rem::Int::Accepted;
@@ -478,7 +480,7 @@ Return Lexer::ScanFactorNotation(TokenData &Token_)
     {
         Rem::Debug() << "No factor notation style seq:[ptrdiff_t:" << mCursor.C - mConfig.Tokens->back().mLoc.End << "]:\n" << mCursor.Mark();
         Rem::Debug() << "Lexer::ScanFactorNotation: mCursor:" << mCursor.C - mCursor.B << " <::> Tail[Begin]:" << mConfig.Tokens->back().mLoc.Begin - mCursor.B;
-        return Rem::Int::Rejected;
+        return Rem::Save() << Rem::Type::Fatal << " error: " << Rem::Int::Expected << " Factor notation style sequence.";
     }
     // Set _F "state" flag :
     if(!mCursor._F)
@@ -496,7 +498,7 @@ Return Lexer::ScanFactorNotation(TokenData &Token_)
     mCursor._F = true;
     
     Token_.mLoc.End = Token_.mLoc.Begin; // Adjust (CUT) the Identifier Attribute to ONE char.
-    Rem::Debug() << "Lexer::ScanFactorNotation: " << Token_.Details(true);
+    //Rem::Debug() << "Confirmed Lexer::ScanFactorNotation: " << Token_.Details(true);
     Mul = Token_; // Save Token_ properties in the incoming virtual multiply operator
     Mul.T        = Type::Binary;
     Mul.S        = Type::Binary | Type::Operator;
@@ -507,8 +509,8 @@ Return Lexer::ScanFactorNotation(TokenData &Token_)
     Mul.mLoc.C = mCursor.Col;
     mConfig.Tokens->push_back(Mul);
     mCursor.C = Mul.mLoc.Begin;
-    Rem::Debug() << "Lexer::ScanFactorNotation: Mul Opertor:" << Mul.Details(true);
-    return Append(Token_);
+    //Rem::Debug() << "Lexer::ScanFactorNotation: Mul Opertor:" << Mul.Details(true);
+    return Push(Token_);
 }
 
 Return Lexer::ScanSignPrefix(TokenData &Token_)
@@ -517,7 +519,7 @@ Return Lexer::ScanSignPrefix(TokenData &Token_)
     {
         Token_.T = Type::Prefix;
         Token_.S = (Token_.S & ~Type::Binary) | Type::Sign | Type::Unary | Type::Prefix; // Type::Operator bit already set
-        return Append(Token_);
+        return Push(Token_);
     }
     return _InputBinaryOperator(Token_);
 }
@@ -530,7 +532,7 @@ Return Lexer::ScanSignPrefix(TokenData &Token_)
 Return Lexer::ScanPrefix(TokenData &Token_)
 {
     
-    return Append(Token_);
+    return Push(Token_);
 }
 
 /*!
@@ -545,12 +547,12 @@ Return Lexer::ScanPostfix(TokenData &Token_)
     Token_.S = (Token_.S & ~Type::Prefix) | Type::Postfix; // Unary/Operator ...  already set.
     Token_.M = Mnemonic::Factorial;
     //mCursor.Sync();
-    return Append(Token_);
+    return Push(Token_);
 }
 
 #pragma endregion Scanners
 
-Return Lexer::Append(TokenData &Token_)
+Return Lexer::Push(TokenData &Token_)
 {
     if(!Token_)
         return (Rem::Save() << Rem::Type::Error << ": Attempt to push a Null TokenData into the Tokens stream.");
@@ -565,8 +567,8 @@ Return Lexer::Append(TokenData &Token_)
     mConfig.Tokens->push_back(Token_);
     mCursor.SkipWS();
     mCursor.Sync();
-    Rem::Debug() << "Lexer::Append: Cursor(Next Token):" << mCursor.Location() << '\n' << mCursor.Mark();
-    Rem::Debug() << "Lexer::Append: Size of Token:" << sz << ", TokenData " << Token_.Details(true);
+    Rem::Debug() << "Lexer::Push: Size of Token:" << sz << ", TokenData " << Token_.Details(true);
+    Rem::Debug() << "Lexer::Push: Cursor(Next Token):" << mCursor.Location() << '\n' << mCursor.Mark();
     return Rem::Int::Accepted;
 }
 
@@ -604,7 +606,8 @@ Return Lexer::Exec()
         std::pair<Type::T, Type::T> P = {mConfig.Tokens->empty() ? Type::Null : mConfig.Tokens->back().S, Token_.S};
         Scanner                     S = GetScanner(P);
         if(S)
-            R = (this->**S)(Token_);
+            if(*(R = (this->**S)(Token_)) != Rem::Int::Accepted)
+                return R;
         
         //...
         
@@ -620,6 +623,8 @@ void Lexer::Flush(std::function<void(TokenData)> F_)
 }
 
 }
+
+
 bool operator&&(std::pair<Lsc::Type::T, Lsc::Type::T> L, std::pair<Lsc::Type::T, Lsc::Type::T> R)
 {
     return (L.first & R.first) && (L.second & R.second);
