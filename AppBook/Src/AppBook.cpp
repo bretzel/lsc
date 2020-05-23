@@ -129,6 +129,11 @@ std::string AppBook::Icon(AppBook::Prefix Prefix_)
 }
 
 
+AppBook::Log &AppBook::Create(std::string Name_)
+{
+    return *std::make_shared<AppBook::Log>(AppBook::mStaticInstance->mCurrentLog, AppBook::Prefix::Debug);
+}
+
 AppBook::Log &AppBook::Log::operator<<(AppBook::Prefix Prefix_)
 {
     mText << "%-30s" << AppBook::ToStr(Prefix_);
