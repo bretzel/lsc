@@ -324,8 +324,8 @@ TokenData TokenData::operator[](Mnemonic CC)
 
 std::string TokenData::Details(bool Mark_)
 {
-    String Str = "Details: '%s': Pos(%d,%d), %s::{%s}";
-    Str << Attr() << mLoc.L << mLoc.C << TypeName() << SemanticTypes();
+    String Str = "Details: '%s'[%s]: Pos(%d,%d), %s::{%s}";
+    Str << Attr() << MnemonicName(M) << mLoc.L << mLoc.C << TypeName() << SemanticTypes();
     if(Mark_)
         Str << '\n' << Mark();
     return Str();

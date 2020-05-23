@@ -171,6 +171,7 @@ enum class Mnemonic : uint16_t
     Noop
 };
 
+
 namespace Type::Delta
 {
 using T = uint8_t;
@@ -309,6 +310,7 @@ constexpr T Kme          = "me";
 }
 
 
+std::string MnemonicName(Mnemonic);
 
 }
 std::string SCRIPTURE_LIB &operator<<(std::string &, Lsc::Type::T);
