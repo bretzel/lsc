@@ -35,7 +35,7 @@ Return App::operator()()
     
     (void) App::Type("Binary/Operator/TypeId/Number/Float");
     (void) Tokens("<>;");
-    (void) LexerScan("A = abc! >< 5 + -4 ac(;");
+    (void) LexerScan("A = abc! >< 5 + -4.012ac(;");
     std::cout << "\n--------------------------------------------------------------------\n";
     return Rem::Int::Ok;
 }

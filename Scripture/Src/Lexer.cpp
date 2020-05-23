@@ -306,6 +306,7 @@ std::map<Lexer::InputPair, Lexer::ScannerFn> Lexer::_ProductionTable = {
     // (Restricted) Factor Notation Syntax:
     {{Type::Number,       Type::Null},        &Lexer::ScanFactorNotation},
     {{Type::Id,           Type::Null},        &Lexer::ScanFactorNotation}, // Required mCursor._F flag to be set.
+    //{{Type::Id,           Type::OpenPair},    &Lexer::ScanFactorNotation}, // Required mCursor._F flag to be set.
     
     // --- Phase 1 association:
     //     Unary Operators:
@@ -487,7 +488,7 @@ Return Lexer::ScanFactorNotation(TokenData &Token_)
     {
         // LHS is Restricted to Number, triggering the Factor notation sequence flag.
         if(!mConfig.Tokens->back().IsNumber())
-            return Rem::Int::Rejected;
+            return Rem::Save() << Rem::Type::Fatal << " error: " << Rem::Int::Expected << " Factor notation style sequence.";
     }
     
     // Expecting RHS to be an identifier Token
@@ -606,7 +607,7 @@ Return Lexer::Exec()
         std::pair<Type::T, Type::T> P = {mConfig.Tokens->empty() ? Type::Null : mConfig.Tokens->back().S, Token_.S};
         Scanner                     S = GetScanner(P);
         if(S)
-            if(*(R = (this->**S)(Token_)) != Rem::Int::Accepted)
+            if(!(R = (this->**S)(Token_)))
                 return R;
         
         //...
