@@ -2,7 +2,8 @@
 // Created by lsc on 20-05-18.
 //
 
-#include "Lsc/Scripture/TokenData.h"
+#include <Lsc/Scripture/TokenData.h>
+#include <Lsc/Rem/Rem.h>
 
 static const char *fmt = "'%s'(%d,%d) %s[%s]";
 
@@ -68,54 +69,54 @@ TokenData::TokenData(Mnemonic aCode, Type::T aType, Type::T aSem, Type::Delta::T
 
 TokenData::TokenData(const TokenData &aToken) // Consider using "default" ...
 {
-    M      = aToken.M     ;
-    T      = aToken.T     ;
-    S      = aToken.S     ;
-    D      = aToken.D     ;
-    mLoc   = aToken.mLoc  ;
+    M      = aToken.M;
+    T      = aToken.T;
+    S      = aToken.S;
+    D      = aToken.D;
+    mLoc   = aToken.mLoc;
     mFlags = aToken.mFlags;
-    mData  = aToken.mData ;
+    mData  = aToken.mData;
 }
 
 TokenData::TokenData(TokenData &&aToken) noexcept
 {
-    std::swap(M      , aToken.M      );
-    std::swap(T      , aToken.T      );
-    std::swap(S      , aToken.S      );
-    std::swap(D      , aToken.D      );
-    std::swap(mLoc   , aToken.mLoc   );
-    std::swap(mFlags , aToken.mFlags );
-    std::swap(mData  , aToken.mData  );
+    std::swap(M, aToken.M);
+    std::swap(T, aToken.T);
+    std::swap(S, aToken.S);
+    std::swap(D, aToken.D);
+    std::swap(mLoc, aToken.mLoc);
+    std::swap(mFlags, aToken.mFlags);
+    std::swap(mData, aToken.mData);
     
 }
 
 TokenData &TokenData::operator=(TokenData &&aToken) noexcept
 {
-    std::swap(M      , aToken.M      );
-    std::swap(T      , aToken.T      );
-    std::swap(S      , aToken.S      );
-    std::swap(D      , aToken.D      );
-    std::swap(mLoc   , aToken.mLoc   );
-    std::swap(mFlags , aToken.mFlags );
-    std::swap(mData  , aToken.mData  );
+    std::swap(M, aToken.M);
+    std::swap(T, aToken.T);
+    std::swap(S, aToken.S);
+    std::swap(D, aToken.D);
+    std::swap(mLoc, aToken.mLoc);
+    std::swap(mFlags, aToken.mFlags);
+    std::swap(mData, aToken.mData);
     return *this;
 }
 
 TokenData &TokenData::operator=(const TokenData &aToken)
 {
-    M      = aToken.M     ;
-    T      = aToken.T     ;
-    S      = aToken.S     ;
-    D      = aToken.D     ;
-    mLoc   = aToken.mLoc  ;
+    M      = aToken.M;
+    T      = aToken.T;
+    S      = aToken.S;
+    D      = aToken.D;
+    mLoc   = aToken.mLoc;
     mFlags = aToken.mFlags;
-    mData  = aToken.mData ;
+    mData  = aToken.mData;
     return *this;
 }
 
 std::string TokenData::Mark()
 {
-    String   str;
+    String     str;
     const char *B  = mLoc.Begin - mLoc.I;
     //std::string str;
     int        l   = 1;
@@ -141,15 +142,11 @@ std::string TokenData::Mark()
     return tstr();
 }
 
-
-
-
 std::string TokenData::SemanticTypes()
 {
     std::string Str;
     return Str << S;
 }
-
 
 std::string TokenData::TypeName()
 {
@@ -215,8 +212,8 @@ static TokenData::Collection tokens_table = {{Mnemonic::Knull,        Type::Keyw
                                              {Mnemonic::Factorial,    Type::Postfix,     0x000580000,  Type::Delta::Unary,      Lexem::Factorial,    1},
                                              {Mnemonic::Positive,     Type::Prefix,      0x000580020,  Type::Delta::Unary,      Lexem::Positive,     1},
                                              {Mnemonic::Negative,     Type::Prefix,      0x000580020,  Type::Delta::Unary,      Lexem::Negative,     1},
-                                             {Mnemonic::Squote,       Type::Text,        0x000000012,  Type::Delta::Identifier, Lexem::Squote,       1},
-                                             {Mnemonic::Dquote,       Type::Text,        0x000000012,  Type::Delta::Identifier, Lexem::Dquote,       1},
+                                             {Mnemonic::Squote,       Type::Text,        0x000400012,  Type::Delta::Identifier, Lexem::Squote,       1},
+                                             {Mnemonic::Dquote,       Type::Text,        0x000400012,  Type::Delta::Identifier, Lexem::Dquote,       1},
                                              {Mnemonic::Kternary,     Type::Keyword,     0x000C40000,  Type::Delta::Unary,      Lexem::Kternary,     1},
                                              {Mnemonic::Hash,         Type::Prefix,      0x000580000,  Type::Delta::Unary,      Lexem::Hash,         1},
                                              {Mnemonic::Dollard,      Type::Prefix,      0x000580000,  Type::Delta::Unary,      Lexem::Dollard,      1},
@@ -250,8 +247,8 @@ static TokenData::Collection tokens_table = {{Mnemonic::Knull,        Type::Keyw
                                              {Mnemonic::Kswitch,      Type::Keyword,     0x000040000,  Type::Delta::Noop,       Lexem::Kswitch,      0},
                                              {Mnemonic::Kcase,        Type::Keyword,     0x000040000,  Type::Delta::Noop,       Lexem::Kcase,        0},
                                              {Mnemonic::Ktype,        Type::Keyword,     0x000040000,  Type::Delta::Noop,       Lexem::Ktype,        0},
-                                             {Mnemonic::Khex,         Type::Hex,         0x000040011,  Type::Delta::Noop,       Lexem::Khex,         1},
-                                             {Mnemonic::KHex,         Type::Hex,         0x000040011,  Type::Delta::Noop,       Lexem::KHex,         1},
+                                             {Mnemonic::Khex,         Type::Hex,         0x400440011,  Type::Delta::Noop,       Lexem::Khex,         1},
+                                             {Mnemonic::KHex,         Type::Hex,         0x400440011,  Type::Delta::Noop,       Lexem::KHex,         1},
                                              {Mnemonic::Kcos,         Type::Prefix,      0x000580000,  Type::Delta::Unary,      Lexem::Kcos,         1},
                                              {Mnemonic::Kacos,        Type::Prefix,      0x0005C0000,  Type::Delta::Unary,      Lexem::Kacos,        1},
                                              {Mnemonic::Ktan,         Type::Prefix,      0x0005C0000,  Type::Delta::Unary,      Lexem::Ktan,         1},
@@ -262,24 +259,32 @@ static TokenData::Collection tokens_table = {{Mnemonic::Knull,        Type::Keyw
                                              {Mnemonic::Kstatic,      Type::Keyword,     0x000040000,  Type::Delta::Identifier, Lexem::Kstatic,      0},
                                              {Mnemonic::Kme,          Type::Keyword,     0x000040000,  Type::Delta::Identifier, Lexem::Kme,          1}};
 
-
-
 // It was the right one ... duh...
 TokenData TokenData::Scan(const char *C_)
 {
     int unicode = 0;
-    int index = 0;
-    
-    for(auto Tok : tokens_table) {
-        const char *crs = C_;
-        const char *rtxt = Tok.mLoc.Begin;
-        std::size_t sz = std::strlen(rtxt);
-        if(*crs != *Tok.mLoc.Begin) {
+    int index   = 0;
+    Rem::Debug() << __PRETTY_FUNCTION__ << ":\n";
+    for(auto Tok : tokens_table)
+    {
+        const char  *crs  = C_;
+        const char  *rtxt = Tok.mLoc.Begin;
+        std::size_t sz    = std::strlen(rtxt);
+        
+        if(*crs != *Tok.mLoc.Begin)
+        {
             ++index;
             continue;
         }
         ++index;
-        /*
+//        String L1, L2, Str;
+//        L1 += *crs;
+//        L2 += *rtxt;
+//        Str               = "\n%s\n%s";
+//        Str << L1 << L2;
+//        Rem::Debug() << "Scan:\n" << Str();
+//
+         /*
          * I arbitrary assume that the UNICODE UNIT is a signed 16 bits AND THAT THE VALUE OF FIRST BYTE IS NEGATIVE.
          * Then I take the next byte to determine the unicode ...code...
          */
@@ -290,26 +295,32 @@ TokenData TokenData::Scan(const char *C_)
                 ++unicode;
             ++crs;
             ++rtxt;
+//            L1 += *crs;
+//            L2 += *rtxt;
+//            Str = "\n%s\n%s";
+//            Str << L1 << L2;
+//            Rem::Debug() << "Scan:\n" << Str();
             ////std::cout << *crs << *rtxt << ','; sin0x4A
         }
         
         if(*rtxt == 0)
         {
+//            Rem::Debug() << "Check Token Mnemonic :[" << MnemonicName(Tok.M) << ']';
             if(*crs && !isspace(*crs))
             {
-                if((isalnum(*crs) || (*crs == '_')) && !Tok.IsOperator()) continue;
+                ///@todo DEBUG! Temporary boolean validation solution... Must be beaten very hard here.
+                if((isalnum(*crs) || (*crs == '_')) && !Tok.IsOperator())
+                    continue;
             }
             
             Tok.mLoc.Begin = C_;
-            Tok.mLoc.End = crs - 1;
+            Tok.mLoc.End   = crs - 1;
             return Tok;
         }
     }
     return TokenData::mNull;
     
 }
-
-
 
 TokenData TokenData::operator[](Mnemonic CC)
 {
@@ -321,7 +332,6 @@ TokenData TokenData::operator[](Mnemonic CC)
     return TokenData::mNull;
 }
 
-
 std::string TokenData::Details(bool Mark_)
 {
     String Str = "Details: '%s'[%s]: Pos(%d,%d), %s::{%s}";
@@ -330,6 +340,5 @@ std::string TokenData::Details(bool Mark_)
         Str << '\n' << Mark();
     return Str();
 }
-
 
 }

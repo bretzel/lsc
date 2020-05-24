@@ -501,7 +501,9 @@ template<typename T> String &String::Printf(const T &_argv)
         case 'g':
         case 'G':fmt.S = *c++;
             break;
-        case 's':fmt.S = *c++;
+        case 's':
+        case 'c':fmt.S = *c++;
+            break;
     }
 
     fmt.Delta = c - beg;

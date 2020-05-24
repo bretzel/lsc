@@ -118,7 +118,7 @@ private:
     Return _InputKeyword(TokenData&);
     Return _InputString(TokenData&);
     Return _InputHex(TokenData&);
-    
+    Return _InputText(TokenData&);
     Return ScanNumber(TokenData&);
     Return ScanIdentifier(TokenData&);
     Return ScanFactorNotation(TokenData&);

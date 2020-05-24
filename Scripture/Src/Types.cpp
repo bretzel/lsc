@@ -258,6 +258,12 @@ Lsc::Type::T &operator<<(Lsc::Type::T &T_, const std::string &TStr_)
 
 std::string &operator<<(std::string &Str_, Lsc::Type::T T_)
 {
+    if(T_ >= Lsc::Type::Bin)
+    {
+        Str_ += "*.*";
+        return Str_;
+    }
+    
     Lsc::Type::T tbm = T_;
     int          a, c, b;
     

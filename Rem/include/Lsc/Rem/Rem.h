@@ -20,12 +20,12 @@ namespace Lsc
 class REM_LIB Rem
 {
     
-    std::string mText;
+    std::string        mText;
     String::Collection mVerticalData;
-    
+
 public:
     
-    enum class Int: uint8_t
+    enum class Int : uint8_t
     {
         Ok = 0,
         Fail,
@@ -61,7 +61,11 @@ public:
         Return,
         Value,
         State,
-        Debug
+        Debug,
+        Event,
+        System,
+        Application,
+        Network
         
     };
 private:
@@ -69,42 +73,56 @@ private:
     Type mType = Rem::Type::None;
     Int  mCode = Rem::Int::Unknown;
     
-    using RemStack = std::stack<Rem>;
-    static RemStack _Stack;
+    using Collection = std::vector<Rem>;
+    static Collection _Array;
     
-    static Rem      _Null;
+    static Rem _Null;
 public:
-    
     
     Rem() = default;
     ~Rem();
     
-    Rem(const Rem& R) = default;
-    Rem(Rem && R) noexcept;
+    Rem(const Rem &R) = default;
+    Rem(Rem &&R) noexcept;
     
-    Rem& operator = (const Rem& R) = default;
-    Rem &operator = (Rem &&R) noexcept;
+    Rem &operator=(const Rem &R) = default;
+    Rem &operator=(Rem &&R) noexcept;
     
     std::string Text();
     std::string operator()();
     
     explicit operator bool() const;
     
-    static Rem& Save();
-    static Rem& Get();
-    static Rem& Debug();
-    static Rem& Null();
+    static Rem &Push();
+    static Rem &Pop();
     
+    static Rem &Debug();
+    
+    static Rem &Info();
+    static Rem &Internal();
+    static Rem &Error();
+    static Rem &SyntaxError();
+    static Rem &Warning();
+    static Rem &Fatal();
+    static Rem &Success();
+    static Rem &Message();
+    static Rem &Return();
+    static Rem &Value();
+    static Rem &State();
+    static Rem &Event();
+    static Rem &System();
+    static Rem &Application();
+    static Rem &Network();
+    
+    static Rem &Null();
     
     static std::string ToStr(Rem::Type T);
     static std::string ToStr(Rem::Int C);
     
+    Rem &operator<<(Rem::Type T);
+    Rem &operator<<(Rem::Int C);
     
-    
-    Rem& operator << (Rem::Type T);
-    Rem& operator << (Rem::Int C);
-    
-    template<typename T> Rem& operator << (const T& Arg)
+    template<typename T> Rem &operator<<(const T &Arg)
     {
         String Str = mText;
         Str << Arg;
@@ -112,9 +130,8 @@ public:
         return *this;
     }
     
-    static std::size_t Clear(std::function<void(Rem&)> LambdaFN=nullptr);
+    static std::size_t Clear(std::function<void(Rem &)> LambdaFN = nullptr);
 };
-
 
 template<typename T = Rem::Int> class Expect
 {
@@ -127,7 +144,7 @@ public:
     Expect(Rem &R)
     {
         mVal = R; // new notification();
-        mF = false;
+        mF   = false;
     }
     
     Expect(const T &V)
@@ -136,22 +153,22 @@ public:
         mF   = true;
     }
     
-    Expect(Expect && E) noexcept
+    Expect(Expect &&E) noexcept
     {
         mVal = std::move(E.mVal);
-        mF = E.mF;
+        mF   = E.mF;
     }
     
     Expect(const Expect &E)
     {
-        mF = E.mF;
+        mF   = E.mF;
         mVal = E.mVal;
     }
     
     Expect &operator=(Rem &R)
     {
         mVal.reset();
-        mF = false;
+        mF   = false;
         mVal = R;
         return *this;
     }
@@ -160,7 +177,7 @@ public:
     {
         mVal.reset();
         mVal = std::move(E.mVal);
-        mF = std::move(E.mF);
+        mF   = std::move(E.mF);
         
         return *this;
     }
@@ -171,23 +188,23 @@ public:
             return *this;
         mVal.reset();
         mVal = E.mVal;
-        mF = E.mF;
+        mF   = E.mF;
         return *this;
     }
     
     Expect &operator=(const T &V)
     {
-//        /if(mF)
+        //        /if(mF)
         mVal.reset();
         mVal = V;
-        mF = true;
+        mF   = true;
         return *this;
     }
     
     explicit operator bool() const
     { return mF; }
     
-    Rem & operator ()()
+    Rem &operator()()
     {
         if(mF)
             return Rem::Null();
@@ -198,8 +215,7 @@ public:
     {
         if(!mF)
         {
-            Rem::Save() <<  Rem::Type::Error <<  ": " << __PRETTY_FUNCTION__ <<  " - Expected value was not returned. >>\n >> " <<
-            std::any_cast<Rem>(mVal).operator()();
+            Rem::Push() << Rem::Type::Error << ": " << __PRETTY_FUNCTION__ << " - Expected value was not returned. >>\n >> " << std::any_cast<Rem>(mVal).operator()();
             
             mVal.reset();
             mVal = T(); // Yep... T must be default-constructible...
@@ -207,15 +223,15 @@ public:
         return std::any_cast<T &>(mVal);
     }
     
-//    auto &operator()()
-//    {
-//        if(!f)
-//        {
-//            _a = notification::push(), "expect: expected value on a false state.";
-//            return std::any_cast<notification &>(_a);
-//        }
-//        return std::any_cast<T &>(_a);
-//    }
+    //    auto &operator()()
+    //    {
+    //        if(!f)
+    //        {
+    //            _a = notification::push(), "expect: expected value on a false state.";
+    //            return std::any_cast<notification &>(_a);
+    //        }
+    //        return std::any_cast<T &>(_a);
+    //    }
     
     void Reset()
     {
@@ -234,15 +250,15 @@ public:
     {
         if(*this)
         {
-            String Str;
+            String      Str;
             std::string rr;
-            T &v = *(*this);
+            T           &v = *(*this);
             if(textify_)
                 return textify_(v);
             else
             {
                 Str << __PRETTY_FUNCTION__;
-                rr = Str.ExtractSurrounded("T =", ";");
+                rr  = Str.ExtractSurrounded("T =", ";");
                 Str = " No method given, for textifying this instance of Expect<T>:[";
                 Str << rr << ']';
             }
@@ -251,7 +267,6 @@ public:
         return std::any_cast<Rem &>(mVal)();
     }
 };
-
 
 using Return = Expect<>;
 }

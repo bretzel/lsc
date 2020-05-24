@@ -127,7 +127,7 @@ std::string Lexer::InternalCursor::Line() const
     while((lb > B) && (*lb != '\r') && (*lb != '\n'))
         --lb;
     
-    while((eb < E) && (*eb != '\r') && (*eb != '\n'))
+    while((eb <= E) && (*eb != '\r') && (*eb != '\n'))
         ++eb;
     
     for(; lb < eb; lb++)
@@ -180,6 +180,7 @@ Expect<std::string> Lexer::InternalCursor::ScanString()
     const char  *be    = C;
     char        Quote_ = *be;
     std::string Str;
+    Str += *be;
     ++be;
     
     while((be <= E) && (*be != Quote_))
@@ -188,7 +189,7 @@ Expect<std::string> Lexer::InternalCursor::ScanString()
     if((*be != Quote_) && (be > E))
     {
         Sync();
-        return (Rem::Save() << Rem::Type::Error << Rem::Int::Eof << " : Unterminated string constant:\n" << Mark());
+        return (Rem::Push() << Rem::Type::Error << Rem::Int::Eof << " : Unterminated string constant:\n" << Mark());
     }
     Str += *be; // Include the rhs Quote.
     return Str;
@@ -276,15 +277,11 @@ std::map<Lexer::InputPair, Lexer::ScannerFn> Lexer::_ProductionTable = {
     // Begin from empty tokens stream:
     {{Type::Null,         Type::Null},        &Lexer::_InputDefault},
     {{0xFFFFFFFFFFFFFFFF, Type::Punctuation}, &Lexer::_InputPunctuation},
+    {{0xFFFFFFFFFFFFFFFF, Type::Text},        &Lexer::_InputText},
+    {{Type::Operator,     Type::Hex},         &Lexer::_InputHex},
     {{Type::Null,         Type::Unary},       &Lexer::_InputUnaryOperator},
     {{Type::Null,         Type::Keyword},     &Lexer::_InputKeyword},
     {{Type::Null,         Type::Binary},      &Lexer::ScanSignPrefix},
-    
-    
-    // -----------------------------------------------------------------
-    
-    // --- Phase 1 association:
-    //     Operators:
     {{Type::ClosePair,    Type::Binary},      &Lexer::_InputBinaryOperator},
     {{Type::ClosePair,    Type::Unary},       &Lexer::ScanPostfix},
     {{Type::Number,       Type::Unary},       &Lexer::ScanPostfix},
@@ -298,33 +295,47 @@ std::map<Lexer::InputPair, Lexer::ScannerFn> Lexer::_ProductionTable = {
     {{Type::Text,         Type::Binary},      &Lexer::_InputBinaryOperator},
     {{Type::Binary,       Type::Binary},      &Lexer::ScanSignPrefix},
     {{Type::Binary,       Type::Null},        &Lexer::_InputDefault},
-    //...
     {{Type::Operator,     Type::Null},        &Lexer::_InputDefault}, // Required mCursor._F flag to be set.
     {{Type::Id,           Type::Unary},       &Lexer::_InputUnaryOperator},
+    {{Type::Id,           Type::Unary},       &Lexer::_InputUnaryOperator},
+    
     // ----------------------------------------------------------------
     
-    // (Restricted) Factor Notation Syntax:
+    // (Restricted) Factor Notation Syntax Style:
     {{Type::Number,       Type::Null},        &Lexer::ScanFactorNotation},
     {{Type::Id,           Type::Null},        &Lexer::ScanFactorNotation}, // Required mCursor._F flag to be set.
     //{{Type::Id,           Type::OpenPair},    &Lexer::ScanFactorNotation}, // Required mCursor._F flag to be set.
     
-    // --- Phase 1 association:
-    //     Unary Operators:
     
     //...
 };
 
 Lexer::Scanner Lexer::GetScanner(Lexer::InputPair Pair)
 {
-    
-    for(auto M : Lexer::_ProductionTable)
-        if(M.first && Pair)
-            return M.second; // That's it! :)
-    
     std::string F_;
     std::string R_;
+    Rem::Internal() << "Lexer::GetScanner():\n";
+    for(auto M : Lexer::_ProductionTable)
+    {
+        String Str;
+        Str << "    {" << (F_ << M.first.first) << ", " << (R_ << M.first.second) << "} <- ";
+        F_.clear();
+        R_.clear();
+        Str << "    {" << (F_ << Pair.first) << ", " << (R_ << Pair.second) << "}:";
+        F_.clear();
+        R_.clear();
+        Rem::Internal() << Str();
+        
+        if(M.first && Pair)
+        {
+            Rem::Internal() << "{" << (F_ << Pair.first) << ", " << (R_ << Pair.second) << "}: MATCH\n";
+            F_.clear();
+            R_.clear();
+            return M.second; // That's it! :)
+        }
+    }
     Rem::Debug() << "Lexer::GetScanner():\n    " << "{" << (F_ << Pair.first) << ", " << (R_ << Pair.second) << "}: NO MATCH";
-    return Rem::Save() << Rem::Int::Rejected;
+    return Rem::Push() << Rem::Int::Rejected;
 }
 
 Return Lexer::_InputBinaryOperator(TokenData &Token_)
@@ -345,8 +356,8 @@ Return Lexer::_InputDefault(TokenData &Token_)
         Rem::Debug() << " Not a Number Trying ScanIdentifier:";
         if(*ScanIdentifier(Token_) != Rem::Int::Accepted)
         {
-            Rem::Save() << mCursor.Mark() << ":";
-            return Rem::Save() << Rem::Type::Fatal << ": " << Rem::Int::UnExpected << " Token type " << Token_.TypeName();
+            Rem::Push() << mCursor.Mark() << ":";
+            return Rem::Push() << Rem::Type::Fatal << ": " << Rem::Int::UnExpected << " Token type " << Token_.TypeName();
         }
     }
     
@@ -357,7 +368,7 @@ Return Lexer::_InputUnaryOperator(TokenData &)
 {
     
     
-    return (Rem::Save() << Rem::Int::Implement);
+    return (Rem::Push() << Rem::Int::Implement);
 }
 
 Return Lexer::_InputPunctuation(TokenData &Token_)
@@ -373,11 +384,14 @@ Return Lexer::_InputKeyword(TokenData &Token_)
 
 Return Lexer::_InputString(TokenData &)
 {
-    return (Rem::Save() << Rem::Int::Implement);
+    return (Rem::Push() << Rem::Int::Implement);
 }
+
 Return Lexer::_InputHex(TokenData &)
 {
-    return (Rem::Save() << Rem::Int::Implement);
+    
+    Rem::Internal() << __PRETTY_FUNCTION__ << ":\n";
+    return Rem::Internal() << Rem::Int::Implement;
 }
 
 Return Lexer::ScanNumber(TokenData &Token_)
@@ -481,14 +495,14 @@ Return Lexer::ScanFactorNotation(TokenData &Token_)
     {
         Rem::Debug() << "No factor notation style seq:[ptrdiff_t:" << mCursor.C - mConfig.Tokens->back().mLoc.End << "]:\n" << mCursor.Mark();
         Rem::Debug() << "Lexer::ScanFactorNotation: mCursor:" << mCursor.C - mCursor.B << " <::> Tail[Begin]:" << mConfig.Tokens->back().mLoc.Begin - mCursor.B;
-        return Rem::Save() << Rem::Type::Fatal << " error: " << Rem::Int::Expected << " Factor notation style sequence.";
+        return Rem::Push() << Rem::Type::Fatal << " error: " << Rem::Int::Expected << " Factor notation style sequence.";
     }
     // Set _F "state" flag :
     if(!mCursor._F)
     {
         // LHS is Restricted to Number, triggering the Factor notation sequence flag.
         if(!mConfig.Tokens->back().IsNumber())
-            return Rem::Save() << Rem::Type::Fatal << " error: " << Rem::Int::Expected << " Factor notation style sequence.";
+            return Rem::Push() << Rem::Type::Fatal << " error: " << Rem::Int::Expected << " Factor notation style sequence.";
     }
     
     // Expecting RHS to be an identifier Token
@@ -500,7 +514,7 @@ Return Lexer::ScanFactorNotation(TokenData &Token_)
     
     Token_.mLoc.End = Token_.mLoc.Begin; // Adjust (CUT) the Identifier Attribute to ONE char.
     //Rem::Debug() << "Confirmed Lexer::ScanFactorNotation: " << Token_.Details(true);
-    Mul = Token_; // Save Token_ properties in the incoming virtual multiply operator
+    Mul = Token_; // Push Token_ properties in the incoming virtual multiply operator
     Mul.T        = Type::Binary;
     Mul.S        = Type::Binary | Type::Operator;
     Mul.mFlags.M = Mul.mFlags.V = 1;
@@ -556,7 +570,7 @@ Return Lexer::ScanPostfix(TokenData &Token_)
 Return Lexer::Push(TokenData &Token_)
 {
     if(!Token_)
-        return (Rem::Save() << Rem::Type::Error << ": Attempt to push a Null TokenData into the Tokens stream.");
+        return (Rem::Push() << Rem::Type::Error << ": Attempt to push a Null TokenData into the Tokens stream.");
     
     mCursor.Sync();
     Token_.mLoc.L = mCursor.L;
@@ -585,7 +599,7 @@ Return Lexer::Exec()
     Return R;
     
     if(!mConfig)
-        return (Rem::Save() << "Lexer::Exec(): " << Rem::Type::Error << " Config Data is missing informations...");
+        return (Rem::Push() << "Lexer::Exec(): " << Rem::Type::Error << " Config Data is missing informations...");
     //...
     TokenData Token_;
     
@@ -597,7 +611,7 @@ Return Lexer::Exec()
     while(!mCursor.Eof())
     {
         if(C == mCursor.C)
-            return Rem::Save() << Rem::Type::Fatal << ": Lexer::Exec() : Aborted :  Force breaking infinite loop.";
+            return Rem::Push() << Rem::Type::Fatal << ": Lexer::Exec() : Aborted :  Force breaking infinite loop.";
         
         C = mCursor.C;
         //Rem::Debug() << "mCursor on '" << *mCursor.C << '\'';
@@ -621,6 +635,14 @@ void Lexer::Flush(std::function<void(TokenData)> F_)
     for(auto T : *mConfig.Tokens)
         if(F_)
             F_(T);
+}
+Return Lexer::_InputText(TokenData &Token_)
+{
+
+    Rem::Debug() << __PRETTY_FUNCTION__ << ":\n";
+    Expect<std::string> R =  mCursor.ScanString();
+    Rem::Debug() << "Scanned String: " << *R << '\n';
+    return Rem::Internal() << __PRETTY_FUNCTION__ << ": " << Rem::Int::Implement;
 }
 
 }
