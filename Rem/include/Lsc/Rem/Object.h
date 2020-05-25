@@ -7,7 +7,7 @@
 namespace Lsc
 {
 
-class Object
+class REM_LIB Object
 {
     
     Object* mParent= nullptr;

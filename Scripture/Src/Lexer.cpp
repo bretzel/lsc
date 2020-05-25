@@ -3,7 +3,7 @@
 //
 
 #include <Lsc/Scripture/Lexer.h>
-
+#include <array>
 namespace Lsc
 {
 

@@ -1,5 +1,3 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "google-explicit-constructor"
 //
 // Created by bretzel on 20-04-18.
 //
@@ -8,6 +6,8 @@
 //#define TEXT_REM_H
 
 #pragma once
+//#pragma clang diagnostic push
+//#pragma ide diagnostic ignored "google-explicit-constructor"
 
 #include <Lsc/Rem/String.h>
 #include <stack>
@@ -273,4 +273,4 @@ using Return = Expect<>;
 
 //#endif //TEXT_REM_H
 
-#pragma clang diagnostic pop
+//#pragma clang diagnostic pop

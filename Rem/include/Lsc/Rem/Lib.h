@@ -16,6 +16,7 @@
 
 #ifdef _WIN32
 #   pragma warning(disable : 4996)
+#   pragma warning(disable : 4005)
 //class __declspec(dllimport) std::thread;
 #   define _CRT_SECURE_NO_WARNINGS
 #   define _SCL_SECURE_NO_WARNINGS
@@ -25,9 +26,9 @@
 #       if __GNUC__ >= 4
 #           define REM_LIB __attribute__ ((visibility ("default")))
 #           define PRIVATE_LIB  __attribute__ ((visibility ("hidden")))
-#       else
-#           define REM_LIB
-#           define PRIVATE_LIB
+//#       else
+//#           define REM_LIB
+//#           define PRIVATE_LIB
 #       endif
 #   else
 #       define REM_LIB __declspec(dllimport)
@@ -43,11 +44,11 @@
 #ifndef DECLOBJ_ID
 #define DECLOBJ_ID \
     public:\
-        virtual const char* RefClassName() const noexcept; \
+        virtual const char*  RefClassName() const noexcept; \
     private:
 
 #define  CLASSNAME_IMPL(CLASS) \
-         const char*  CLASS::RefClassName() const noexcept{ return #CLASS; }
+         const char*   CLASS::RefClassName() const noexcept{ return #CLASS; }
 #endif
 
 #ifndef _WIN32

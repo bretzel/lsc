@@ -1,10 +1,10 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "bugprone-reserved-identifier"
+
 //#ifndef H_VPTRLIST
 //#define H_VPTRLIST
 
 #pragma once
-
+//#pragma clang diagnostic push
+//#pragma ide diagnostic ignored "bugprone-reserved-identifier"
 #include <Lsc/Rem/Lib.h>
 
 namespace Lsc
@@ -185,5 +185,5 @@ public:
 //#endif // H_VPTRLIST
 // kate: indent-mode cstyle; space-indent on; indent-width 0;
 
-#pragma clang diagnostic pop
+//#pragma clang diagnostic pop
 
