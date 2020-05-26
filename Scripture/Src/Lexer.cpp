@@ -387,12 +387,31 @@ Return Lexer::_InputString(TokenData &)
     return (Rem::Push() << Rem::Int::Implement);
 }
 
+
+
 Return Lexer::_InputHex(TokenData &Token_)
-{
-    
+{    
     Rem::Internal() << __PRETTY_FUNCTION__ << ":\n";
-    return Rem::Internal() << Rem::Int::Implement;
+    const char *C_ = mCursor.C;
+    C_ += Token_.Attr().length();
+    const char* E_ = C_;
+    if (isspace(*E_))
+        return Rem::Int::Rejected;
+
+    while (*E_ && !isspace(*E_) && 
+        ( 
+            ((*E_ >= '0') && (*E_ <= '9')) || 
+            ((*E_ >= 'A') && (*E_ <= 'F')) || 
+            ((*E_ >= 'a') && (*E_ <= 'f')) 
+        )
+    ) ++E_;
+    if (E_ > C_) --E_;
+
+    Token_.mLoc.End = E_;
+    return Push(Token_);
 }
+
+
 
 Return Lexer::ScanNumber(TokenData &Token_)
 {
