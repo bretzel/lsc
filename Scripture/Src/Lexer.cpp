@@ -387,7 +387,7 @@ Return Lexer::_InputString(TokenData &)
     return (Rem::Push() << Rem::Int::Implement);
 }
 
-Return Lexer::_InputHex(TokenData &)
+Return Lexer::_InputHex(TokenData &Token_)
 {
     
     Rem::Internal() << __PRETTY_FUNCTION__ << ":\n";
