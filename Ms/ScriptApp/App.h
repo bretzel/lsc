@@ -12,22 +12,23 @@
 namespace Lsc
 {
 
-class App
-{
-    String mString;
-    
-public:
-    App() = default;
-    ~App();
-    
-    Return operator()();
-    
-private:
-    
-    Return Type(std::string Txt_);
-    Return Tokens(std::string Txt_);
-    Return LexerScan(std::string Txt_);
+    class App
+    {
+        String mString;
 
-};
+    public:
+        App() = default;
+        ~App();
+
+        Return operator()();
+
+    private:
+
+        Return Type(std::string Txt_);
+        Return Tokens(std::string Txt_);
+        Return LexerScan(std::string Txt_);
+        Return ArithmeticLogicalUnit();
+
+    };
 }
 //#endif //LSC_APP_H

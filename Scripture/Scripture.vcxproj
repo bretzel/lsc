@@ -151,12 +151,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\Lsc\Scripture\Alu.h" />
     <ClInclude Include="include\Lsc\Scripture\Lexer.h" />
     <ClInclude Include="include\Lsc\Scripture\Lib.h" />
     <ClInclude Include="include\Lsc\Scripture\TokenData.h" />
     <ClInclude Include="include\Lsc\Scripture\Types.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Alu.cpp" />
     <ClCompile Include="Src\Lexer.cpp" />
     <ClCompile Include="Src\TokenData.cpp" />
     <ClCompile Include="Src\Types.cpp" />

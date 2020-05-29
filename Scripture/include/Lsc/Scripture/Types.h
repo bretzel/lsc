@@ -60,7 +60,7 @@ constexpr T F128        = 0x40000000000;
 constexpr T Octal       = 0x80000000000;
 constexpr T Bin         = 0x100000000000;
 
-std::string Name(T T_);
+std::string SCRIPTURE_LIB Name(T T_);
 }
 
 enum class Mnemonic : uint16_t
@@ -310,7 +310,7 @@ constexpr T Kme          = "me";
 }
 
 
-std::string MnemonicName(Mnemonic);
+std::string SCRIPTURE_LIB MnemonicName(Mnemonic);
 
 }
 std::string SCRIPTURE_LIB &operator<<(std::string &, Lsc::Type::T);
