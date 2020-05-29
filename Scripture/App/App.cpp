@@ -6,7 +6,7 @@
 
 
 #include <Lsc/Scripture/Lexer.h>
-
+#include <Lsc/Scripture/Alu.h>
 
 auto main(int arc, char**argv) -> int
 {
@@ -36,6 +36,7 @@ Return App::operator()()
     (void) App::Type("Binary/Operator/TypeId/Number/Float");
     (void) Tokens("<>;");
     (void) LexerScan("Abcdere = 0xb09AFcfdaghj >< 0xabcd + -4.012ac(;");
+    (void) ArithmeticLogicalUnit();
     std::cout << "\n--------------------------------------------------------------------\n";
     return Rem::Int::Ok;
 }
@@ -94,6 +95,17 @@ Return App::LexerScan(std::string Txt_)
        Rem::Debug() << Token_.Details();
     });
     return Rem::Int::Implement;
+}
+Return App::ArithmeticLogicalUnit()
+{
+    Rem::Debug() << __PRETTY_FUNCTION__  << ":\n";
+    Alu A = 1.1f;
+    Alu B = .0f;
+    Rem::Debug() << "A=" << A() << " => [" << Type::Name(A.TypeOf()) << "]";
+    Rem::Debug() << "B=" << B() << " => [" << Type::Name(B.TypeOf()) << "]";
+    Rem::Debug() << "A / B:"  << " => " << (A/B)() ;
+    
+    return Lsc::Return();
 }
 
 } // namespace [Lsc::]Type

@@ -27,6 +27,7 @@ private:
     Return Type(std::string Txt_);
     Return Tokens(std::string Txt_);
     Return LexerScan(std::string Txt_);
+    Return ArithmeticLogicalUnit();
 
 };
 }

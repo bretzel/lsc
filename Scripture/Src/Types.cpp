@@ -104,9 +104,38 @@ std::map<std::string, T> STR_T = {{"Null",         Null},
                                   {"Hex",          Hex},
                                   {"Leftpar",      OpenPair},
                                   {"Closepar",     ClosePair}};
+ 
+std::string Name(T T_)
+{
+    std::string Str_;
     
+    if(T_ >= Lsc::Type::Bin)
+    {
+        Str_ += "*.*";
+        return Str_;
+    }
+    
+    Lsc::Type::T tbm = T_;
+    int          a, c, b;
+    
+    for(const auto &t : Lsc::Type::T_STR)
+    {
+        if(!tbm)
+            break;
+        if(t.first & tbm)
+        {
+            Str_ += t.second;
+            tbm &= ~t.first;  // Remove the Bit from the "Sem" field.
+            if(tbm)
+                Str_ += '/';
+        }
+    }
+    if(Str_.empty())
+        Str_ += "null";
+    return Str_;
 }
-}
+
+}}
 
 namespace Lsc
 {

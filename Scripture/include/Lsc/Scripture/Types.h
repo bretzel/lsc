@@ -60,7 +60,7 @@ constexpr T F128        = 0x40000000000;
 constexpr T Octal       = 0x80000000000;
 constexpr T Bin         = 0x100000000000;
 
-//std::string Name(T T_);
+std::string Name(T T_);
 }
 
 enum class Mnemonic : uint16_t
