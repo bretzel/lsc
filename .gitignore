@@ -295,3 +295,4 @@ gnu_build/
 cmake-*
 .clangd/
 
+.vscode/

@@ -321,7 +321,7 @@ Lexer::Scanner Lexer::GetScanner(Lexer::InputPair Pair)
         Str << "    {" << (F_ << M.first.first) << ", " << (R_ << M.first.second) << "} <- ";
         F_.clear();
         R_.clear();
-        Str << "    {" << (F_ << Pair.first) << ", " << (R_ << Pair.second) << "}:";
+        Str << "{" << (F_ << Pair.first) << ", " << (R_ << Pair.second) << "}:";
         F_.clear();
         R_.clear();
         Rem::Internal() << Str();
@@ -460,7 +460,7 @@ Return Lexer::ScanNumber(TokenData &Token_)
                 break;
             case 2:Token_.S = (Token_.S & ~Type::U64) | Type::U32;
                 break;
-            default:Token_.S = (Token_.S & ~Type::U64) | Type::U64;
+            default:Token_.S |= Type::U64;
                 break;
         }
     }
@@ -474,8 +474,7 @@ Return Lexer::ScanIdentifier(TokenData &Token_)
     const char *C = mCursor.C;
     if((!isalpha(*C)) && (*C != '_'))
         return Rem::Int::Rejected;
-    while(*C && isalnum(*C))
-        ++C;
+    while(*C && (isalnum(*C) || (*C == '_'))) ++C;
     --C;
     Token_.mLoc.Begin = mCursor.C;
     Token_.mLoc.End   = C;
@@ -494,11 +493,7 @@ Return Lexer::ScanIdentifier(TokenData &Token_)
  *         4ac => 4 x a x c
  *         4(ac...) => 4 x ( a x c ...)
  *         4pi/sin/cos/atan/asin/acos ... => 4 x p x i / 4 x s x i x n ... And NOT 4 x pi or 4 x sin ...
- *
- *         Rejected sequences:
- *         ac4 => Id; a4c => Id ...;
- *         4pi/sin/cos/atan/asin/acos ...;
- *
+ * *
  * @note   Required that the Left hand side token is a Number and that the Input token is contiguous and of unknown type (Type::Null) to be scanned as an identifier.
  *         Input Token_ is either scanned in the Ref Table or not.
  * @return Execp<>
@@ -514,14 +509,14 @@ Return Lexer::ScanFactorNotation(TokenData &Token_)
     {
         Rem::Debug() << "No factor notation style seq:[ptrdiff_t:" << mCursor.C - mConfig.Tokens->back().mLoc.End << "]:\n" << mCursor.Mark();
         Rem::Debug() << "Lexer::ScanFactorNotation: mCursor:" << mCursor.C - mCursor.B << " <::> Tail[Begin]:" << mConfig.Tokens->back().mLoc.Begin - mCursor.B;
-        return Rem::Push() << Rem::Type::Fatal << " error: " << Rem::Int::Expected << " Factor notation style sequence.";
+        return Rem::Fatal() << Rem::Int::Expected << " Factor notation style sequence.";
     }
     // Set _F "state" flag :
     if(!mCursor._F)
     {
         // LHS is Restricted to Number, triggering the Factor notation sequence flag.
         if(!mConfig.Tokens->back().IsNumber())
-            return Rem::Push() << Rem::Type::Fatal << " error: " << Rem::Int::Expected << " Factor notation style sequence.";
+            return Rem::Fatal() << Rem::Int::Expected << " Factor notation style sequence.";
     }
     
     // Expecting RHS to be an identifier Token
@@ -618,7 +613,7 @@ Return Lexer::Exec()
     Return R;
     
     if(!mConfig)
-        return (Rem::Push() << "Lexer::Exec(): " << Rem::Type::Error << " Config Data is missing informations...");
+        return Rem::Fatal() << "Lexer::Exec(): Config Data is missing crucial informations...";
     //...
     TokenData Token_;
     
@@ -630,7 +625,7 @@ Return Lexer::Exec()
     while(!mCursor.Eof())
     {
         if(C == mCursor.C)
-            return Rem::Push() << Rem::Type::Fatal << ": Lexer::Exec() : Aborted :  Force breaking infinite loop.";
+            return Rem::Internal() << ": Lexer::Exec() : Aborted :  Force breaking infinite loop.";
         
         C = mCursor.C;
         //Rem::Debug() << "mCursor on '" << *mCursor.C << '\'';

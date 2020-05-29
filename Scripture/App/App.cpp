@@ -101,10 +101,13 @@ Return App::ArithmeticLogicalUnit()
     Rem::Debug() << __PRETTY_FUNCTION__  << ":\n";
     Alu A = 1.1f;
     Alu B = .0f;
+    Alu C = .00345f;
     Rem::Debug() << "A=" << A() << " => [" << Type::Name(A.TypeOf()) << "]";
     Rem::Debug() << "B=" << B() << " => [" << Type::Name(B.TypeOf()) << "]";
     Rem::Debug() << "A / B:"  << " => " << (A/B)() ;
     
+    Rem::Debug() << "C=" << C.Number<double>() << " => [" << Type::Name(C.TypeOf()) << "]";
+    Rem::Debug() << "A / C: => " << (A/C)() << "[" << Type::Name(C.TypeOf()) << "]";
     return Lsc::Return();
 }
 
