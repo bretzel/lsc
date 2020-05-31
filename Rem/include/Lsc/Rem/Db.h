@@ -1,8 +1,7 @@
 #pragma once
 
-#include <Lsc/Rem/Lib.h>
+#include <Lsc/Rem/String.h>
 #include <sqlite3.h>
-
 namespace Lsc
 {
 

@@ -33,6 +33,9 @@
     <ClInclude Include="include\Lsc\Rem\String.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="include\Lsc\Rem\Db.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\CArguments.cpp">
@@ -48,6 +51,9 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Src\String.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Db.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
