@@ -108,7 +108,7 @@ Return App::ArithmeticLogicalUnit()
     
     Rem::Debug() << "C=" << C.Number<double>() << " => [" << Type::Name(C.TypeOf()) << "]";
     Rem::Debug() << "A / C: => " << (A/C)() << "[" << Type::Name(C.TypeOf()) << "]";
-    return Lsc::Return();
+    return Rem::Int::Good;
 }
 
 } // namespace [Lsc::]Type
