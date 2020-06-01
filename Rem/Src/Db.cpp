@@ -11,7 +11,7 @@
 
 
 
-namespace Lsc
+namespace Lsc::Db
 {
 
 Db::Db(std::string DbName_)
@@ -79,6 +79,29 @@ std::string Db::Filename()
 {
     return mDbName + ".Db";
 }
+void Db::SetName(std::string Name_)
+{
+    mDbName = std::move(Name_);
+}
 
+SchemaItem::~SchemaItem()
+{
+    mName.Clear();
+}
+
+SchemaItem::SchemaItem(Object *Parent_) : Object(Parent_){}
+
+
+Expect<Schema *> Schema::Load(std::string DbName_)
+{
+    Db Temp = Db();
+    Temp.SetName(DbName_);
+    Db::Return R = Temp.Open();
+    if(!R)
+        return R();
+    
+    
+    return nullptr;
+}
 
 }

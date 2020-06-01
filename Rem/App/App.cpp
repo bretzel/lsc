@@ -77,8 +77,9 @@ Return App::LscObject()
 
 Return App::CreateDb()
 {
-    Db Db_ = Db("Rem");
-    Db::Return Handle = Db_.Create();
+    Db::Db Db_ = Db::Db();
+    Db_.SetName("Rem");
+    Db::Db::Return Handle = Db_.Create();
     if(Handle)
     {
         Rem::Success() << " SQLite3 Database file" << Db_.Filename() << " Created";

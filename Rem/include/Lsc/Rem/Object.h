@@ -14,6 +14,7 @@ class REM_LIB Object
 
     DECLOBJ_ID
 
+    
 public:
     using Collection = std::vector<Object*>; // NE SE COPIE PAS !!!
 
