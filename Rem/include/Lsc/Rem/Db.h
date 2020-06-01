@@ -4,30 +4,82 @@
 #include <Lsc/Rem/Rem.h>
 #include <Lsc/Rem/Object.h>
 #include <chrono>
+#include <stack>
+
 
 namespace Lsc::Db
 {
 
-
-
 #pragma region SQL_SCHEMA
 
-class SchemaItem : public Object
+class REM_LIB SchemaItem : public Object
 {
     String mName;
-    
+
 public:
     
-    using List = std::vector<Object*>;
+    using List = std::vector<Object *>;
     
-    SchemaItem()                        = default;
-    SchemaItem(SchemaItem&&) noexcept   = default;
-    SchemaItem(const SchemaItem&)       = default;
+    SchemaItem() = default;
+    SchemaItem(SchemaItem &&) noexcept = default;
+    SchemaItem(const SchemaItem &) = default;
     ~SchemaItem() override;
     
-    SchemaItem(Object*);
+    SchemaItem(Object *);
     
+};
+
+class REM_LIB QueryItem : public Object
+{
+    String mName;
+    String::Collection mCommaItems;
     
+public:
+    using List = std::vector<QueryItem>;
+    
+    QueryItem() = default;
+    QueryItem(const QueryItem &) = default;
+    QueryItem(QueryItem &&) = default;
+    
+    QueryItem(std::string ItemName_);
+    
+    ~QueryItem() override;
+    
+};
+
+
+class REM_LIB Select : public QueryItem
+{
+
+};
+
+
+class REM_LIB Where : public QueryItem
+{
+
+};
+
+
+class REM_LIB Update : public QueryItem
+{
+
+};
+
+
+class REM_LIB Insert : public QueryItem
+{
+
+};
+
+class REM_LIB Delete : public QueryItem
+{
+
+};
+
+
+class REM_LIB From : public QueryItem
+{
+
 };
 
 /*
@@ -174,10 +226,9 @@ All internal computations assume the Gregorian calendar system. It is also assum
 class REM_LIB Field : public SchemaItem
 {
     String mName;
-    
-    
+
 public:
-    enum class Type: uint8_t
+    enum class Type : uint8_t
     {
         NUL = 0,
         INT,
@@ -188,86 +239,83 @@ public:
     
     struct Flag
     {
-        uint8_t PK:1;
-        uint8_t NUL:1;
+        uint8_t PK: 1;
+        uint8_t NUL: 1;
         
     };
     
-    enum class Date:uint8_t
+    enum class Date : uint8_t
     {
-        TIME=0,
+        TIME = 0,
         STAMP,
         DATETIME
     };
     
-    using List = std::vector<Field*>;
-    Field()                   = default;
-    Field(Field&&) noexcept   = default;
-    Field(const Field&)       = default;
+    using List = std::vector<Field *>;
+    Field() = default;
+    Field(Field &&) noexcept = default;
+    Field(const Field &) = default;
     
 };
-
 
 class REM_LIB Table : public SchemaItem
 {
     Field::List mFields;
 public:
     
-    using List = std::vector<Table*>;
+    using List = std::vector<Table *>;
     
-    Table()                     = default;
-    Table(Table&&) noexcept     = default;
-    Table(const Table&)         = default;
+    Table() = default;
+    Table(Table &&) noexcept = default;
+    Table(const Table &) = default;
     
     ~Table() override;
     
-
 };
 
-
-class REM_LIB Schema :public SchemaItem
+class REM_LIB Schema : public SchemaItem
 {
     Table::List mTables;
-    
+
 public:
     
-    
-    
-    Schema()                      = default;
-    Schema(Schema&&) noexcept     = default;
-    Schema(const Schema&)         = default;
+    Schema() = default;
+    Schema(Schema &&) noexcept = default;
+    Schema(const Schema &) = default;
     
     ~Schema() override;
     
-    static Expect<Schema*> Load(std::string DbName_);
+    static Expect<Schema *> Load(std::string DbName_);
     
 };
+
 #pragma endregion SQL_SCHEMA
 
 class REM_LIB Query
 {
-    String mText;
+    String                  mText;
+    std::stack<std::string> mStack;
 
 public:
-    Query()                     = default;
-    Query(Query &&) noexcept    = default;
-    Query(const Query &)        = default;
+    Query() = default;
+    Query(Query &&) noexcept = default;
+    Query(const Query &) = default;
     ~Query();
     
-    Query& operator << (std::string Obj_);
-    template<typename T> Query& operator << (T Arg_)
+    Query &operator<<(std::string Obj_);
+    template<typename T> Query &operator<<(T Arg_)
     {
         mText << Arg_;
         return *this;
     }
     
-#pragma region SQL_COMMANDS
-    Query& Select(Query& Q_);
-    Query& Delete(Query& Q_);
-    Query& Update(Query& Q_);
-    Query& Insert(Query& Q_);
-#pragma endregion SQL_COMMANDS
-
+    #pragma region SQL_COMMANDS
+    Query &Select(Query &Q_);
+    Query &Delete(Query &Q_);
+    Query &Update(Query &Q_);
+    Query &Insert(Query &Q_);
+    #pragma endregion SQL_COMMANDS
+    std::string Text();
 };
 
 class REM_LIB Db
@@ -276,11 +324,11 @@ class REM_LIB Db
     std::string mDbName;
 public:
     
-    using Return         = Expect<sqlite3 *>;
+    using Return = Expect<sqlite3 *>;
     
-    Db()                 = default;
-    Db(Db &&)            = default;
-    Db(const Db &)       = default;
+    Db() = default;
+    Db(Db &&) = default;
+    Db(const Db &) = default;
     
     Db(std::string DbName_);
     

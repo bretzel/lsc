@@ -35,6 +35,7 @@ Return App::operator()()
     std::cout << mString();
     LscObject();
     CreateDb();
+    Query();
     //Log();
     return Rem::Int::Ok;
 }
@@ -86,6 +87,20 @@ Return App::CreateDb()
         return Handle();
     }
     
+    return Rem::Int::Ok;
+}
+
+Return App::Query()
+{
+    Db::Query Q;
+    
+    Q.Select(
+        Q.Insert(
+            Q.Delete(Q << "Start")
+        )
+    );
+    
+    Rem::Debug() << Q.Text();
     return Rem::Int::Ok;
 }
 

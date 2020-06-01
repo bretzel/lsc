@@ -120,37 +120,45 @@ Query::~Query()
 
 Query& Query::operator<<(std::string Obj_)
 {
-    mText << "\"" << Obj_ << "\"";
-
+    String Str_;
+    Str_ << "\"" << Obj_ << "\"";
+    mStack.push(Str_());
+    return *this;
 }
 
 Query& Query::Select(Query& Q_)
 {
-    mText = "SELECT";
+    mStack.push("SELECT");
     return *this;
-
 }
 
 Query& Query::Delete(Query& Q_)
 {
-    mText = "DELETE";
+    mStack.push("DELETE");
     return *this;
 
 }
 
 Query& Query::Update(Query& Q_)
 {
-    mText = "UPDATE";
+    mStack.push("UPDATE");
     return *this;
 
 }
 
 Query& Query::Insert(Query& Q_)
 {
-    mText = "UPDATE";
+    mStack.push("UPDATE");
     return *this;
-
-
+}
+std::string Query::Text()
+{
+    while(!mStack.empty())
+    {
+        mText << " " << mStack.top();
+        mStack.pop();
+    }
+    return mText();
 }
 
 }

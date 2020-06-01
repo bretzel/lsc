@@ -28,6 +28,7 @@ private:
     //Return  Log();
     Return  LscObject();
     Return  CreateDb();
+    Return  Query();
 };
 }
 //#endif //LSC_APP_H
