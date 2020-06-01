@@ -10,6 +10,9 @@ auto main(int arc, char**argv) -> int
 {
     Lsc::App mApp;
     mApp();
+    Lsc::Rem::Clear([](Lsc::Rem& R) {
+       std::cout <<  R() << '\n';
+    });
     return 0;
 }
 
@@ -31,6 +34,7 @@ Return App::operator()()
     mString = "Hello, And welcome to the Lsc World!\n";
     std::cout << mString();
     LscObject();
+    CreateDb();
     //Log();
     return Rem::Int::Ok;
 }
@@ -66,6 +70,20 @@ Return App::operator()()
 Return App::LscObject()
 {
     Object Obj;
+    
+    return Rem::Int::Ok;
+}
+
+
+Return App::CreateDb()
+{
+    Db Db_ = Db("Rem");
+    Db::Return Handle = Db_.Create();
+    if(Handle)
+    {
+        Rem::Success() << " SQLite3 Database file" << Db_.Filename() << " Created";
+        return Handle();
+    }
     
     return Rem::Int::Ok;
 }
