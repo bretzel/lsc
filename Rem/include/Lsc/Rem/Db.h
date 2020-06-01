@@ -201,9 +201,9 @@ public:
     };
     
     using List = std::vector<Field*>;
-    Field()                        = default;
+    Field()                   = default;
     Field(Field&&) noexcept   = default;
-    Field(const Field&)            = default;
+    Field(const Field&)       = default;
     
 };
 
@@ -219,7 +219,7 @@ public:
     Table(Table&&) noexcept     = default;
     Table(const Table&)         = default;
     
-    ~Table()  = override;
+    ~Table() override;
     
 
 };
@@ -233,11 +233,11 @@ public:
     
     
     
-    Schema()                     = default;
+    Schema()                      = default;
     Schema(Schema&&) noexcept     = default;
     Schema(const Schema&)         = default;
     
-    ~Schema()  = override;
+    ~Schema() override;
     
     static Expect<Schema*> Load(std::string DbName_);
     
@@ -276,11 +276,11 @@ class REM_LIB Db
     std::string mDbName;
 public:
     
-    using Return = Expect<sqlite3 *>;
+    using Return         = Expect<sqlite3 *>;
     
-    Db() = default;
-    Db(Db &&) = default;
-    Db(const Db &) = default;
+    Db()                 = default;
+    Db(Db &&)            = default;
+    Db(const Db &)       = default;
     
     Db(std::string DbName_);
     

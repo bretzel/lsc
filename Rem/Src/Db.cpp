@@ -17,7 +17,7 @@ namespace Lsc::Db
 Db::Db(std::string DbName_)
 {
    String Str_ = std::move(DbName_);
-    mDbName = Str_();
+    mDbName    = Str_();
     Str_ << ".Db";
 
     Rem::Debug() << __FUNCTION__ << ": db file: [" << Str_() << "]";
@@ -29,7 +29,7 @@ Db::Return Db::Open()
     String Str_  = mDbName;
     Str_ << ".Db";
 #ifdef  _WIN32
-    if (!PathFileExistsA(str().c_str()))
+    if (!PathFileExistsA(Str_().c_str()))
         return Rem::Error()<< " -  creating database '"<< mDbName <<"' :"<< strerror(errno);
 #else
     int ok = access(Str_().c_str(),F_OK) == 0; // Just check if the db file exists.
@@ -92,6 +92,10 @@ SchemaItem::~SchemaItem()
 SchemaItem::SchemaItem(Object *Parent_) : Object(Parent_){}
 
 
+Schema::~Schema()
+{
+}
+
 Expect<Schema *> Schema::Load(std::string DbName_)
 {
     Db Temp = Db();
@@ -102,6 +106,51 @@ Expect<Schema *> Schema::Load(std::string DbName_)
     
     
     return nullptr;
+}
+
+Table::~Table()
+{
+
+}
+
+Query::~Query()
+{
+    mText.Clear();
+}
+
+Query& Query::operator<<(std::string Obj_)
+{
+    mText << "\"" << Obj_ << "\"";
+
+}
+
+Query& Query::Select(Query& Q_)
+{
+    mText = "SELECT";
+    return *this;
+
+}
+
+Query& Query::Delete(Query& Q_)
+{
+    mText = "DELETE";
+    return *this;
+
+}
+
+Query& Query::Update(Query& Q_)
+{
+    mText = "UPDATE";
+    return *this;
+
+}
+
+Query& Query::Insert(Query& Q_)
+{
+    mText = "UPDATE";
+    return *this;
+
+
 }
 
 }
