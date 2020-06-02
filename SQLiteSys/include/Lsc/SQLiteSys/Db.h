@@ -31,6 +31,12 @@ public:
     
 };
 
+
+/*!
+    Query().Select()
+    
+*/
+
 class SQLITE_LIB QueryItem : public Object
 {
     String mName;
@@ -49,40 +55,6 @@ public:
     
 };
 
-
-class SQLITE_LIB Select : public QueryItem
-{
-
-};
-
-
-class SQLITE_LIB Where : public QueryItem
-{
-
-};
-
-
-class SQLITE_LIB Update : public QueryItem
-{
-
-};
-
-
-class SQLITE_LIB Insert : public QueryItem
-{
-
-};
-
-class SQLITE_LIB Delete : public QueryItem
-{
-
-};
-
-
-class SQLITE_LIB From : public QueryItem
-{
-
-};
 
 /*
 
@@ -243,7 +215,7 @@ public:
     {
         uint8_t PK: 1;
         uint8_t NUL: 1;
-        
+        uint8_t Uniq : 1;
     };
     
     enum class Date : uint8_t
@@ -257,8 +229,11 @@ public:
     Field() = default;
     Field(Field &&) noexcept = default;
     Field(const Field &) = default;
-    
+    ~Field() override;
 };
+
+
+
 
 class SQLITE_LIB Table : public SchemaItem
 {

@@ -173,4 +173,8 @@ QueryItem::~QueryItem()
 {
 }
 
+Field::~Field()
+{
+}
+
 }
