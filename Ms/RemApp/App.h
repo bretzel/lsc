@@ -8,7 +8,6 @@
 #include <Lsc/Rem/Rem.h>
 #include <Lsc/Rem/Object.h>
 
-
 namespace Lsc
 {
 
@@ -26,6 +25,7 @@ private:
     
     //Return  Log();
     Return  LscObject();
+   
 };
 }
 //#endif //LSC_APP_H

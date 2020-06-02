@@ -31,7 +31,10 @@ Return App::operator()()
     mString = "Hello, And welcome to the Lsc World!\n";
     std::cout << mString();
     LscObject();
-    //Log();
+
+    Rem::Clear([](Rem& R) {
+        std::cout << R() << '\n';
+        });
     return Rem::Int::Ok;
 }
 
@@ -43,5 +46,6 @@ Return App::LscObject()
     
     return Rem::Int::Ok;
 }
+
 
 }
