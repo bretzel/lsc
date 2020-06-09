@@ -6,6 +6,7 @@
 #include <Lsc/Rem/Object.h>
 #include <chrono>
 #include <stack>
+#include <memory>
 
 struct sqlite3;
 
@@ -32,28 +33,7 @@ public:
 };
 
 
-/*!
-    Query().Select()
-    
-*/
 
-class DBQUERY_LIB QueryItem : public Object
-{
-    String mName;
-    String::Collection mCommaItems;
-    
-public:
-    using List = std::vector<QueryItem>;
-    
-    QueryItem() = default;
-    QueryItem(const QueryItem &) = default;
-    QueryItem(QueryItem &&) = default;
-    
-    QueryItem(std::string ItemName_);
-    
-    ~QueryItem() override;
-    
-};
 
 
 /*
@@ -268,11 +248,34 @@ public:
 
 #pragma endregion SQL_SCHEMA
 
+
+
+class DBQUERY_LIB QueryItem : public Object
+{
+    String      mText;
+    QueryItem* mParent = nullptr;
+public:
+    using List = std::vector<QueryItem*>;
+    
+    QueryItem() = default;
+    QueryItem(const QueryItem&) = default;
+    QueryItem(QueryItem&&) = default;
+
+    QueryItem(QueryItem& Parent_);
+
+
+    ~QueryItem() override;
+private:
+    QueryItem::List* mChildren = nullptr;
+
+};
+
+
 class DBQUERY_LIB Query
 {
     String                  mText;
     std::stack<std::string> mStack;
-
+    
 public:
     Query() = default;
     Query(Query &&) noexcept = default;
@@ -294,6 +297,7 @@ public:
     #pragma endregion SQL_COMMANDS
     std::string Text();
 };
+
 
 
 
