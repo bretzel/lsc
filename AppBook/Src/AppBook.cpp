@@ -158,6 +158,11 @@ AppBook::Log::~Log()
 
 AppBook::Log::Log(AppBook::Prefix Prefix_):mPrefix(Prefix_){}
 
+AppBook::Log::Log(AppBook::Log::Shared Parent_, AppBook::Prefix Prefix_):
+    mParent(Parent_),
+    mPrefix(Prefix_)
+{}
+
 
 
 
