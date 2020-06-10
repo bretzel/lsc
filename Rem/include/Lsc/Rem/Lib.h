@@ -45,7 +45,8 @@
 #define DECLOBJ_ID \
     public:\
         virtual const char*  RefClassName() const noexcept; \
-    private:
+    private:\
+
 
 #define  CLASSNAME_IMPL(CLASS) \
          const char*   CLASS::RefClassName() const noexcept{ return #CLASS; }

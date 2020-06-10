@@ -31,7 +31,10 @@ Return App::operator()()
     mString = "Hello, And welcome to the Lsc World!\n";
     std::cout << mString();
     LscObject();
-
+    /// <summary>
+    /// @todo TEST Shared PTR!!!
+    /// </summary>
+    /// <returns></returns>
     Rem::Clear([](Rem& R) {
         std::cout << R() << '\n';
         });

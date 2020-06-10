@@ -16,6 +16,17 @@ Object::Object(Object *Parent_) : mParent(Parent_)
         mParent->AppendChild(this);
 }
 
+Object::Object(Object::Shared Parent_):mParent(&(*Parent_))
+{
+}
+
+
+Object::Shared Object::Make(Object::Shared Parent_)
+{
+    Object::Shared So = std::make_shared<Object>(Parent_);
+    So->_Self = So;
+    return So;
+}
 
 std::size_t Object::AppendChild(Object *Object_)
 {

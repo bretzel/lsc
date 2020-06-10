@@ -25,6 +25,10 @@
 namespace Lsc
 {
 
+
+#pragma warning(disable: 4244)
+#pragma warning(disable: 4251)
+
 class REM_LIB String
 {
     static std::string __nullstr__;

@@ -38,7 +38,7 @@
 
 namespace Lsc
 {
-// No namespace here. AppBook to be used so fuc'* too often.
+// No [sub-]namespace here. AppBook to be used so fuc'* too often.
 
 enum class Color : uint16_t
 {
@@ -318,7 +318,25 @@ enum class TextCtl : uint8_t
     //...
 };
 
+/*
+    Notes: 
+        (fr) 
+            La configuration (globale/générale) de AppBook est stockée dans une database ( en l'occurence SQLite3 ) sous forme de fichier.
+            J'ai un foutu bloquage : Je sais pas comment nommer cette foutu librairie qui va se servir de SQLite3 !
 
+            lib???.so 
+            ???.dll / ???.lib
+
+            'Rem' pour "Remarques/Remarks" 
+            'Scripture' : Scripting / Interpreteur;
+            
+            ---> 'Vault' pour stockage des donnees. Jene veux pas utiliser 'Archive' pour la simple raison que ce nom evoque les outils de compressions/decompressions.
+
+
+            Ce sous-projet de librairie contiendra l'ammalgamation de SQLite3 - donc pas besoin de dependre de son installation.
+
+
+*/
 
 /*
 
