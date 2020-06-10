@@ -165,9 +165,6 @@ std::string Query::Text()
     return mText();
 }
 
-QueryItem::QueryItem(std::string ItemName_)
-{
-}
 
 QueryItem::~QueryItem()
 {

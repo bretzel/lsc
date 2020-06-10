@@ -1,9 +1,0 @@
-
-
-
-namespace Lsc::QD
-{
-
-}
-
-
