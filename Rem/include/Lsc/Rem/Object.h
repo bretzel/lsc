@@ -10,42 +10,43 @@ namespace Lsc
 
 #pragma warning(disable: 4251)
 
-class REM_LIB Object
+class REM_LIB Object: public std::enable_shared_from_this<Object>
 {
     
-    Object* mParent= nullptr;
-
     DECLOBJ_ID
 
     
 public:
+    
     using Shared = std::shared_ptr<Object>;
-
-    using Collection = std::vector<Object*>; // NE SE COPIE PAS !!!
+    using Collection = std::vector<Object::Shared>; // NE SE COPIE PAS !!!
+    using Iterator = Collection::iterator;
+    using ConstIterator = Collection::const_iterator;
 
     Object() = default;
-    explicit Object(Object* Parent_);
     explicit Object(Object::Shared Parent_);
     virtual ~Object();
 
     Object(const Object& ) = delete;
     Object(Object&& ) = delete;
 
-    template<typename T> T* IsClass() { return dynamic_cast<T*>(this); }
-    template<typename T=Object> T* Parent() { return (mParent? dynamic_cast<T*>(mParent):nullptr); }
+    template<typename T> Object::Shared IsClass() { return dynamic_cast<T*>(shared_from_this()); }
+    template<typename T=Object> Object::Shared Parent() { return (mParent? dynamic_cast<T*>(mParent):nullptr); }
     
     bool Detach();
-    bool RemoveChild(Object*);
+    bool RemoveChild(Object::Shared);
     
-
     static Object::Shared  Make(Object::Shared Parent_);
-    Object::Shared Self() { return _Self; }
+    Object::Shared Self() { return shared_from_this(); }
 
 private:
-    virtual std::size_t AppendChild(Object* Object_);
-    virtual void SetParent(Object* Object_);
+    
+    Object::Shared mParent = nullptr;
 
-    Object::Shared _Self = nullptr; // Pas si certain ... 
+    virtual std::size_t AppendChild(Object::Shared Object_);
+    virtual void SetParent(Object::Shared Object_);
+
+    //Object::Shared _Self = nullptr; // Pas si certain ... 
 
 protected:
     Collection mChildren;

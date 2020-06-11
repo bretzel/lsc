@@ -45,8 +45,10 @@ Return App::operator()()
 
 Return App::LscObject()
 {
-    Object Obj;
-    
+    Object::Shared Obj = Object::Make(nullptr);
+    Rem::Debug() << "Object::Shared _Self.use_count() = " << Obj.use_count();
+    //...
+
     return Rem::Int::Ok;
 }
 

@@ -10,25 +10,26 @@ CLASSNAME_IMPL(Object)
 
 
 
-Object::Object(Object *Parent_) : mParent(Parent_)
+Object::Object(Object::Shared Parent_) : mParent(Parent_)
 {
     if(mParent)
-        mParent->AppendChild(this);
+        mParent->AppendChild(shared_from_this());
+
 }
 
-Object::Object(Object::Shared Parent_):mParent(&(*Parent_))
-{
-}
 
 
 Object::Shared Object::Make(Object::Shared Parent_)
 {
     Object::Shared So = std::make_shared<Object>(Parent_);
-    So->_Self = So;
+    // If I keep a Self Shared instance within this Object instance, 
+    // Does it infinite recurse when std::shared_ptr ref count-- ? 
+    // Or never reach 0 ? 
+    So->shared_from_this() = So->shared_from_this();
     return So;
 }
 
-std::size_t Object::AppendChild(Object *Object_)
+std::size_t Object::AppendChild(Object::Shared Object_)
 {
     mChildren.push_back(Object_);
     return mChildren.size();
@@ -36,19 +37,23 @@ std::size_t Object::AppendChild(Object *Object_)
 
 
 
-void Object::SetParent(Object *Object_)
+void Object::SetParent(Object::Shared Object_)
 {
     if(mParent)
         return;
     
     if(Object_)
-        Object_->AppendChild(this);
+        Object_->AppendChild(shared_from_this());
     
 }
 
 Object::~Object()
 {
     std::cout << __PRETTY_FUNCTION__ << ": \\O/!\n";
+    //if (shared_from_this().use_count() == 1)
+    //{
+
+    //}
 }
 
 
@@ -57,12 +62,12 @@ bool Object::Detach()
     if(!mParent)
         return false;
     
-    return mParent->RemoveChild(this);
+    return mParent->RemoveChild(shared_from_this());
 }
 
 
 
-bool Object::RemoveChild(Object * Child_)
+bool Object::RemoveChild(Object::Shared Child_)
 {
     auto I = std::find(mChildren.begin(), mChildren.end(), Child_);
     if(I!=mChildren.end())
