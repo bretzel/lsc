@@ -1,4 +1,6 @@
 #include <Lsc/Rem/Object.h>
+#include <Lsc/Rem/Rem.h>
+
 #include <iostream>
 
 #include <algorithm>
@@ -10,12 +12,7 @@ CLASSNAME_IMPL(Object)
 
 
 
-Object::Object(Object::Shared Parent_) : mParent(Parent_)
-{
-    if(mParent)
-        mParent->AppendChild(shared_from_this());
-
-}
+Object::Object(Object::Shared Parent_) : mParent(Parent_) {}
 
 
 
@@ -25,12 +22,14 @@ Object::Shared Object::Make(Object::Shared Parent_)
     // If I keep a Self Shared instance within this Object instance, 
     // Does it infinite recurse when std::shared_ptr ref count-- ? 
     // Or never reach 0 ? 
-    So->shared_from_this() = So->shared_from_this();
+    if (Parent_)
+        Parent_->AppendChild(So);
     return So;
 }
 
 std::size_t Object::AppendChild(Object::Shared Object_)
 {
+    Rem::Debug() << __PRETTY_FUNCTION__ << ":";
     mChildren.push_back(Object_);
     return mChildren.size();
 }
@@ -49,11 +48,8 @@ void Object::SetParent(Object::Shared Object_)
 
 Object::~Object()
 {
-    std::cout << __PRETTY_FUNCTION__ << ": \\O/!\n";
-    //if (shared_from_this().use_count() == 1)
-    //{
-
-    //}
+    Rem::Debug() << __PRETTY_FUNCTION__ << ": \\O/!";
+    if(!mChildren.empty())  mChildren.clear();
 }
 
 

@@ -38,6 +38,8 @@ public:
     
     static Object::Shared  Make(Object::Shared Parent_);
     Object::Shared Self() { return shared_from_this(); }
+    
+    void Clear() { if (!mChildren.empty()) mChildren.clear(); }
 
 private:
     
