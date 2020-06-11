@@ -34,9 +34,6 @@ Return App::operator()()
     mString = "Hello, And welcome to the Lsc World!\n";
     std::cout << mString();
     LscObject();
-    CreateDb();
-    Query();
-    //Log();
     return Rem::Int::Ok;
 }
 
@@ -76,32 +73,5 @@ Return App::LscObject()
 }
 
 
-Return App::CreateDb()
-{
-    Db::Db Db_ = Db::Db();
-    Db_.SetName("Rem");
-    Db::Db::Return Handle = Db_.Create();
-    if(Handle)
-    {
-        Rem::Success() << " SQLite3 Database file" << Db_.Filename() << " Created";
-        return Handle();
-    }
-    
-    return Rem::Int::Ok;
-}
-
-Return App::Query()
-{
-    Db::Query Q;
-    
-    Q.Select(
-        Q.Insert(
-            Q.Delete(Q << "Start")
-        )
-    );
-    
-    Rem::Debug() << Q.Text();
-    return Rem::Int::Ok;
-}
 
 }

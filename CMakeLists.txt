@@ -21,7 +21,7 @@ endif()
 # Crisse de bug?????! J'arrete JAMAIS DE DEVOIR CORRIGER LE CRISSE DE '}' C QUOI QUI INSERT CETTE CRISSE COCHONNERIE LÀ ?????? OSTIE!!!!!!!!!!!!!!!
 
 if(BUILD_BASE)
-    SET(BASE_INCLUDE_DIR ${LSC_ROOT}/Base/include)
+    SET(BASE_INCLUDE_DIR ${LSC_ROOT}/Vault/include)
     add_subdirectory(Base)
 endif()
 
