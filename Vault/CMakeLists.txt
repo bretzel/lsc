@@ -1,14 +1,14 @@
 cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 # Project name
 
-project(Rem VERSION 0.1.0 LANGUAGES CXX)
+project(Vault VERSION 0.1.0 LANGUAGES CXX)
 
 
 include(GNUInstallDirs)
 #SET(REM_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/include)
-message("REM_INCLUDE_PATH:" ${REM_INCLUDE_DIR})
-FILE(GLOB HDRS ${REM_INCLUDE_DIR}/*)
-FILE(GLOB SRCS Src/*)
+message("SCRIPTURE_INCLUDE_DIR:" ${SCRIPTURE_INCLUDE_DIR})
+FILE(GLOB HDRS ${VAULT_INCLUDE_DIR}/* ${VAULT_INCLUDE_DIR}/Model/*)
+FILE(GLOB SRCS Src/* Src/sqlite3.c Src/Model/*)
 SET( CMAKE_EXPORT_COMPILE_COMMANDS ON )
 
 
@@ -19,14 +19,18 @@ add_library(
         SHARED
         ${HDRS}
         ${SRCS}
-		App/App.cpp App/App.h
+
+)
+message("Vault.Sources:" ${SRCS})
+list(
+    APPEND INCLUDE_PATHS
+    "${REM_INCLUDE_DIR}"
+    "${VAULT_INCLUDE_DIR}"
 )
 
 
-
-
 target_compile_definitions(${PROJECT_NAME} PUBLIC "${PROJECT_NAME}_DEBUG=$<CONFIG:Debug>")
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 
 include(GenerateExportHeader)
 #generate_export_header(${PROJECT_NAME} EXPORT_FILE_NAME ${${PROJECT_NAME}_export})
@@ -37,22 +41,16 @@ IF( EXISTS "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json" )
 			)
 ENDIF()
 
-#if(PACKAGE_TESTS)
-#    enable_testing()
-#    include(googletest)
-#    add_subdirectory(Tests)
-#endif()
 
-#set_target_properties(${PROJECT_NAME}
-#        SOVERSION
-#        )
+message("Scripture::INCLUDE_PATHS:" ${INCLUDE_PATHS})
+add_dependencies(${PROJECT_NAME} Rem)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
-    "$<BUILD_INTERFACE:${REM_INCLUDE_DIR}>"
+    "$<BUILD_INTERFACE:${INCLUDE_PATHS}>"
         $<INSTALL_INTERFACE:include/${FrameWorkName}/${PROJECT_NAME}>  # <prefix>/include/mylib
         )
 
-target_link_libraries(${PROJECT_NAME} ${CMAKE_DL_LIBS} )
+target_link_libraries(${PROJECT_NAME} ${CMAKE_DL_LIBS} Rem )
 
 
 install(DIRECTORY
@@ -71,4 +69,5 @@ install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}Targets
 
 string(REPLACE "++" "" NS PROJECTNAME)
 
-add_subdirectory(App)
+
+#add_subdirectory(App)

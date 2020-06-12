@@ -5,7 +5,7 @@ project(Lsc VERSION 0.1.0 LANGUAGES CXX)
 set(FrameWorkName "Lsc")
 
 option(BUILD_REM "Enable building the Rem Utility library" ON)
-option(BUILD_BASE "Enable building the Base/[SQLite,...] Database support  Library" OFF)
+option(BUILD_VAULT "Enable building the Vault/[SQLite,...] Database support  Library" ON)
 option(BUILD_SCRIPTURE "Enable building the Scripture interpreter Library" ON)
 option(BUILD_APPBOOK "Enable building the AppBook Library" ON)
 option(BUILD_DIAGNOSTICS "Enable building the Diagnostics Library" OFF)
@@ -20,9 +20,9 @@ if(BUILD_REM)
 endif()
 # Crisse de bug?????! J'arrete JAMAIS DE DEVOIR CORRIGER LE CRISSE DE '}' C QUOI QUI INSERT CETTE CRISSE COCHONNERIE LÀ ?????? OSTIE!!!!!!!!!!!!!!!
 
-if(BUILD_BASE)
-    SET(BASE_INCLUDE_DIR ${LSC_ROOT}/Vault/include)
-    add_subdirectory(Base)
+if(BUILD_VAULT)
+    SET(VAULT_INCLUDE_DIR ${LSC_ROOT}/Vault/include)
+    add_subdirectory(Vault)
 endif()
 
 if(BUILD_SCRIPTURE)
