@@ -16,7 +16,7 @@ mID(std::move(Id_))
 {
 }
 
-Field::Field(Object::Shared Table_):Object(Table_)
+Field::Field(Object* Table_):Object(Table_)
 {
 }
 

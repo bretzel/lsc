@@ -27,7 +27,7 @@ public:
     ~Field() override;
 
     Field(std::string Id_);
-    Field(Object::Shared Table_);
+    Field(Object* Table_);
 
 
 };
