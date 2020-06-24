@@ -20,6 +20,9 @@ struct SCRIPTURE_LIB Alu
 {
     using Collection = std::vector<Alu>;
     using LinkArray = std::vector<Alu *>;
+    using Shared    = std::shared_ptr<Alu>;
+    using SharedArray = std::vector<Alu::Shared>;
+    
     static std::string mNil;
     std::any R = .0;
     Type::T  T = Type::Float; ///< Default type.

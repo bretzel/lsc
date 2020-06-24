@@ -45,7 +45,7 @@ private:
     virtual std::size_t AppendChild(Object* Object_);
     virtual void SetParent(Object* Object_);
 
-    //Object* _Self = nullptr; // Pas si certain ... 
+    //Object::Shared _Self = nullptr; // Pas si certain ...
 
 protected:
     Collection mChildren;

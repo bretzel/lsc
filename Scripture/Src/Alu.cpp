@@ -243,13 +243,15 @@ Alu Alu::operator/(const Alu &rv)
     //else
     lr_number(rv)
     {
-        double vr = rv.Number<double>();
-        if(!vr)
+        double vr = std::any_cast<double>(rv.R);
+        double lr = std::any_cast<double>(R);
+        
+        if(vr == 0.0L)
         {
             Rem::Error() <<  " in Alu arithmetic operation: division by zero error. (" <<  (*this)() << " / " << rv() << ")";
             return Alu();
         }
-        return Alu(Number<double>() / rv.Number<double>());
+        return Alu(lr / vr);
     }
     
     Rem::Warning() << "cannot divide " << Type::Name(T) << " and " <<  Type::Name(rv.T) << ".";
