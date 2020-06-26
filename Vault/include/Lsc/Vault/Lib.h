@@ -38,6 +38,8 @@
 #endif
 
 // Mandatory. Globally used where it needs to.
+#include <sqlite3.h>
+
 // ...
 //---------------------------------------------
 //

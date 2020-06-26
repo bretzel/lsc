@@ -9,7 +9,7 @@ namespace Lsc::Vault
 
 class VAULT_LIB  Model
 {
-
+    
 };
 
 }

@@ -123,12 +123,14 @@
       <PreprocessorDefinitions>VAULT_DLL_EXPORT;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)Rem\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)Rem\include;C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Python\Miniconda\Miniconda3-x64\Library\include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Python\Miniconda\Miniconda3-x64\Library\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sqlite3.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -154,14 +156,14 @@
     <ClCompile Include="Src\Model\Field.cpp" />
     <ClCompile Include="Src\Model\Model.cpp" />
     <ClCompile Include="Src\Model\Table.cpp" />
-    <ClCompile Include="Src\sqlite3.c" />
+    <ClCompile Include="Src\Vault.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Lsc\Vault\Lib.h" />
     <ClInclude Include="include\Lsc\Vault\Model\Model.h" />
     <ClInclude Include="include\Lsc\Vault\Model\Table.h" />
-    <ClInclude Include="include\Lsc\Vault\sqlite3.h" />
     <ClInclude Include="include\Lsc\Vault\Model\Field.h" />
+    <ClInclude Include="include\Lsc\Vault\Vault.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rem\Rem.vcxproj">
