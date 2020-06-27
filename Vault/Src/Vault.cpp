@@ -1,5 +1,10 @@
 #include <Lsc/Vault/Vault.h>
-#include <unistd.h>
+
+#ifdef _WIN32
+#include <shlwapi.h>
+#else
+    #include <unistd.h>
+#endif
 
 
 
@@ -36,10 +41,8 @@ Return Vault::Open()
     str << ".sqlite3";
 #ifdef  _WIN32
     if (!PathFileExistsA(str().c_str()))
-        return
-    {
-        (utils::notification::push(), " sqlite3 open db error(", _dbname, ") - no such database file.\n")
-    };
+        return Rem::Error() << " sqlite3 open db error(" << mName <<  ") - no such database file.\n";
+    
 #else
     if(access(str().c_str(), F_OK) == 0) // Just check if the db file exists.
         return Rem::Error() << "error openning database '" << mName << "' - database file not found.";
@@ -71,10 +74,8 @@ Return Vault::Create()
     str << ".sqlite3";
 #ifdef  _WIN32
     if (PathFileExistsA(str().c_str()))
-        return
-    {
-        (utils::notification::push(), " sqlite3 create db error(", _dbname, ") - database file already exists.\n")
-    };
+        return Rem::Error() << " sqlitedb create db error - Database file exists.";
+
 #else
     int exists = access(str().c_str(), F_OK) == 0; // Just check if the db file exists.
     if (exists)

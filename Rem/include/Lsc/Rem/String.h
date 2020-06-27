@@ -116,7 +116,7 @@ private:
         BCE &operator>>(String::Word &w);
         //BCE& operator = (const Word& w);
         
-    };// _Cursor;
+    } _Cursor;
 
 public:
     
