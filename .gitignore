@@ -296,3 +296,4 @@ cmake-*
 .clangd/
 
 .vscode/
+/Ms/VaultApp/test.sqlite3
