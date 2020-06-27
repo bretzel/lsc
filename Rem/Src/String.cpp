@@ -368,7 +368,7 @@ std::string String::Word::Location()
     return str();
 }
 
-string::const_iterator String::ScanTo(string::const_iterator start, char c)
+string::const_iterator String::ScanTo(string::const_iterator start, char c) const
 {
     string::const_iterator p = start;
     ++p;
@@ -377,7 +377,7 @@ string::const_iterator String::ScanTo(string::const_iterator start, char c)
     return p;
 }
 
-const char *String::ScanTo(const char *start, char c)
+const char *String::ScanTo(const char *start, char c) const
 {
     const char *p = start;
     if(!p)
@@ -397,57 +397,59 @@ const char *String::ScanTo(const char *start, char c)
     * @notice : After several years of experience and experimentations, I have determined that
     * white-spaces/ctrl or spacing characters are silent and implicit delimiters, in addition to the ones supplied by \c a_delimiters.
     */
-std::size_t String::Words(String::Word::Collection &wcollection, const std::string &a_delimiters, bool keep_as_word)
+std::size_t String::Words(String::Word::Collection &wcollection, const std::string &a_delimiters, bool keep_as_word) const
 {
     //std::cout << __PRETTY_FUNCTION__ << ":\n";// << _D << "\n:\n";
+    
+    String::BCE Crs = String::BCE(_D);
     if(_D.empty())
     {
         std::cout << " --> Contents is Empty!";
         return (std::size_t) 0;
     }
-    _Cursor.Reset(_D);
+    Crs.Reset(_D);
     std::string token_separators = a_delimiters.empty() ? String::_DefaultSeparators : a_delimiters;
     //std::cout << " contents after bce::Reset\n ------------- \n" << _D << "\n---------------\n: [\n" << *_Cursor.M << "\n]\n";
-    if(!_Cursor.Skip())
+    if(!Crs.Skip())
     {
         //std::cout << " --> Contents Skip is false? (internal?)...\n";
         return (std::size_t) 0;
     }
     Word w;
-    _Cursor >> w;
+    Crs >> w;
     
-    while(!_Cursor.End())
+    while(!Crs.End())
     {
         if(!wcollection.empty());
         //std::cout << __FUNCTION__ << " last inserted Word: [" << wcollection.back()() << "] - _Cursor on [" << *_Cursor.M << "]\n";
-        std::string::const_iterator cc = _Cursor.C;
-        if(token_separators.find(*_Cursor.C) != string::npos)
+        std::string::const_iterator cc = Crs.C;
+        if(token_separators.find(*Crs.C) != string::npos)
         {
-            cc = _Cursor.C;
+            cc = Crs.C;
             //std::cout << __FUNCTION__ << " Delimiter:[" << *cc << "]\n";
             if(cc > w.B)
             {
                 --cc;
-                wcollection.push_back({w.B, cc, _Cursor.E, w.L, w.C, w.Pos});
+                wcollection.push_back({w.B, cc, Crs.E, w.L, w.C, w.Pos});
                 //std::cout << __FUNCTION__ << ": pushed lhs Word:[" << wcollection.back()() << "];\n";
                 
-                _Cursor >> w;
-                cc = _Cursor.C;
+                Crs >> w;
+                cc = Crs.C;
             }
             
             // '//' as one token instead of having two consecutive '/'
-            if((*_Cursor.C == '/') && (*(_Cursor.C + 1) == '/'))
-                ++_Cursor;
+            if((*Crs.C == '/') && (*(Crs.C + 1) == '/'))
+                ++Crs;
             
             if(keep_as_word)
             {
-                wcollection.push_back({w.B, _Cursor.C, _Cursor.E, w.L, w.C, w.Pos});
+                wcollection.push_back({w.B, Crs.C, Crs.E, w.L, w.C, w.Pos});
                 //std::cout << __FUNCTION__ << ": pushed new token:[" << wcollection.back()() << "];\n";
             }
-            ++_Cursor;
+            ++Crs;
             //std::cout << "        Iterator eos: " << _Cursor.End() << "\n";
-            if(!_Cursor.End())
-                _Cursor >> w;
+            if(!Crs.End())
+                Crs >> w;
             else
             {
                 //std::cout << __FUNCTION__ << " - EOS: wcollection size: " << wcollection.size() << " = leaving. Done!\n";
@@ -456,53 +458,53 @@ std::size_t String::Words(String::Word::Collection &wcollection, const std::stri
             
             //std::cout << " is eos?" << _Cursor.End() << "\n";
         }
-        else if((*_Cursor.C == '\'') || (*_Cursor.C == '"'))
+        else if((*Crs.C == '\'') || (*Crs.C == '"'))
         { // Quoted litteral string...
-            _Cursor >> w;
+            Crs >> w;
             //std::cout << __FUNCTION__ << " In quoted litteral:\n";
             if(keep_as_word)
             {
                 // Create the three parts of the quoted string: (") + (litteral) + (") ( or ' )
                 // So, we save the Word coords anyway.
                 //std::cout << __FUNCTION__ << " Creating three parts quoted tokens: \n";
-                wcollection.push_back({w.B, w.B, _Cursor.E, w.L, w.C, w.Pos});
+                wcollection.push_back({w.B, w.B, Crs.E, w.L, w.C, w.Pos});
                 //std::cout << __FUNCTION__ << " 1:[" << wcollection.back()() << "]; ";
             }
             
-            string::const_iterator p = ScanTo(w.B + (keep_as_word ? 0 : 1), *_Cursor.C); // w.B is the starting position, _Cursor.M is the quote delim.
-            while(_Cursor.C < p)
-                ++_Cursor; // compute white spaces!!!
+            string::const_iterator p = ScanTo(w.B + (keep_as_word ? 0 : 1), *Crs.C); // w.B is the starting position, _Cursor.M is the quote delim.
+            while(Crs.C < p)
+                ++Crs; // compute white spaces!!!
             
             if(keep_as_word)
             {
                 // then push the litteral that is inside the quotes.
-                wcollection.push_back({w.B + 1, p - 1, _Cursor.E, w.L, w.C, w.Pos});
+                wcollection.push_back({w.B + 1, p - 1, Crs.E, w.L, w.C, w.Pos});
                 //std::cout << " 2:[" << wcollection.back()() << "]; ";
                 //++_Cursor; // _Cursor now on the closing quote
-                _Cursor >> w; // Litteral is done, update w.
-                wcollection.push_back({w.B, p, _Cursor.E, w.L, w.C, w.Pos});
+                Crs >> w; // Litteral is done, update w.
+                wcollection.push_back({w.B, p, Crs.E, w.L, w.C, w.Pos});
                 //std::cout << " 3:[" << wcollection.back()() << "]\n";
             }
             else
             {
                 // Push the entire quote delims surrounding the litteral as the Word.
                 //std::cout << __FUNCTION__ << " Creating single part quoted token: \n";
-                wcollection.push_back({w.B, _Cursor.C, _Cursor.E, w.L, w.C, w.Pos});
+                wcollection.push_back({w.B, Crs.C, Crs.E, w.L, w.C, w.Pos});
                 //std::cout << " :[" << wcollection.back()() << "]\n";
             }
-            if(++_Cursor)
-                _Cursor >> w;
+            if(++Crs)
+                Crs >> w;
             else
                 return wcollection.size();
             
         }
         else
         {
-            cc = _Cursor.C;
+            cc = Crs.C;
             ++cc;
-            if(cc == _Cursor.E)
+            if(cc == Crs.E)
             {
-                ++_Cursor.C;
+                ++Crs.C;
                 break;
             }
             //std::cout << __FUNCTION__ << " check whitespace :[" << *cc << "]\n";
@@ -510,23 +512,23 @@ std::size_t String::Words(String::Word::Collection &wcollection, const std::stri
             {
                 if(w.B < cc)
                 {
-                    wcollection.push_back({w.B, cc - 1, _Cursor.E, w.L, w.C, w.Pos});
-                    ++_Cursor;
+                    wcollection.push_back({w.B, cc - 1, Crs.E, w.L, w.C, w.Pos});
+                    ++Crs;
                 }
                 
-                if(_Cursor.Skip())
+                if(Crs.Skip())
                 {
-                    _Cursor >> w;
+                    Crs >> w;
                     continue;
                 }
                 return wcollection.size();
             }
-            if(!_Cursor.End())
-                ++_Cursor; // advance offset to the next separator/white space.
+            if(!Crs.End())
+                ++Crs; // advance offset to the next separator/white space.
         }
     }
-    if(_Cursor.C > w.B)
-        wcollection.push_back({w.B, _Cursor.C - 1, _Cursor.E, w.L, w.C, w.Pos});
+    if(Crs.C > w.B)
+        wcollection.push_back({w.B, Crs.C - 1, Crs.E, w.L, w.C, w.Pos});
     
     return wcollection.size();
 }

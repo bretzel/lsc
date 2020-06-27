@@ -113,10 +113,10 @@ private:
             I = 0;
             E = _str.cend();
         }
-        BCE &operator>>(Word &w);
+        BCE &operator>>(String::Word &w);
         //BCE& operator = (const Word& w);
         
-    } _Cursor;
+    };// _Cursor;
 
 public:
     
@@ -234,8 +234,8 @@ public:
         return *this;
     }
     std::string ExtractSurrounded(const std::string &first_lhs, const std::string &first_rhs);
-    std::string::const_iterator ScanTo(std::string::const_iterator start, char c);
-    const char *ScanTo(const char *start, char c);
+    std::string::const_iterator ScanTo(std::string::const_iterator start, char c) const;
+    const char *ScanTo(const char *start, char c) const;
     
     bool test();
     String &Oct(uint64_t __arg)
@@ -262,7 +262,7 @@ public:
     { return String::_DefaultSeparators; }
     static std::string Separators()
     { return String::_DefaultSeparators; }
-    std::size_t Words(String::Word::Collection &wcollection, const std::string &a_delimiters = "", bool keep_as_word = true);
+    std::size_t Words(String::Word::Collection &wcollection, const std::string &a_delimiters = "", bool keep_as_word = true) const;
     
     template<typename T> String &arg(T _arg)
     {
