@@ -12,7 +12,7 @@ Field::~Field()
 }
 
 Field::Field(std::string Id_):Object(),
-mID(std::move(Id_))
+mName(std::move(Id_))
 {
 }
 

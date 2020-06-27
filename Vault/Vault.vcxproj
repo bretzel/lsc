@@ -89,7 +89,7 @@
       <PreprocessorDefinitions>VAULT_DLL_EXPORT;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)Rem\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)Rem\include;C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Python\Miniconda\Miniconda3-x64\Library\include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -106,7 +106,7 @@
       <PreprocessorDefinitions>VAULT_DLL_EXPORT;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)Rem\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)Rem\include;C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Python\Miniconda\Miniconda3-x64\Library\include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -142,7 +142,7 @@
       <PreprocessorDefinitions>VAULT_DLL_EXPORT;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)Rem\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)Rem\include;C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Python\Miniconda\Miniconda3-x64\Library\include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -154,13 +154,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Src\Model\Field.cpp" />
-    <ClCompile Include="Src\Model\Model.cpp" />
+    <ClCompile Include="Src\Model\Entity.cpp" />
     <ClCompile Include="Src\Model\Table.cpp" />
     <ClCompile Include="Src\Vault.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Lsc\Vault\Lib.h" />
-    <ClInclude Include="include\Lsc\Vault\Model\Model.h" />
+    <ClInclude Include="include\Lsc\Vault\Model\Entity.h" />
     <ClInclude Include="include\Lsc\Vault\Model\Table.h" />
     <ClInclude Include="include\Lsc\Vault\Model\Field.h" />
     <ClInclude Include="include\Lsc\Vault\Vault.h" />
