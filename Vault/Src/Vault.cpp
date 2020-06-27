@@ -1,44 +1,26 @@
 #include <Lsc/Vault/Vault.h>
+#include <unistd.h>
 
 
 
 
-/*
-
-
-
-
-#include <xio/sqlitedb/sqlitedb.h>
-#include <xio/utils/xstr.h>
-#include <xio/utils/expect>
-
-#ifdef  _WIN32
-#   include <Windows.h>
-#   include <Shlwapi.h>
-#else
-# include <unistd.h>
-#endif
-
-
-namespace teacc::xdb
+namespace Lsc::Vault
 {
 
-
-sqlitedb::sqlitedb(std::string&& a_dbname) noexcept
+Vault::Vault::~Vault()
 {
-    utils::xstr str = std::move(a_dbname);
-    _dbname = str();
-    str << ".sqlitedb";
-
-    std::cout << __FUNCTION__ << ": db file: [" << str() << "] \n\n";
-
+    Rem::Debug() << __PRETTY_FUNCTION__ << ": ";
+    if(mDB)
+        Close();
+    else
+        Rem::Debug() << __PRETTY_FUNCTION__ << ": Clear.";
 }
 
-sqlitedb::~sqlitedb()
+
+Vault::Vault::Vault(std::string DbName_):
+mName(std::move(DbName_))
 {
-    std::cout << __FUNCTION__ << '\n';
-    close();
-    _dbname.clear();
+
 }
 
 /*!
@@ -46,11 +28,12 @@ sqlitedb::~sqlitedb()
  *
  * @note Do not let sqlite3_open auto-create the file automatically.
  * @return sqlitedb::code::ok.
+*/
 
-sqlitedb::code sqlitedb::open()
+Return Vault::Open()
 {
-    utils::xstr str = _dbname;
-    str << ".sqlitedb";
+    String str = mName;
+    str << ".sqlite3";
 #ifdef  _WIN32
     if (!PathFileExistsA(str().c_str()))
         return
@@ -58,71 +41,52 @@ sqlitedb::code sqlitedb::open()
         (utils::notification::push(), " sqlite3 open db error(", _dbname, ") - no such database file.\n")
     };
 #else
-    int ok = access(str().c_str(), F_OK) == 0; // Just check if the db file exists.
-    if (!ok)
-    {
-        return { (
-            utils::notification::push(), "error openning database '", _dbname,"' - ",
-            strerror(errno)
-        ) };
-    }
+    if(access(str().c_str(), F_OK) == 0) // Just check if the db file exists.
+        return Rem::Error() << "error openning database '" << mName << "' - database file not found.";
+    
 #endif
-    int res = sqlite3_open(str().c_str(), &_db);
+    int res = sqlite3_open(str().c_str(), &mDB);
     if (res != SQLITE_OK)
-        return
-    {
-        (utils::notification::push(), " sqlitedb open db error(", res, ") - ", sqlite3_errmsg(_db))
-    };
+        return Rem::Error()<< " sqlitedb open db error(" << res << ") - " << sqlite3_errmsg(mDB);
 
-    std::cout << "(" << res << ")" << sqlite3_errmsg(_db) << "\n";
+    std::cout << "(" << res << ")" << sqlite3_errmsg(mDB) << "\n";
 
-    return utils::notification::code::ok;
+    return Rem::Int::Accepted;
 }
 
-sqlitedb::code sqlitedb::close()
+
+Return Vault::Close()
 {
-    if (_db)
-    {
-        utils::notification::push(), "db file [", _dbname, "] - closing. ";
-        sqlite3_close(_db);
-        _db = nullptr;
-    }
-    return utils::notification::code::ok;
+    if(!mDB)
+        return Rem::Warning() << "Vault::Close() : " << Rem::Int::Rejected;
+    sqlite3_close(mDB);
+    mDB = nullptr;
+    return Rem::Int::Accepted;
 }
 
-sqlitedb::code sqlitedb::create()
+
+Return Vault::Create()
 {
-    utils::xstr str = _dbname;
+    String str = mName;
+    str << ".sqlite3";
 #ifdef  _WIN32
     if (PathFileExistsA(str().c_str()))
         return
     {
         (utils::notification::push(), " sqlite3 create db error(", _dbname, ") - database file already exists.\n")
     };
+#else
+    int exists = access(str().c_str(), F_OK) == 0; // Just check if the db file exists.
+    if (exists)
+        return Rem::Error() << "error creating database '" << mName << "' - database file already exists.";
+        
+    
 #endif
-    int res = sqlite3_open(str().c_str(), &_db);
+    int res = sqlite3_open(str().c_str(), &mDB);
     if (res != SQLITE_OK)
-        return
-    {
-            (utils::notification::push(), " sqlitedb open db error(", res, ") - ", sqlite3_errmsg(_db))
-    };
-
-    return utils::notification::code::ok;
+        return Rem::Error() << " sqlite3 create db error(" << res <<  ") - " <<  sqlite3_errmsg(mDB);
+    
+    return Rem::Int::Accepted;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-*/
+}

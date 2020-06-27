@@ -8,7 +8,7 @@ include(GNUInstallDirs)
 #SET(REM_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/include)
 message("SCRIPTURE_INCLUDE_DIR:" ${SCRIPTURE_INCLUDE_DIR})
 FILE(GLOB HDRS ${VAULT_INCLUDE_DIR}/* ${VAULT_INCLUDE_DIR}/Model/*)
-FILE(GLOB SRCS Src/* Src/sqlite3.c Src/Model/*)
+FILE(GLOB SRCS Src/*  Src/Model/*)
 SET( CMAKE_EXPORT_COMPILE_COMMANDS ON )
 
 
@@ -50,7 +50,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
         $<INSTALL_INTERFACE:include/${FrameWorkName}/${PROJECT_NAME}>  # <prefix>/include/mylib
         )
 
-target_link_libraries(${PROJECT_NAME} ${CMAKE_DL_LIBS} Rem )
+target_link_libraries(${PROJECT_NAME} ${CMAKE_DL_LIBS} Rem sqlite3)
 
 
 install(DIRECTORY
@@ -70,4 +70,4 @@ install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}Targets
 string(REPLACE "++" "" NS PROJECTNAME)
 
 
-#add_subdirectory(App)
+add_subdirectory(App)

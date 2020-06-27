@@ -1,24 +1,26 @@
+//#include <Lsc/Vault/Model/Field.h>
+#include <Lsc/Vault/Model/Table.h>
 #include <Lsc/Vault/Model/Field.h>
-
-
 
 namespace Lsc::Vault
 {
+
+
 CLASSNAME_IMPL(Field)
 
-Field::~Field()
+
+
+Field::Field(Table *Table_, std::string Name_): mName(std::move(Name_))
 {
-    mID.Clear(); //...
+
 }
 
-Field::Field(std::string Id_):Object(),
-mName(std::move(Id_))
-{
-}
+Field::Field(std::string Name_, Field::Type Type_, Field::Attr Attr_):
+mName(std::move(Name_)),
+mType(Type_),
+mAttr(Attr_)
+{}
 
-Field::Field(Object* Table_):Object(Table_)
-{
-}
 
 
 }

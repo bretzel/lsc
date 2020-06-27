@@ -2,7 +2,7 @@
 
 #include <Lsc/Vault/Lib.h>
 #include <Lsc/Rem/Rem.h>
-
+#include <Lsc/Vault/Model/Table.h>
 
 namespace Lsc::Vault
 {
@@ -18,9 +18,17 @@ public:
     Vault(Vault&&) = default;
     Vault(const Vault&) = default;
 
-    Vault(const std::string& DbName_);
+    ~Vault();
+    Vault(std::string DbName_);
     
-
+    Return Open();
+    Return Close();
+    Return Create();
+    
+    
+    //Return Query();
+    
+    
 };
 
 }
