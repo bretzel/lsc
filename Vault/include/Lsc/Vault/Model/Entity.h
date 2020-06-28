@@ -13,11 +13,13 @@ class VAULT_LIB  Entity
     friend class Vault;
     Vault*  mVault = nullptr;
     using Fields = std::vector<Field*>; ///< J'ai besoin de restreindre la copie donc ici on ne prend que l'adresse ( ou la r&eacute;f&eacute;rence) .
+    using Cursor = Fields::iterator;    ///< Current position;
     
-    Field::Collection  mLocalFields; ///< Schema etendu ou locale
-    Fields mModel;
+    Field::Collection   mLocalFields; ///< Schema &eacute;tendu ou initiale.
+    Cursor              mCursor;
+    Fields              mModel;
+    String              mName;
     
-    String mName;
 public:
     Entity() = default;
     Entity(const Entity&) = default;
@@ -33,6 +35,10 @@ public:
     Entity& operator + (Field&);
     Entity& operator + (const String&);
     Entity& operator << (Field&&) noexcept;
+    
+    bool End();
+    Cursor Begin() { mCursor = mModel.begin(); return mCursor;}
+    
     template<typename T=const std::string&> Entity& operator << (T D_)
     {
         

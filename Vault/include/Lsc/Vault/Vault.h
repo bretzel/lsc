@@ -12,7 +12,9 @@ class VAULT_LIB Vault
     sqlite3* mDB = nullptr;
     std::string mName;
 
-
+    Table::Collection mTables;
+    Expect<std::size_t> PullSchema(); ///< Construire la liste des Tables de cette Vo&ucirc;te.
+    
 public:
     Vault() = default;
     Vault(Vault&&) = default;

@@ -14,6 +14,10 @@ class VAULT_LIB  Table
     std::string mName;
     Field::Collection   mField;
     Vault*              mVault = nullptr;
+    using Collection    = std::vector<Table>;
+    friend class Vault;
+    Expect<std::size_t> PullSchema(); ///< Construire la liste des Fields de cette table;
+    
 public:
 
     Table() = default;

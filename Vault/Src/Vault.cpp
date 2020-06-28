@@ -19,7 +19,10 @@ Vault::Vault::~Vault()
         Close();
     else
         Rem::Debug() << __PRETTY_FUNCTION__ << ": Clear.";
+    if(!mTables.empty())
+        mTables.clear();
 }
+
 
 
 Vault::Vault::Vault(std::string DbName_):
@@ -88,6 +91,44 @@ Return Vault::Create()
         return Rem::Error() << " sqlite3 create db error(" << res <<  ") - " <<  sqlite3_errmsg(mDB);
     
     return Rem::Int::Accepted;
+}
+
+
+Expect<std::size_t> Vault::PullSchema()
+{
+    const char *sql = "SELECT name FROM sqlite_master WHERE type='table'";
+    if(!mDB)
+        return Rem::Error() << __PRETTY_FUNCTION__ << '(' << "'" << mName << "') - Database File not open.";
+    
+    auto Ln = [](void *this_, int argc, char **argv, char **azColName) -> int{
+        auto* This = reinterpret_cast<Vault*>(this_);
+        if(!This)
+        {
+            Rem::Error() << __PRETTY_FUNCTION__ << ": Cannot get the Vault instance from the sqlite3_master query";
+            return -1;
+        }
+        for(int i = 0; i < argc; i++)
+            This->mTables.push_back({argv[i],This});
+        
+        return 0;
+    };
+    
+    char* ErrMsg;
+    
+    int Ok = sqlite3_exec(mDB, sql, Ln, this, &ErrMsg);
+    if(Ok != SQLITE_OK)
+    {
+        
+        Expect<std::size_t> R = Rem::Error() << __PRETTY_FUNCTION__ << ": " << ErrMsg;
+        sqlite3_free(ErrMsg);
+        return R;
+    }
+    
+    for(auto& Tbl : mTables)
+    {
+        Tbl.PullSchema();
+    }
+    return Rem::Warning() << __PRETTY_FUNCTION__ << ": " << Rem::Int::Implement;
 }
 
 }

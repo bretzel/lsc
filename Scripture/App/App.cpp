@@ -3,7 +3,7 @@
 //
 
 #include "App.h"
-
+#include "../../Vault/App/App.h"
 
 #include <Lsc/Scripture/Lexer.h>
 #include <Lsc/Scripture/Alu.h>
@@ -40,8 +40,6 @@ Return App::operator()()
     std::cout << "\n--------------------------------------------------------------------\n";
     return Rem::Int::Ok;
 }
-
-
 
 Return App::Type(std::string Txt_)
 {

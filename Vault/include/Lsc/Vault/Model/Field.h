@@ -28,16 +28,20 @@ public:
     
     enum class Type : uint8_t
     {
-        TEXT = 0,
+        NUL = 0,
+        TEXT,
         NUMERIC,
         INTEGER,
         REAL,
-        BLOB,
+        RAW,
+        CHAR,
         DATE = 100,
         TIME,
-        STAMP
+        STAMP,
+        STRING,
+        CURRENCY
     };
-    
+    uint32_t mLen = 0;
     /*!
      * @brief Not necessarely exclusive (merged) serial bit selections;
      */
@@ -51,6 +55,13 @@ public:
         uint8_t FK     :1;
     }mAttr={0,0,0,0,0,0};
     
+    static constexpr uint8_t PK     = 0x01;
+    static constexpr uint8_t Unique = 0x02;
+    static constexpr uint8_t PKAUTO = 0x05;
+    static constexpr uint8_t Null   = 0x08;
+    static constexpr uint8_t Index  = 0x10;
+    static constexpr uint8_t FK     = 0x20;
+    
     
     Field() = default;
     Field(const Field&) = default;
@@ -59,10 +70,15 @@ public:
 
     Field(Table* Table_, std::string Name_);
     Field(std::string Name_, Field::Type, Field::Attr Attr_);
+    Field(std::string Name_, Field::Type Type_);
+    String Name() { return mName; }
     
+    Field::Attr SetAttributes(uint8_t Attr_);
+    
+    String Serialize();
 private:
     Field::Type mType = Field::Type::INTEGER;
-
+    
 };
 
 }
