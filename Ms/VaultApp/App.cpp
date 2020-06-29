@@ -30,15 +30,31 @@ App::~App()
 Return App::operator()()
 {
     //...
-    Vault::Vault Vault("test");
+    Vault::Vault Vault("lab");
     
-    mString = "Hello, And welcome to the Lsc::Vault Tests!:\n--------------------------------------------------------------------\n";
+    mString = "Hello, And welcome to the Lsc::Vault!:\n--------------------------------------------------------------------\n";
     std::cout << mString();
     Vault.Create();
+    Expect<Vault::Field> F = Field();
+    if(!F)
+        std::cout << F()() << "\n";
+    else
+    {
+        Rem::Success() << "Field:[" << (*F).Serialize()() << "]";
+    }
+    
     std::cout << "\n--------------------------------------------------------------------\n";
     return Rem::Int::Ok;
 }
 
+Expect<Vault::Field> App::Field()
+{
+    using Vault::Field;
+    Field F = {"ID", Vault::Field::Type::INTEGER};
+    F.SetAttributes(Field::PKAUTO);
+    
+    return F;
+}
 
 
 } // namespace [Lsc::]Type

@@ -6,7 +6,7 @@
 //#define LSC_APP_H
 #pragma once
 #include <Lsc/Rem/Rem.h>
-//#include <Lsc/Scripture/Types.h>
+#include <Lsc/Vault/Model/Field.h>
 
 
 namespace Lsc
@@ -21,6 +21,8 @@ public:
     ~App();
     
     Return operator()();
+    
+    Expect<Vault::Field> Field();
     
 private:
     
