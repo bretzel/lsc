@@ -47,8 +47,8 @@ Return Vault::Open()
         return Rem::Error() << " sqlite3 open db error(" << mName <<  ") - no such database file.\n";
     
 #else
-    if(access(str().c_str(), F_OK) == 0) // Just check if the db file exists.
-        return Rem::Error() << "error openning database '" << mName << "' - database file not found.";
+    if(access(str().c_str(), F_OK|R_OK|W_OK) != 0) // Just check if the db file exists.
+        return Rem::Error() << "error openning database '" << str() << "' - database file not found.";
     
 #endif
     int res = sqlite3_open(str().c_str(), &mDB);
@@ -57,6 +57,12 @@ Return Vault::Open()
 
     std::cout << "(" << res << ")" << sqlite3_errmsg(mDB) << "\n";
 
+    
+    Expect<std::size_t> R = PullSchema();
+    if(!R)
+        return R();
+    
+    Rem::Success() << __PRETTY_FUNCTION__ <<": " << *R << " Tables in DB " << mName;
     return Rem::Int::Accepted;
 }
 
@@ -104,11 +110,12 @@ Expect<std::size_t> Vault::PullSchema()
         auto* This = reinterpret_cast<Vault*>(this_);
         if(!This)
         {
-            Rem::Error() << __PRETTY_FUNCTION__ << ": Cannot get the Vault instance from the sqlite3_master query";
+            Rem::Error() << __PRETTY_FUNCTION__ << ": Cannot get the Vault instance from the sqlite3_exec.";
             return -1;
         }
         for(int i = 0; i < argc; i++)
-            This->mTables.push_back({argv[i],This});
+            if(std::string(argv[i]) != "sqlite_sequence")
+                This->mTables.push_back({argv[i],This});
         
         return 0;
     };
@@ -128,7 +135,7 @@ Expect<std::size_t> Vault::PullSchema()
     {
         Tbl.PullSchema();
     }
-    return Rem::Warning() << __PRETTY_FUNCTION__ << ": " << Rem::Int::Implement;
+    return mTables.size();
 }
 
 }

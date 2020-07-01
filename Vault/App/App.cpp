@@ -34,7 +34,9 @@ Return App::operator()()
     
     mString = "Hello, And welcome to the Lsc::Vault Tests!:\n--------------------------------------------------------------------\n";
     std::cout << mString();
-    Vault.Create();
+    
+    Vault.Open();
+    
     Expect<Vault::Field> F = Field();
     if(!F)
         std::cout << F()() << "\n";

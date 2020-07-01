@@ -3,7 +3,7 @@
 //
 
 #include "App.h"
-#include "../../Vault/App/App.h"
+
 
 #include <Lsc/Scripture/Lexer.h>
 #include <Lsc/Scripture/Alu.h>

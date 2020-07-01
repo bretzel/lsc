@@ -22,7 +22,7 @@ public:
 
     ~Vault();
     Vault(std::string DbName_);
-    
+    sqlite3* Handle() { return mDB; }
     Return Open();
     Return Close();
     Return Create();
