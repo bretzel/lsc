@@ -102,7 +102,7 @@ Return Vault::Create()
 
 Expect<std::size_t> Vault::PullSchema()
 {
-    const char *sql = "SELECT name FROM sqlite_master WHERE type='table'";
+    const char *sql = "SELECT name FROM sqlite_master WHERE type='table' and name <> 'sqlite_sequence' order by name;";
     if(!mDB)
         return Rem::Error() << __PRETTY_FUNCTION__ << '(' << "'" << mName << "') - Database File not open.";
     
@@ -114,7 +114,7 @@ Expect<std::size_t> Vault::PullSchema()
             return -1;
         }
         for(int i = 0; i < argc; i++)
-            if(std::string(argv[i]) != "sqlite_sequence")
+            //if(std::string(argv[i]) != "sqlite_sequence")
                 This->mTables.push_back({argv[i],This});
         
         return 0;
