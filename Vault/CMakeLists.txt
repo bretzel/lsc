@@ -20,7 +20,7 @@ add_library(
         ${HDRS}
         ${SRCS}
 
-)
+		Src/Row.cpp include/Lsc/Vault/Data/Row.h)
 message("Vault.Sources:" ${SRCS})
 list(
     APPEND INCLUDE_PATHS

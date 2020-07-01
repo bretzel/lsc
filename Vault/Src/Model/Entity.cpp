@@ -53,9 +53,9 @@ Entity &Entity::operator+(const String& FieldName_)
     return *this;
 }
 
-bool Entity::End()
+bool Entity::End( Entity::Cursor C_)
 {
-    return mCursor == mModel.end();
+    return C_ == mModel.end();
 }
 
 

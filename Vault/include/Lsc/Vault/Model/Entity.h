@@ -36,14 +36,25 @@ public:
     Entity& operator + (const String&);
     Entity& operator << (Field&&) noexcept;
     
-    bool End();
-    Cursor Begin() { mCursor = mModel.begin(); return mCursor;}
+    bool End(Cursor C_);
+    Entity::Cursor Begin() { mCursor = mModel.begin(); return mCursor;}
     
+    /*!
+     * @brief Temporaire...
+     * @tparam T
+     * @param D_
+     * @return
+     */
     template<typename T=const std::string&> Entity& operator << (T D_)
     {
-        
+        String Str;
+        Str << D_;
+        //... Selon la donnee versus le type de donnee de la colonne(field) courante,
+        // on ne verifie que si le type est grossierement compatible.
+        //...
         return *this;
     }
+    
     #pragma endregion EntityCompose
     //-----------------------------------------------------------------------------
     
