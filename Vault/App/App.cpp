@@ -37,14 +37,6 @@ Return App::operator()()
     
     Vault.Open();
     
-    Expect<Vault::Field> F = Field();
-    if(!F)
-        std::cout << F()() << "\n";
-    else
-    {
-        Rem::Success() << "Field:[" << (*F).Serialize()() << "]";
-    }
-    
     std::cout << "\n--------------------------------------------------------------------\n";
     return Rem::Int::Ok;
 }

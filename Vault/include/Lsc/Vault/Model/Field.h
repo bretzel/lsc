@@ -1,6 +1,7 @@
 #pragma once
 #include <Lsc/Vault/Lib.h>
 #include <Lsc/Rem/Rem.h>
+#include <utility>
 
 namespace Lsc::Vault
 {
@@ -21,8 +22,11 @@ DECLOBJ_ID
     String mName; ///< Nom de la colonne de la table du schema sqlite3 - ET - d'un item du Modele donne par le nom de la classe. ( CLASSNAME_IMPL )
     String mDesc; ///< Description de la colonne.
     Table* mTable = nullptr;
-
+    String mDflt;
+    
 public:
+    using SchemaInfoItem = std::pair<const char*, const char*>;
+    using SchemaInfo     = std::vector<Field::SchemaInfoItem >;
     
     using Collection = std::vector<Field>;
     
@@ -71,6 +75,9 @@ public:
     Field(Table* Table_, std::string Name_);
     Field(std::string Name_, Field::Type, Field::Attr Attr_);
     Field(std::string Name_, Field::Type Type_);
+    
+    Field(Table* Table_, const Field::SchemaInfo& SI_);
+    
     String Name() { return mName; }
     
     Field::Attr SetAttributes(uint8_t Attr_);
@@ -78,6 +85,7 @@ public:
     String Serialize();
 private:
     Field::Type mType = Field::Type::INTEGER;
+    int CID=-1;
     
 };
 

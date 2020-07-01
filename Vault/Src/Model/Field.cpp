@@ -82,5 +82,37 @@ String Field::Serialize()
     return Str;
 }
 
+/*!
+ * @brief Construct a Field from the Table::PullSchema()
+ *
+ * @param Table_ Table instance this Field belongs.
+ * @param SI_    SchemaInfo set.
+ */
+Field::Field(Table* Table_, const Field::SchemaInfo& SI_):
+mTable(Table_)
+{
+    String Txt = SI_[0].second;
+    Txt >> CID;
+    mName = SI_[1].second;
+    Txt = SI_[2].second; // Type
+    std::map<std::string, Field::Type> _ = {
+        {"TEXT"    , Field::Type::TEXT },
+        {"NUMERIC" , Field::Type::NUMERIC },
+        {"INTEGER" , Field::Type::INTEGER },
+        {"REAL"    , Field::Type::REAL },
+        {"BLOB"    , Field::Type::RAW }
+    };
+    
+    mType = _[Txt()];
+    _.clear();
+    
+    mAttr.Null = (SI_[3].second[0] != '1' ? 1 : 0);
+    mDflt = SI_[4].second;
+    mAttr.Primary = (SI_[5].second[0] == '1' ? 1 : 0);
+    
+    //sqlite3* H = mTable->DB();
+    
+}
+
 }
 

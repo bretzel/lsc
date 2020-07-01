@@ -12,7 +12,7 @@ class Vault;
 class VAULT_LIB  Table
 {
     std::string mName;
-    Field::Collection   mField;
+    Field::Collection   mFields;
     Vault*              mVault = nullptr;
     using Collection    = std::vector<Table>;
     friend class Vault;
@@ -25,6 +25,8 @@ public:
     Table(const Table&) = default;
     
     Table(std::string Name_, Vault* Vault_);
+    
+    sqlite3* DB();
 };
 
 }
