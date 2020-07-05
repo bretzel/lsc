@@ -39,8 +39,12 @@ bool Row::End()
 }
 
 
-std::string &Row::operator[](const std::string &ColumnName_)
+Expect<std::string&> Row::operator[](const std::string &ColumnName_)
 {
-    return mRow[0];
+    int I =  (*mModel)[ColumnName_];
+    if(I<0)
+        return Rem::Error() << __PRETTY_FUNCTION__ << ": No Field named '" << ColumnName_ << "';";
+    return mRow[I];
 }
+
 }

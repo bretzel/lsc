@@ -25,8 +25,10 @@ public:
     Table(const Table&) = default;
     
     Table(std::string Name_, Vault* Vault_);
-    
+    std::string Name() { return mName; }
     sqlite3* DB();
+    
+    Expect<Field*>  operator [](const std::string& Name_);
 };
 
 }

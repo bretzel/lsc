@@ -3,7 +3,7 @@
 //
 
 #include "App.h"
-
+#include <Lsc/Vault/Data/Row.h>
 
 
 #include <Lsc/Vault/Vault.h>
@@ -41,6 +41,9 @@ Return App::operator()()
     return Rem::Int::Ok;
 }
 
+
+// if(Expect<std::string&> R; R = Row["Username"]) *R = "lussier.serge";
+
 Expect<Vault::Field> App::Field()
 {
     using Vault::Field;
@@ -49,6 +52,14 @@ Expect<Vault::Field> App::Field()
     
     return F;
 }
-
+Return App::Row()
+{
+     Vault::Vault Vault("lab");
+     if(Return R; !( R= Vault.Open()))
+        return R();
+     
+     ;
+    return Rem::Int::Ok;
+}
 
 } // namespace [Lsc::]Type

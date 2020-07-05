@@ -38,7 +38,7 @@ public:
     void Reset();
     Row::FColumn Begin();
     bool End();
-    std::string& operator[](const std::string& ColumnName_);
+    Expect<std::string&> operator[](const std::string& ColumnName_);
     
 };
 }

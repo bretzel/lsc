@@ -1,31 +1,37 @@
-#include  <Lsc/Vault/Vault.h>
+#include <Lsc/Vault/Vault.h>
 #include <Lsc/Vault/Model/Table.h>
 
-Lsc::Vault::Table::Table(std::string Name_, Lsc::Vault::Vault *Vault_):
-mName(std::move(Name_)),
-mVault(Vault_)
+
+
+
+namespace  Lsc::Vault
 {
 
+
+
+
+Table::Table(std::string Name_, Vault *Vault_) : mName(std::move(Name_)), mVault(Vault_)
+{
+    
 }
 
-
-Lsc::Expect<size_t> Lsc::Vault::Table::PullSchema()
+Lsc::Expect<size_t> Table::PullSchema()
 {
     String sql = "PRAGMA table_info('%s')";
     sql << mName;
     
-    char* ErrMsg = nullptr;
-    auto Lm = [](void *this_, int argc, char **argv, char **azColName) -> int{
-        auto* This = reinterpret_cast<Table*>(this_);
+    char *ErrMsg = nullptr;
+    auto Lm = [](void *this_, int argc, char **argv, char **azColName)->int {
+        auto *This          = reinterpret_cast<Table *>(this_);
         Rem::Debug() << "------------------------------------";
         Field::SchemaInfo Infos;
-        for(int i=0; i<argc; i++)
+        for(int           i = 0; i < argc; i++)
         {
             Rem::Debug() << "[" << azColName[i] << "]: " << argv[i];
             Infos.push_back({azColName[i], argv[i]});
         }
         This->mFields.push_back({This, Infos});
-        Rem::Debug() << "Field: "  << This->mFields.back().Serialize();
+        Rem::Debug() << "Field: " << This->mFields.back().Serialize();
         Rem::Debug() << "------------------------------------";
         Infos.clear();
         return SQLITE_OK;
@@ -41,9 +47,24 @@ Lsc::Expect<size_t> Lsc::Vault::Table::PullSchema()
     return mFields.size();
 }
 
-
-sqlite3 *Lsc::Vault::Table::DB()
+sqlite3 *Table::DB()
 {
-     return mVault->Handle();
+    return mVault->Handle();
 }
 
+Expect<Field *> Table::operator[](const std::string &Name_)
+{
+    if(mFields.empty())
+    {
+        return Rem::Error() << __PRETTY_FUNCTION__ << ": No such Field named '" << Name_ << "' in Table '" << mName << "'";
+    }
+    
+    for(auto& F : mFields)
+    {
+        if(F.Name() == Name_) return &F;
+    }
+    
+    return Rem::Error() << __PRETTY_FUNCTION__ << ": No such Field named '" << Name_ << "' in Table '" << mName << "'";
+}
+    
+}

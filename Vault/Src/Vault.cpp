@@ -138,4 +138,22 @@ Expect<std::size_t> Vault::PullSchema()
     return mTables.size();
 }
 
+
+Expect<Table *> Vault::operator[](std::string Name_)
+{
+    if(mTables.empty())
+        return Rem::Error() << __PRETTY_FUNCTION__ << ": No such table schema named '" <<
+            Name_ << "' in Vault named '" << mName << "'";
+    
+    for(auto& T : mTables)
+    {
+        if(T.mName == Name_)
+            return &T;
+    }
+    
+    return Rem::Error() << __PRETTY_FUNCTION__ << ": No such table schema named '" <<
+        Name_ << "' in Vault named '" << mName << "'";
+}
+
+
 }

@@ -2,6 +2,7 @@
 
 #include <Lsc/Vault/Lib.h>
 #include <Lsc/Vault/Model/Field.h>
+#include <Lsc/Vault/Model/Table.h>
 
 namespace Lsc::Vault
 {
@@ -19,7 +20,7 @@ class VAULT_LIB  Entity
     Cursor              mCursor;
     Fields              mModel;
     String              mName;
-    
+    Table*              mTable = nullptr;
 public:
     Entity() = default;
     Entity(const Entity&) = default;
@@ -32,9 +33,10 @@ public:
     
     //--------------------Composition de l'Entity : -------------------------------
     #pragma region EntityCompose
-    Entity& operator + (Field&);
+    Entity& operator + (Field&&);
     Entity& operator + (const String&);
-    Entity& operator << (Field&&) noexcept;
+    Entity& operator << (Field*) noexcept;
+    int     operator [](const std::string& Name_);
     
     bool End(Cursor C_);
     Entity::Cursor Begin() { mCursor = mModel.begin(); return mCursor;}

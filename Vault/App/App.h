@@ -23,6 +23,7 @@ public:
     Return operator()();
     
     Expect<Vault::Field> Field();
+    Return               Row();
     
 private:
     

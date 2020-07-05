@@ -78,7 +78,7 @@ public:
     
     Field(Table* Table_, const Field::SchemaInfo& SI_);
     
-    String Name() { return mName; }
+    String Name() const { return mName; }
     
     Field::Attr SetAttributes(uint8_t Attr_);
     

@@ -21,11 +21,12 @@ public:
     Vault(const Vault&) = default;
 
     ~Vault();
-    Vault(std::string DbName_);
+    explicit Vault(std::string DbName_);
     sqlite3* Handle() { return mDB; }
     Return Open();
     Return Close();
     Return Create();
+    Expect<Table*> operator [](std::string Name_);
     
     
     //Return Query();
