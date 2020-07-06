@@ -34,7 +34,7 @@ Return App::operator()()
     Vault::Entity E = Vault::Entity("User", &Vault);
     
     try{
-        E += "User:UserName,AMD,Name, Mode:Name,Begin,End"; // Expect crash or ....
+        E += "User:UserName,A,Name, Mode:Name,Begin,End"; // Expect crash or ....
         std::cout << "\n--------------------------------------------------------------------\n";
         return Rem::Int::Ok;
     }

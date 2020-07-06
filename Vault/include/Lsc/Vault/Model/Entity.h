@@ -4,6 +4,7 @@
 #include <Lsc/Vault/Model/Field.h>
 #include <Lsc/Vault/Model/Table.h>
 #include <map>
+#include <stack>
 
 namespace Lsc::Vault
 {
@@ -16,14 +17,13 @@ class VAULT_LIB  Entity
     Vault*  mVault = nullptr;
     using Fields = std::vector<Field*>; ///< J'ai besoin de restreindre la copie donc ici on ne prend que l'adresse ( ou la r&eacute;f&eacute;rence) .
     using Cursor = Fields::iterator;    ///< Current position;
+    using Stack  = std::stack<std::string>;
     
-    using Parser = Return(Entity::*)(const String&);
-    using Parsers = std::map<char,Entity::Parser>;
     Return Parse(const String& Text_);
-    Return QueryTableName(const String& Text_);
-    Return QueryFieldName(const String& Text_);
+    Return SetTable(const String& Text_);
+    Return ProcessField(const String& Text_);
     
-    static Entity::Parsers EParsers;
+    Entity::Stack mStack;
     
     Field::Collection   mLocalFields; ///< Schema &eacute;tendu ou initiale.
     Cursor              mCursor;
