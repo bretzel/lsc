@@ -172,11 +172,13 @@ int Entity::operator[](const std::string &Name_)
 Return Entity::Parse(const String &Text_)
 {
     //String Str;
+    Rem::Debug() << __PRETTY_FUNCTION__ <<": '" << Text_ << '\'';
     String::Word::Collection Words;
-    std::size_t sz = Text_.Words(Words,":,", true);
+    (void) Text_.Words(Words,":,", true);
     for(auto S: Words)
     {
         Return R;
+        Rem::Debug() << __PRETTY_FUNCTION__ <<": Word '" << *S << '\'';
         switch((*S)[0])
         {
             case ':':
