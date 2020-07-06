@@ -23,11 +23,11 @@ public:
     Table() = default;
     Table(Table&&) noexcept = default;
     Table(const Table&) = default;
-    
+    ~Table();
     Table(std::string Name_, Vault* Vault_);
     std::string Name() { return mName; }
     sqlite3* DB();
-    
+    [[nodiscard]] Field::Collection& Fields() { return mFields; }
     Expect<Field*>  operator [](const std::string& Name_);
 };
 

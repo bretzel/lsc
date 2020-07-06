@@ -56,7 +56,7 @@ Expect<Field *> Table::operator[](const std::string &Name_)
 {
     if(mFields.empty())
     {
-        return Rem::Error() << __PRETTY_FUNCTION__ << ": No such Field named '" << Name_ << "' in Table '" << mName << "'";
+        throw Rem::Exception() << __PRETTY_FUNCTION__ << ": No such Field named '" << Name_ << "' in Table '" << mName << "'";
     }
     
     for(auto& F : mFields)
@@ -64,7 +64,12 @@ Expect<Field *> Table::operator[](const std::string &Name_)
         if(F.Name() == Name_) return &F;
     }
     
-    return Rem::Error() << __PRETTY_FUNCTION__ << ": No such Field named '" << Name_ << "' in Table '" << mName << "'";
+    throw Rem::Exception() << __PRETTY_FUNCTION__ << ": No such Field named '" << Name_ << "' in Table '" << mName << "'";
+}
+Table::~Table()
+{
+    mFields.clear();
+    Rem::Debug() << __PRETTY_FUNCTION__ << "["<< mName << "]: \\O/!";
 }
     
 }

@@ -65,7 +65,8 @@ public:
         Event,
         System,
         Application,
-        Network
+        Network,
+        Exception
         
     };
 private:
@@ -113,6 +114,7 @@ public:
     static Rem &System();
     static Rem &Application();
     static Rem &Network();
+    static Rem &Exception();
     
     static Rem &Null();
     

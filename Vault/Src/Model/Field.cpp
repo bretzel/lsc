@@ -113,6 +113,13 @@ mTable(Table_)
     //sqlite3* H = mTable->DB();
     
 }
+Field::~Field()
+{
+    Rem::Debug() << __PRETTY_FUNCTION__ << "["<< mName << "]: \\O/!";
+    mName.Clear();
+    mDflt.Clear();
+    mDesc.Clear();
+}
 
 }
 

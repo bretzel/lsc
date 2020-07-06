@@ -70,7 +70,7 @@ public:
     Field() = default;
     Field(const Field&) = default;
     Field(Field&&) noexcept = default;
-    ~Field() = default;
+    ~Field();
 
     Field(Table* Table_, std::string Name_);
     Field(std::string Name_, Field::Type, Field::Attr Attr_);

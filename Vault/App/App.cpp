@@ -4,9 +4,8 @@
 
 #include "App.h"
 #include <Lsc/Vault/Data/Row.h>
-
-
 #include <Lsc/Vault/Vault.h>
+#include <Lsc/Vault/Model/Entity.h>
 
 auto main(int arc, char**argv) -> int
 {
@@ -31,14 +30,18 @@ Return App::operator()()
 {
     //...
     Vault::Vault Vault("lab");
-    
-    mString = "Hello, And welcome to the Lsc::Vault Tests!:\n--------------------------------------------------------------------\n";
-    std::cout << mString();
-    
     Vault.Open();
+    Vault::Entity E = Vault::Entity("User", &Vault);
     
-    std::cout << "\n--------------------------------------------------------------------\n";
-    return Rem::Int::Ok;
+    try{
+        E += "User:UserName,AMD,Name, Mode:Name,Begin,End"; // Expect crash or ....
+        std::cout << "\n--------------------------------------------------------------------\n";
+        return Rem::Int::Ok;
+    }
+    catch(Rem& R)
+    {
+        return R;
+    }
 }
 
 
@@ -54,11 +57,13 @@ Expect<Vault::Field> App::Field()
 }
 Return App::Row()
 {
-     Vault::Vault Vault("lab");
-     if(Return R; !( R= Vault.Open()))
+    Vault::Vault Vault("lab");
+    if(Return R; !( R= Vault.Open()))
         return R();
      
-     ;
+    // We create Entity's In the Open Databse phase. Shall I do callbacks ? - no! Because Entities are made from already existing tables and from NEW
+    // Tabeless Fields. So they are created manually, systematically:
+    
     return Rem::Int::Ok;
 }
 

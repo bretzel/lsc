@@ -322,7 +322,7 @@ enum class TextCtl : uint8_t
     Notes: 
         (fr) 
             La configuration (globale/générale) de AppBook est stockée dans une database ( en l'occurence SQLite3 ) sous forme de fichier.
-            J'ai un foutu bloquage : Je sais pas comment nommer cette foutu librairie qui va se servir de SQLite3 !
+            J'ai un foutu bloquage : Je sais pas comment nommer cette foutue librairie qui va se servir de SQLite3 !
 
             lib???.so 
             ???.dll / ???.lib

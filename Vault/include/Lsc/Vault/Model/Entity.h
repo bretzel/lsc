@@ -3,6 +3,7 @@
 #include <Lsc/Vault/Lib.h>
 #include <Lsc/Vault/Model/Field.h>
 #include <Lsc/Vault/Model/Table.h>
+#include <map>
 
 namespace Lsc::Vault
 {
@@ -16,11 +17,20 @@ class VAULT_LIB  Entity
     using Fields = std::vector<Field*>; ///< J'ai besoin de restreindre la copie donc ici on ne prend que l'adresse ( ou la r&eacute;f&eacute;rence) .
     using Cursor = Fields::iterator;    ///< Current position;
     
+    using Parser = Return(Entity::*)(const String&);
+    using Parsers = std::map<char,Entity::Parser>;
+    Return Parse(const String& Text_);
+    Return QueryTableName(const String& Text_);
+    Return QueryFieldName(const String& Text_);
+    
+    static Entity::Parsers EParsers;
+    
     Field::Collection   mLocalFields; ///< Schema &eacute;tendu ou initiale.
     Cursor              mCursor;
     Fields              mModel;
     String              mName;
     Table*              mTable = nullptr;
+    
 public:
     Entity() = default;
     Entity(const Entity&) = default;
@@ -35,6 +45,7 @@ public:
     #pragma region EntityCompose
     Entity& operator + (Field&&);
     Entity& operator + (const String&);
+    Entity& operator += (const String&);
     Entity& operator << (Field*) noexcept;
     int     operator [](const std::string& Name_);
     
@@ -49,6 +60,7 @@ public:
      */
     template<typename T=const std::string&> Entity& operator << (T D_)
     {
+        Rem::Debug() << __PRETTY_FUNCTION__ << "?";
         String Str;
         Str << D_;
         //... Selon la donnee versus le type de donnee de la colonne(field) courante,
@@ -59,7 +71,7 @@ public:
     
     #pragma endregion EntityCompose
     //-----------------------------------------------------------------------------
-    
+    std::string Name() { return mName(); }
 //...
 };
 

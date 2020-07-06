@@ -103,7 +103,8 @@ std::string Rem::ToStr(Rem::Type T)
                                           {Rem::Type::Event,       "Event"},
                                           {Rem::Type::System,      "System"},
                                           {Rem::Type::Application, "Application"},
-                                          {Rem::Type::Network,     "Network"}
+                                          {Rem::Type::Network,     "Network"},
+                                          {Rem::Type::Exception,   "Exception"}
         
     };
     return "Rem::" + _[T];
@@ -274,6 +275,13 @@ Rem &Rem::Network()
 {
     Rem R;
     R << Rem::Type::Network << ": ";
+    Rem::_Array.push_back(R);
+    return Rem::_Array.back();
+}
+Rem &Rem::Exception()
+{
+    Rem R;
+    R << Rem::Type::Exception << ": ";
     Rem::_Array.push_back(R);
     return Rem::_Array.back();
 }
