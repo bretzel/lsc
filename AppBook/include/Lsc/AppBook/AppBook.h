@@ -38,7 +38,6 @@
 
 namespace Lsc
 {
-// No [sub-]namespace here. AppBook to be used so fuc'* too often.
 
 enum class Color : uint16_t
 {
@@ -322,20 +321,10 @@ enum class TextCtl : uint8_t
     Notes: 
         (fr) 
             La configuration (globale/générale) de AppBook est stockée dans une database ( en l'occurence SQLite3 ) sous forme de fichier.
-            J'ai un foutu bloquage : Je sais pas comment nommer cette foutue librairie qui va se servir de SQLite3 !
-
-            lib???.so 
-            ???.dll / ???.lib
-
-            'Rem' pour "Remarques/Remarks" 
-            'Scripture' : Scripting / Interpreteur;
             
-            ---> 'Vault' pour stockage des donnees. Jene veux pas utiliser 'Archive' pour la simple raison que ce nom evoque les outils de compressions/decompressions.
-
-
-            Ce sous-projet de librairie contiendra l'ammalgamation de SQLite3 - donc pas besoin de dependre de son installation.
-
-
+        (en)
+            The global configuration data of the AppBook is stored into a database ( such as AQLite3 ) file.
+            
 */
 
 /*
@@ -345,13 +334,14 @@ enum class TextCtl : uint8_t
 
    Table : 'Mode'
    (
-        Name TEXT Primary Key,
+        ID  INTEGER PRIMARY KEY AUTOINCREMENT
+        Name TEXT
         //...
    )
 
    Table : 'TextCtl' 
    (
-    Mode         TEXT,
+    Mode         INTEGER (FK),
     Reset        TEXT,
     Eol          TEXT,
     Eos          TEXT,
@@ -368,7 +358,7 @@ enum class TextCtl : uint8_t
 
     Table : 'Prefix' 
     (
-        Mode           TEXT,
+        Mode           INTEGER (FK),
         Ok             TEXT,
         Fail           TEXT,
         Eof            TEXT,
@@ -390,13 +380,14 @@ enum class TextCtl : uint8_t
     )
 
 
-    Table : 'EntryType'
+    Table : 'Entry'
     (
-        Mode           TEXT,
+        Mode           INTEGER (FK),
         None           TEXT,
         Info           TEXT,
         Internal       TEXT,
         Error          TEXT,
+        Exception      TEXT,
         SyntaxError    TEXT,
         Warning        TEXT,
         Fatal          TEXT,
@@ -421,7 +412,6 @@ enum class TextCtl : uint8_t
  *
  * @note Single Instance.
  */
-
 class APPBOOK_LIB AppBook
 {
     
