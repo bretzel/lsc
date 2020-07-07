@@ -66,59 +66,7 @@ Entity &Entity::operator+=(const String& Fields_)
 {
     try
     {
-        
         (void)Parse(Fields_);
-//        String::Word::Collection Words;
-//        std::size_t              count = Fields_.Words(Words, ":,", true);
-//        if(!count)
-//            return *this; ///@todo handle empty result.
-//        //..
-//        Expect<Table *> Tbl = nullptr;
-//        Expect<Field *> F   = nullptr;
-//        int Idx = 0;
-//        for(auto S: Words)
-//        {
-//            Rem::Debug() << __PRETTY_FUNCTION__ << " Word: [" << *S << "]:";
-//            if(Idx == 0 )
-//            {
-//                Tbl = (*mVault)[*S];
-//                Rem::Debug() << __PRETTY_FUNCTION__ << ": Tablename: '" << (*Tbl)->Name() << '\'';
-//                ++Idx;
-//                continue;
-//            }
-//
-//            if(*S == "*")
-//            {
-//                // All fields except CID=0:
-//                Rem::Debug() << "'*': All fields except 'CID':" << (*Tbl)->Fields().size();
-//                int Fid = 0;
-//                for(auto& Fi : (*Tbl)->Fields())
-//                {
-//                    if(!Fid)
-//                    {
-//                        ++Fid;
-//                        Rem::Debug() << " Bypass Column:['" << Fi.Name() << "']";
-//                        continue;
-//                    }
-//                    Rem::Debug() << " Column:['" << Fi.Name() << "']";
-//                    (*this) << &Fi;
-//                    ++Fid;
-//                }
-//                return *this;
-//            }
-//            if(S() == "**")
-//            {
-//                // All fields including CID=0:
-//                Rem::Debug() << "'**': All fields including 'CID':" << (*Tbl)->Fields().size();
-//                for(auto& Fi : (*Tbl)->Fields())
-//                {
-//                    (*this) << &Fi;
-//                }
-//                return *this;
-//            }
-//            F = (*(*Tbl))[*S];
-//            (*this) << *F;
-//        }
     }
     catch(Rem& Msg)
     {
@@ -194,13 +142,12 @@ Return Entity::Parse(const String &Text_)
                 break;
         }
     }
+    
     if(!mStack.empty())
     {
         if(!mTable)
             return Rem::Error() << __PRETTY_FUNCTION__ <<": Failed processing Entity from '" << Text_ << "'";
         ProcessField(mStack.top());
-        mStack.pop();
-        
     }
     if(!mStack.empty())
         Rem::Warning() << __PRETTY_FUNCTION__ <<": extra tokens not processed in Entity ('" << Text_ << "')";
