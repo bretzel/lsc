@@ -9,7 +9,7 @@
 
 auto main(int arc, char**argv) -> int
 {
-    Lsc::App mApp;
+    Lsc::AppBook mApp;
     mApp();
     Lsc::Rem::Clear([](Lsc::Rem& R) {
        std::cout << R() << '\n';
@@ -21,12 +21,12 @@ auto main(int arc, char**argv) -> int
 namespace Lsc
 {
 
-App::~App()
+AppBook::~AppBook()
 {
     mString.Clear();
 }
 
-Return App::operator()()
+Return AppBook::operator()()
 {
     //...
     Vault::Vault Vault("lab");
@@ -47,7 +47,7 @@ Return App::operator()()
 
 // if(Expect<std::string&> R; R = Row["Username"]) *R = "lussier.serge";
 
-Expect<Vault::Field> App::Field()
+Expect<Vault::Field> AppBook::Field()
 {
     using Vault::Field;
     Field F = {"ID", Vault::Field::Type::INTEGER};
@@ -55,7 +55,7 @@ Expect<Vault::Field> App::Field()
     
     return F;
 }
-Return App::Row()
+Return AppBook::Row()
 {
     Vault::Vault Vault("lab");
     if(Return R; !( R= Vault.Open()))

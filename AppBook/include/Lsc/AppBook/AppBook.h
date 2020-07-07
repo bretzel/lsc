@@ -35,7 +35,7 @@
 //journal::m_type_table.push_back(journal::m_attr_table[(int)hgreen] + std::string("✔") + " succes:    "); // and ...succes ... :-)
 
 
-
+// À part le travail de moine ( liste des couleurs ), Je reprend AppBook à partir de zéro...
 namespace Lsc
 {
 
@@ -300,22 +300,6 @@ enum class Color : uint16_t
     /*255 */ Grey93                   //#eeeeee	rgb(238,238,238)	hsl(0,0%,93%)
 };
 
-enum class TextCtl : uint8_t
-{
-    Reset=0,
-    Eol,
-    Eos,
-    Eof,
-    Sup,
-    EndSup,
-    Sub,
-    EndSub,
-    Code,
-    EndCode,
-    Paragraph,
-    EndParagraph
-    //...
-};
 
 /*
     Notes: 
@@ -323,95 +307,34 @@ enum class TextCtl : uint8_t
             La configuration (globale/générale) de AppBook est stockée dans une database ( en l'occurence SQLite3 ) sous forme de fichier.
             
         (en)
-            The global configuration data of the AppBook is stored into a database ( such as AQLite3 ) file.
+            The global configuration data of the AppBook is stored into a database ( such as SQLite3 ) file.
             
 */
 
 /*
 
 
+    # JE VAIS MONTRER CE Que JE VEUX Éviter...Donc ça doit aller dans une database....
+    Le prob est que je réfléchis encore et encore à comment structurer cette foutue DB!!
+    J'aimerais bien faire fonctionner ce AppBook durant le developpement de l'interpreteur sous la lib. Scripture...
+    Avoir un journal dont le sujet sous la rubrique "Scripture::R&D", par exemple.
+     -- Donc ayant un Livre relatant le cheminement du developpement du projet.
+    
+    Devrait etre au format HTML avant tout. Je pourrais concevoir un convertisseur Html->Ansi une fois Appbook fonctionnel
+    
 
-
-   Table : 'Mode'
-   (
-        ID  INTEGER PRIMARY KEY AUTOINCREMENT
-        Name TEXT
-        //...
-   )
-
-   Table : 'TextCtl' 
-   (
-    Mode         INTEGER (FK),
-    Reset        TEXT,
-    Eol          TEXT,
-    Eos          TEXT,
-    Eof          TEXT,
-    Sup          TEXT,
-    EndSup       TEXT,
-    Sub          TEXT,
-    EndSub       TEXT,
-    Code         TEXT,
-    EndCode      TEXT,
-    Paragraph    TEXT,
-    EndParagraph TEXT
-   )
-
-    Table : 'Prefix' 
-    (
-        Mode           INTEGER (FK),
-        Ok             TEXT,
-        Fail           TEXT,
-        Eof            TEXT,
-        Eos            TEXT,
-        Eot            TEXT,
-        UnExpected     TEXT,
-        Expected       TEXT,
-        Null           TEXT,
-        Bad            TEXT,
-        Good           TEXT,
-        Unknown        TEXT,
-        Known          TEXT,
-        Unset          TEXT,
-        UnInit         TEXT,
-        Implement      TEXT,
-        Accepted       TEXT,
-        Rejected       TEXT,
-        Unterminated   TEXT
-    )
-
-
-    Table : 'Entry'
-    (
-        Mode           INTEGER (FK),
-        None           TEXT,
-        Info           TEXT,
-        Internal       TEXT,
-        Error          TEXT,
-        Exception      TEXT,
-        SyntaxError    TEXT,
-        Warning        TEXT,
-        Fatal          TEXT,
-        Success        TEXT,
-        Message        TEXT,
-        Return         TEXT,
-        Value          TEXT,
-        State          TEXT,
-        Debug          TEXT,
-        Event          TEXT,
-        System         TEXT,
-        Application    TEXT,
-        Network        TEXT
-   
-    )
 */
 
 /*!
- * @brief Rewrite and rebase of my journal logger.
+ * @brief Application Book.
  *
- * @author &copy; 2020, Serge Lussier (lussier.serge@gmail.com)
+ * Rewrite and rebase of my journal logger.
+ *
+ * @author &copy; 2020, Serge Lussier (AKA Lsc, Lonesomecoder, bretzel, Bretzelus, Bretzeltux), (lussier.serge@gmail.com)
  *
  * @note Single Instance.
  */
+ 
 class APPBOOK_LIB AppBook
 {
     
@@ -425,109 +348,25 @@ public:
     
     // Colors
     
-    enum Mode
-    {
-        Html,
-        Ansi
-    };
-    enum Prefix
-    {
-        
-        Debug,
-        Info,
-        Error,
-        Warning,
-        Exception,
-        Fatal,
-        Success,
-        Notice
-    };
-
-    
-    struct APPBOOK_LIB Log
-    {
-        using Shared = std::shared_ptr<AppBook::Log>;
-        Log::Shared mParent = nullptr;
-        Log::Shared mChild = nullptr;
-        
-        String  mText; ///< Local Text;
-        AppBook::Prefix     mPrefix = AppBook::Prefix::Notice;
-        
-        int     mIndent = 0;
-        bool    mNewLine = false;
-        //...
-        
-        
-        AppBook::Log &operator<<(AppBook::Prefix);
-        AppBook::Log &operator<<(Lsc::TextCtl);
-        AppBook::Log &operator<<(Lsc::Color);
-        
-        std::string Endl();
-        
-        template<typename T> Log& operator << (const T& V)
-        {
-            if(mNewLine)
-            {
-                mText << AppBook::Icon(mPrefix) << "    "; // Quick test...
-                mNewLine = false;
-            }
-            
-            mText << V; // Uses default String Input operator.
-            return *this;
-        }
-        
-        Log() = default;
-        ~Log();
-        
-        Log(AppBook::Prefix);
-        Log(AppBook::Log::Shared Parent_, AppBook::Prefix Prefix_);
-        
-        void SetParent(Log::Shared Parent_);
-        void SetChild(Log::Shared  Child_);
-        
-        
-        //void Detach();
-        void End();
-    };
-    
-    ~AppBook();
-    
-    static AppBook& Instance();
-    static AppBook& Init(/* ...*/);
-    static std::string Text();
-    // Let's try a config struct
+    // Let's try to elaborate one config struct
     struct ConfigData
     {
-        std::string Title;       ///< Application Book's Title
-        std::string Path;        ///< Specific AppBook SQLite Files Path.
-        std::string CfgDbName;   ///< Name part of the SQLITE[3] AppBook Configurations Database File ( [%{Path}/]AppBook.Config.%{DbName}.sqlite3 ).
-        int          Mode   = AppBook::Mode::Ansi;
+        std::string Title;      ///< Application Book's Title
+        std::string Path;       ///< Specific AppBook SQLite Files Path.
+        std::string Name;       ///< Name part of the SQLITE[3] AppBook Configurations Database File ( [%{Path}/]AppBook.Config.%{DbName}.sqlite3 ).
+        int          Mode   = 0;
         int          Indent = 4;
         
         //...
     };
     
-    struct LogTopic
-    {
-        std::string ID;         ///< Will be SQLite PrimaryKey Column Value.
-        std::string Name;       ///< Name Identifier for Accessing the Log [Topic] Instance.
-        std::string Title;      ///< Topic Title
-        std::string Filename;   ///< Path and name of the File if specified.
-        AppBook::Mode Mode = AppBook::Mode::Ansi;
-        using Collection = std::map<std::string_view, LogTopic>;
-        
-        
-        
-    };
-    
-    LogTopic::Collection mTopics;
     
     
     /*!
      * @brief Expose ConfigData instance for filling its parameters
      *
      * @code
-     *      AppBook::Instance.Config() = {
+     *      AppBook::Instance().Config() = {
      *          "The Application LogBook!",
      *          "Filename.log",
      *          AppBook::Ansi
@@ -537,22 +376,11 @@ public:
      * @return Reference to the ConfigData;
      */
     static AppBook::ConfigData& Config();
-    static Log& Begin(AppBook::Prefix);
-    static Log& Create(std::string Name_);
-    static void End(std::function<void(const std::string&)> EndFN=nullptr);
     
     
     
 private:
-    friend struct Log;
-    AppBook::ConfigData mConfig;
-    static std::string ToStr(Prefix Prefix_);
-    std::map<TextCtl, std::string> mComponentData;
 
-    Log::Shared mCurrentLog = nullptr;
-    
-    static std::string Icon(AppBook::Prefix Prefix_);
-    
 };
 //#endif //TEXT_APPBOOK_H
 

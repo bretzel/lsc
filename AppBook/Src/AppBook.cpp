@@ -10,19 +10,11 @@ namespace Lsc
 {
 
 
-AppBook* AppBook::mStaticInstance = nullptr;
-AppBook::~AppBook()
-{
-    std::cout << __PRETTY_FUNCTION__ << " ⚒ \\O/\n";
-}
-
-AppBook &AppBook::Instance()
-{
-    return *AppBook::mStaticInstance;
-}
-
-
-AppBook &AppBook::Init(/* ... */)
+/*
+ *
+ *
+ 
+AppBook &AppBook::Init()
 {
     if(!AppBook::mStaticInstance->mComponentData.empty()) return *AppBook::mStaticInstance;
     AppBook& Book = *AppBook::mStaticInstance;
@@ -197,4 +189,6 @@ void AppBook::Log::SetParent(AppBook::Log::Shared Parent_)
     mParent = Parent_;
 }
 
+}
+*/
 }

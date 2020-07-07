@@ -10,27 +10,14 @@ SET(TargetName AppBook.App)
 #target_compile_definitions(${PROJECT_NAME} PUBLIC "${PROJECT_NAME}_DEBUG=$<CONFIG:Debug>")
 #target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 
-#include(GenerateExportHeader)
-#add_dependencies(tdd journal grammar lexer utils)
 
 add_executable(${TargetName} ${SRCS})
-add_dependencies(${TargetName} Rem ) # Diagnostics ) #sqlitedb logbook lexer)
+add_dependencies(${TargetName} Vault ) # Diagnostics ) #sqlitedb logbook lexer)
 
-list(
-    APPEND LSC_INCLUDE_PATH
-    "${CMAKE_CURRENT_SOURCE_DIR}/include"
-#    "${LSC_ROOT}/Rem/include" "${LSC_ROOT}/Diagnostics/include"
-#    "${LSC_ROOT}/Base/SQLite/include" 
-#    "${LSC_ROOT}/Scripture/include")
-)
+include_directories(${VAULT_INCLUDE_DIR} ${REM_INCLUDE_DIR} ${APPBOOK_INCLUDE_DIR})
 
-message ("App/LSC_INCLUDES: " ${LSC_INCLUDE_PATH})
 
-target_include_directories(${TargetName} PUBLIC
-        "$<BUILD_INTERFACE:${REM_INCLUDE_PATH}>"
-        )
-
-target_link_libraries(${TargetName} ${CMAKE_DL_LIBS} Rem)
+target_link_libraries(${TargetName} ${CMAKE_DL_LIBS} Rem Vault)
 target_compile_features(${TargetName} PUBLIC cxx_std_20)
 
 IF (EXISTS "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json")

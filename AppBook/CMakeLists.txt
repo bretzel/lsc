@@ -19,7 +19,7 @@ add_library(
         SHARED
         ${HDRS}
         ${SRCS}
-)
+        App/AppBook.App.cpp App/AppBook.App.h)
 
 
 
@@ -65,4 +65,4 @@ install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}Targets
 
 string(REPLACE "++" "" NS PROJECTNAME)
 
-#add_subdirectory(App)
+add_subdirectory(App)

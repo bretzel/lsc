@@ -10,7 +10,7 @@
 
 auto main(int arc, char**argv) -> int
 {
-    Lsc::App mApp;
+    Lsc::AppBook mApp;
     mApp();
     Lsc::Rem::Clear([](Lsc::Rem& R) {
        std::cout << R() << '\n';
@@ -22,18 +22,18 @@ auto main(int arc, char**argv) -> int
 namespace Lsc
 {
 
-App::~App()
+AppBook::~AppBook()
 {
     mString.Clear();
 }
 
-Return App::operator()()
+Return AppBook::operator()()
 {
     //...
     mString = "Hello, And welcome to the Lsc::Scripture Tests!:\n--------------------------------------------------------------------\n";
     std::cout << mString();
     
-    (void) App::Type("Binary/Operator/TypeId/Number/Float");
+    (void) AppBook::Type("Binary/Operator/TypeId/Number/Float");
     (void) Tokens("<>;");
     (void) LexerScan("Abcdere = 0xb09AFcfdaghj >< 0xabcd + -4.012ac(;");
     (void) ArithmeticLogicalUnit();
@@ -41,13 +41,13 @@ Return App::operator()()
     return Rem::Int::Ok;
 }
 
-Return App::Type(std::string Txt_)
+Return AppBook::Type(std::string Txt_)
 {
     Type::T T;
     T << Txt_;
     String Str_  = "[%08b]";
     Str_ << T;
-    std::cout << "App::Type( [%08b]" << Txt_ << ") :" <<  Str_() << '\n';
+    std::cout << "AppBook.App::Type( [%08b]" << Txt_ << ") :" <<  Str_() << '\n';
     Str_.Clear();
     std::string Txt;
     Txt.clear();
@@ -59,27 +59,27 @@ Return App::Type(std::string Txt_)
 
 
 
-Return App::Tokens(std::string Txt_)
+Return AppBook::Tokens(std::string Txt_)
 {
     TokenData Token_ = TokenData::Scan(Txt_.c_str()); // => sin(+4) / 2a;
     
     std::cout <<
-        "App::TokenScan(" << Txt_ << "):\n" <<
+        "AppBook.App::TokenScan(" << Txt_ << "):\n" <<
         Token_.Details() << '\n';
         
     TokenData::Collection Tokens(1);
     Token_ = Tokens.back();
     std::cout <<
-        "App::TokenScan(From the head of an empty Tokens stream):\n" <<
+        "AppBook.App::TokenScan(From the head of an empty Tokens stream):\n" <<
         Token_.Details() << '\n';
     return Rem::Int::Ok;
 }
 
 
 
-Return App::LexerScan(std::string Txt_)
+Return AppBook::LexerScan(std::string Txt_)
 {
-    std::cout << "App::LexerScan(" << Txt_ << "):\n";
+    std::cout << "AppBook.App::LexerScan(" << Txt_ << "):\n";
     Lexer Lex;
     TokenData::Collection Tokens;
     Lex.Config() =
@@ -94,7 +94,7 @@ Return App::LexerScan(std::string Txt_)
     });
     return Rem::Int::Implement;
 }
-Return App::ArithmeticLogicalUnit()
+Return AppBook::ArithmeticLogicalUnit()
 {
     Rem::Debug() << __PRETTY_FUNCTION__  << ":\n";
     Alu A = 1.1f;
