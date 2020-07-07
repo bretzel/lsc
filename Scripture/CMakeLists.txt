@@ -7,8 +7,8 @@ project(Scripture VERSION 0.1.0 LANGUAGES CXX)
 include(GNUInstallDirs)
 #SET(REM_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/include)
 message("SCRIPTURE_INCLUDE_DIR:" ${SCRIPTURE_INCLUDE_DIR})
-FILE(GLOB HDRS ${SCRIPTURE_INCLUDE_DIR}/*)
-FILE(GLOB SRCS Src/*)
+FILE(GLOB HDRS ${SCRIPTURE_INCLUDE_DIR}/* ${SCRIPTURE_INCLUDE_DIR}/Interpreter/*) # ${SCRIPTURE_INCLUDE_DIR}/Interpreter/Compiler/*
+FILE(GLOB SRCS Src/* Src/Interpreter/*) # ... Src/Interpreter/Compiler/* Src/Interpreter/Compiler/*
 SET( CMAKE_EXPORT_COMPILE_COMMANDS ON )
 
 
@@ -19,7 +19,7 @@ add_library(
         SHARED
         ${HDRS}
         ${SRCS}
-		Src/Lexer.cpp include/Lsc/Scripture/Lexer.h Src/Alu.cpp include/Lsc/Scripture/Alu.h)
+)
 
 list(
     APPEND INCLUDE_PATHS

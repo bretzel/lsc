@@ -584,7 +584,7 @@ Return Lexer::ScanPostfix(TokenData &Token_)
 Return Lexer::Push(TokenData &Token_)
 {
     if(!Token_)
-        return (Rem::Push() << Rem::Type::Error << ": Attempt to push a Null TokenData into the Tokens stream.");
+        return Rem::Push() << Rem::Type::Error << ": Attempt to push a Null TokenData into the Tokens stream.";
     
     mCursor.Sync();
     Token_.mLoc.L = mCursor.L;
@@ -650,9 +650,10 @@ void Lexer::Flush(std::function<void(TokenData)> F_)
         if(F_)
             F_(T);
 }
+
+
 Return Lexer::_InputText(TokenData &Token_)
 {
-
     Rem::Debug() << __PRETTY_FUNCTION__ << ":\n";
     Expect<std::string> R =  mCursor.ScanString();
     Rem::Debug() << "Scanned String: " << *R << '\n';

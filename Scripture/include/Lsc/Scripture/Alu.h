@@ -54,13 +54,14 @@ struct SCRIPTURE_LIB Alu
     Alu(bool A_);
 
     void Reset();
-        Alu& operator =(const Alu& Lhs_);// { a = lf.a; T = lf.T; return *this; }
-
+    
+    Alu& operator =(const Alu& Lhs_);// { a = lf.a; T = lf.T; return *this; }
     Alu& operator =(Alu&& rhs) noexcept;
-
     Alu operator==(const Alu & lf);
-    Type::T TypeOf() { return T; }
-
+    
+    Type::T TypeOf() const { return T; } // [const] Sous réserve; [const] provided that it is not screwing access...
+    
+    #pragma region Huge_Overload
     template<typename OfType> OfType Value() const {
 
         if constexpr (std::is_same<OfType, std::string>::value)
@@ -113,7 +114,7 @@ struct SCRIPTURE_LIB Alu
 
     }
 
-
+#pragma endregion Huge_Overload
     template<Type::T T> bool is() {
         return T == T;
     }

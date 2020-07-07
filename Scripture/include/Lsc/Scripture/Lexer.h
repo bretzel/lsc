@@ -25,20 +25,20 @@ class SCRIPTURE_LIB Lexer
         bool operator++(int);
         [[maybe_unused]] bool SkipWS();
         bool Eof(const char *P = nullptr) const;
-        long Index() const;
+        [[nodiscard]] long Index() const;
         int        L   = -1;
         int        Col = -1;
         void Sync();
         std::string ScanToEol();
-        std::string Line() const;
-        std::string Mark() const;
-        std::string Location() const;
+        [[nodiscard]]std::string Line() const;
+        [[nodiscard]]std::string Mark() const;
+        [[nodiscard]]std::string Location() const;
         bool       _F  = false;
         Rem::Int ScanTo(const char *SubStr_);
         Expect<std::string> ScanString();
         
         InternalCursor() = default;
-        InternalCursor(const char *Source_);
+        explicit InternalCursor(const char *Source_);
     } mCursor;
     
     struct NumScanner
@@ -93,7 +93,7 @@ public:
     Return  operator()();
     
     
-    bool Empty() { return (mConfig.Tokens ? mConfig.Tokens->empty() : true); }
+    [[maybe_unused]] [[nodiscard]] bool Empty() const { return mConfig.Tokens == nullptr || mConfig.Tokens->empty(); }
     void Flush(std::function<void(TokenData)> F_);
 private:
 
