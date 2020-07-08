@@ -87,7 +87,7 @@ Alors au besoin, seulement, nous allons adapter les cas particuliers une fois re
  *  -> Section::Debug() créé une instance Book::Log de type DEBUG ( implicitement, ça tire la config du style debug ....)
  *      Et le mechanisme d'enchainement des appels de la surcharge de l'operateur '<<' adressé à l'instance Log cree par Section::Debug().
  *
- *      S = Book::SelectTopic("Nom du Topic").SeletSection("Nom de la Section);
+ *      S = Book::SelectTopic("Nom du Topic").SelectSection("Nom de la Section);
  *      S.Debug() << "..." ;
  *      S.Info() << "..." ;
  *      S.XXX() << "...";
