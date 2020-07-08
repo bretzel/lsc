@@ -46,8 +46,10 @@ target_include_directories(${PROJECT_NAME} PUBLIC
         $<INSTALL_INTERFACE:include/${FrameWorkName}/${PROJECT_NAME}>  # <prefix>/include/mylib
         )
 
+
+add_dependencies(${PROJECT_NAME} Vault) # Diagnostics ) #sqlitedb logbook lexer)
 target_link_libraries(${PROJECT_NAME} ${CMAKE_DL_LIBS} Vault)
-add_dependencies(${TargetName} Rem Vault) # Diagnostics ) #sqlitedb logbook lexer)
+
 
 install(DIRECTORY
         include/${FrameWorkName}/${PROJECT_NAME}/

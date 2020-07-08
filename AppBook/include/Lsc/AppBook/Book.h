@@ -93,7 +93,12 @@ Alors au besoin, seulement, nous allons adapter les cas particuliers une fois re
  *      S.XXX() << "...";
  *
  *      Donc la Table Des Matières devrait s'auto-générer ... ^^
- *      Ansi que les légendes
+ *      Ansi que les légendes..
+ *
+ *      Maintenant que l'on a une vue rapide et simple de l'ensemble de la structure du "Book",
+ *      il faut elaborer l'adressage et le stockage des items de config et objets de contenu.
+ *      Examples: <fin de ligne> <prefix de log > < gestion des indentations > < estampe horodatage > < paragraphe > < titre/section/article> < styles et couleurs - effectivement...>
+ *
  */
 class APPBOOK_LIB Book
 {
@@ -119,17 +124,24 @@ public:
         // Ici non-plus je n'ai à lier une instance Section à une instance Topic --
         // Mais - Comme il n'y aura pas une tonne de sections, je devrais lier à l'instance de Topic parent.
         
+        
         using Dictionary = std::map<std::string, Section *>;
         
     };
 
     class APPBOOK_LIB Topic
     {
-    
+        String mName;
+        Book::Section::Dictionary mSections;
+        
+    public:
+        using Dictionary = std::map<std::string, Topic*>;
+        
     };
     
 private:
     Book::Log::GlobalCollection mLogs; ///< Sous Réserve parceque les entrees sont stockees sous les topics/sections.
+    Book::Topic::Dictionary     mTopics;
     
     
     
