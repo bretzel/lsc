@@ -39,6 +39,14 @@
 namespace Lsc
 {
 
+
+/*!
+ * @brief Ref: https://jonasjacek.github.io/colors/
+ *
+ * Corrig&eacute; et Modifi&eacute; par Serge Lussier
+ *     (lonesomecoder, bretzel, bretzelus, bretzeltux, tuxinz)
+ * lussier.serge@gmail.com
+*/
 enum class Color : uint16_t
 {
     

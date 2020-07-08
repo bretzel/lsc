@@ -12,12 +12,12 @@ SET(TargetName AppBook.App)
 
 
 add_executable(${TargetName} ${SRCS})
-add_dependencies(${TargetName} Vault ) # Diagnostics ) #sqlitedb logbook lexer)
+add_dependencies(${TargetName} AppBook Vault ) # Diagnostics ) #sqlitedb logbook lexer)
 
 include_directories(${VAULT_INCLUDE_DIR} ${REM_INCLUDE_DIR} ${APPBOOK_INCLUDE_DIR})
 
 
-target_link_libraries(${TargetName} ${CMAKE_DL_LIBS} Rem Vault)
+target_link_libraries(${TargetName} ${CMAKE_DL_LIBS} Rem Vault AppBook)
 target_compile_features(${TargetName} PUBLIC cxx_std_20)
 
 IF (EXISTS "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json")

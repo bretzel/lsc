@@ -687,7 +687,7 @@ Alu Alu::operator--(int)
 {
     is_text(*this)
     {
-        Rem::Warning() <<  "cannot idecrement string (\""<< (*this)()<< "\")++.";
+        Rem::Warning() <<  "cannot decrement string (\""<< (*this)()<< "\")++."; // oops... What if long text string?
     }
     
     is_number
@@ -736,7 +736,7 @@ Alu &Alu::operator<<=(const Alu &rv)
     
     lr_text(rv)
     {
-        Rem::Warning() <<  "cannot execute assign extraction/bitwise right-shift / output on strings (\""<< (*this)()<< "\") >>= [...].";
+        Rem::Warning() <<  "cannot execute assign extraction/bitwise right-shift / output on strings.";
         return *this;
     }
     
@@ -755,7 +755,7 @@ Alu &Alu::operator>>=(const Alu &rv)
     
     lr_text(rv)
     {
-        Rem::Warning() <<  "cannot execute assign extraction/bitwise right-shift / output on strings (\""<< (*this)()<< "\") >>= [...].";
+        Rem::Warning() <<  "cannot execute assign extraction/bitwise right-shift / output on strings.";
         return *this;
     }
     
@@ -785,7 +785,7 @@ Alu &Alu::operator>>=(const Alu &rv)
 //    return Alu(cp);
 //}
 //
-//Alu Alu::completely_remove_substr_copy(const std::string &to_erase)
+//Alu Alu::remove_all_substr_copy(const std::string &to_erase)
 //{
 //    // J'suis paresseux :: copy-paste here (from thispointer :: how to remove substr: )
 //

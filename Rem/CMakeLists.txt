@@ -5,7 +5,6 @@ project(Rem VERSION 0.1.0 LANGUAGES CXX)
 
 
 include(GNUInstallDirs)
-#SET(REM_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/include)
 message("REM_INCLUDE_PATH:" ${REM_INCLUDE_DIR})
 FILE(GLOB HDRS ${REM_INCLUDE_DIR}/*)
 FILE(GLOB SRCS Src/*)
@@ -19,7 +18,6 @@ add_library(
         SHARED
         ${HDRS}
         ${SRCS}
-		App/App.cpp App/App.h
 )
 
 

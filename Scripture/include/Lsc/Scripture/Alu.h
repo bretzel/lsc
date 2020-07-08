@@ -16,6 +16,14 @@
 namespace Lsc
 {
 
+
+/*!
+ * @brief Arithmetic Logical Unit ( Sort of...)
+ *
+ * @author &copy; 2014(using c++-union),2020(using std::any) Serge Lussier, Lonsomecoder/bretzel/Bretzelus/Bretzeltux, (lussier.serge@gmail.com)
+ *
+ */
+ 
 struct SCRIPTURE_LIB Alu
 {
     using Collection = std::vector<Alu>;
@@ -127,7 +135,7 @@ struct SCRIPTURE_LIB Alu
 
 
 
-    // Arithmetic operations overload between two Alus:
+    // Arithmetic operations overload between two Alu's:
 
     // Binary operators:
 

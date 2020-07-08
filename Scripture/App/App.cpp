@@ -47,7 +47,7 @@ Return AppBook::Type(std::string Txt_)
     T << Txt_;
     String Str_  = "[%08b]";
     Str_ << T;
-    std::cout << "AppBook.App::Type( [%08b]" << Txt_ << ") :" <<  Str_() << '\n';
+    std::cout << "App::Type( [%08b]" << Txt_ << ") :" <<  Str_() << '\n';
     Str_.Clear();
     std::string Txt;
     Txt.clear();
@@ -64,13 +64,13 @@ Return AppBook::Tokens(std::string Txt_)
     TokenData Token_ = TokenData::Scan(Txt_.c_str()); // => sin(+4) / 2a;
     
     std::cout <<
-        "AppBook.App::TokenScan(" << Txt_ << "):\n" <<
+        "App::TokenScan(" << Txt_ << "):\n" <<
         Token_.Details() << '\n';
         
     TokenData::Collection Tokens(1);
     Token_ = Tokens.back();
     std::cout <<
-        "AppBook.App::TokenScan(From the head of an empty Tokens stream):\n" <<
+        "App::TokenScan(From the head of an empty Tokens stream):\n" <<
         Token_.Details() << '\n';
     return Rem::Int::Ok;
 }
@@ -79,7 +79,7 @@ Return AppBook::Tokens(std::string Txt_)
 
 Return AppBook::LexerScan(std::string Txt_)
 {
-    std::cout << "AppBook.App::LexerScan(" << Txt_ << "):\n";
+    std::cout << "App::LexerScan(" << Txt_ << "):\n";
     Lexer Lex;
     TokenData::Collection Tokens;
     Lex.Config() =
@@ -89,11 +89,14 @@ Return AppBook::LexerScan(std::string Txt_)
     };
     auto R = Lex();
     
-    Lex.Flush([](TokenData Token_) {
+    Lex.Flush([](TokenData Token_) { // On s'en foutre que ce soit une (deep) copie ou une reference...
        Rem::Debug() << Token_.Details();
     });
     return Rem::Int::Implement;
 }
+
+
+
 Return AppBook::ArithmeticLogicalUnit()
 {
     Rem::Debug() << __PRETTY_FUNCTION__  << ":\n";
