@@ -11,11 +11,16 @@ namespace Lsc::Vault
 
 class Vault;
 
+
+/*!
+ * @brief Entity est la pi&egrave;ce angulaire de la structure de la base de donn&eacute;es entre l'application-usager et Vault.
+ *
+ */
 class VAULT_LIB  Entity
 {
     friend class Vault;
     Vault*  mVault = nullptr;
-    using Fields = std::vector<Field*>; ///< J'ai besoin de restreindre la copie donc ici on ne prend que l'adresse ( ou la r&eacute;f&eacute;rence) .
+    using Fields = std::vector<Field*>; ///< "Liste" des Fields/colonnes du schema de la DB
     using Cursor = Fields::iterator;    ///< Current position;
     using Stack  = std::stack<std::string>;
     
@@ -25,7 +30,7 @@ class VAULT_LIB  Entity
     
     Entity::Stack mStack;
     
-    Field::Collection   mLocalFields; ///< Schema &eacute;tendu ou initiale.
+    Field::Collection   mLocalFields; ///< D&eacutesfinition/Structure (Schema) &eacute;tendu ou initiale; Servant &agrave; construire la liste de nouveaux fields.
     Cursor              mCursor;
     Fields              mModel;
     String              mName;
@@ -52,9 +57,11 @@ public:
     bool End(Cursor C_);
     Entity::Cursor Begin() { mCursor = mModel.begin(); return mCursor;}
     
+    
+    
     /*!
      * @brief Temporaire...
-     * @tparam T
+     * @param T
      * @param D_
      * @return
      */

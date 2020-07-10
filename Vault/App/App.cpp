@@ -9,7 +9,7 @@
 
 auto main(int arc, char**argv) -> int
 {
-    Lsc::AppBook mApp;
+    Lsc::VaultApp mApp;
     mApp();
     Lsc::Rem::Clear([](Lsc::Rem& R) {
        std::cout << R() << '\n';
@@ -21,14 +21,20 @@ auto main(int arc, char**argv) -> int
 namespace Lsc
 {
 
-AppBook::~AppBook()
+VaultApp::~VaultApp()
 {
     mString.Clear();
 }
 
-Return AppBook::operator()()
+Return VaultApp::operator()()
 {
     //...
+    mString = "Hello, Testing Vault:\n------------------------------------------------\n";
+    std::cout << mString();
+    
+    Rem::Message() << " First thing first: Test the Field: ";
+    Field();
+    Rem::Message() << " Now the Entity:";
     Vault::Vault Vault("lab");
     Vault.Open();
     Vault::Entity E = Vault::Entity("User", &Vault);
@@ -47,15 +53,21 @@ Return AppBook::operator()()
 
 // if(Expect<std::string&> R; R = Row["Username"]) *R = "lussier.serge";
 
-Expect<Vault::Field> AppBook::Field()
+Return VaultApp::Field()
 {
     using Vault::Field;
-    Field F = {"ID", Vault::Field::Type::INTEGER};
-    F.SetAttributes(Field::PKAUTO);
-    
-    return F;
+    Field F = {"ParentID", Vault::Field::Type::INTEGER};
+    F.SetReference("Parent","ID");
+    Rem::Debug() << __PRETTY_FUNCTION__ <<": [" << F.Serialize() << "] ...";
+    return Rem::Int::Ok;
 }
-Return AppBook::Row()
+
+
+/*!
+ * @brief Pour l'instant c'est juste pour tester si ça compile :) ...
+ * @return
+ */
+Return VaultApp::Row()
 {
     Vault::Vault Vault("lab");
     if(Return R; !( R= Vault.Open()))

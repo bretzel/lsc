@@ -40,20 +40,7 @@
 // Mandatory. Globally used where it needs to.
 #include <sqlite3.h>
 
-// ...
-//---------------------------------------------
-//
-//// Voila : Retour a la premiere raison de "DECLOBJ_ID": Une pseudo "reflexion" des classes / objets c++ : Pour un gestionnaire ORM. 
-//#ifndef DECLOBJ_ID
-//#define DECLOBJ_ID \
-//    public:\
-//        virtual const char*  RefClassName() const noexcept; \
-//    private:
-//
-//#define  CLASSNAME_IMPL(CLASS) \
-//         const char*   CLASS::RefClassName() const noexcept{ return #CLASS; }
-//#endif
-//
+
 //#ifndef _WIN32
 //#   define _strdup  strdup
 //

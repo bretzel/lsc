@@ -24,6 +24,10 @@ DECLOBJ_ID
     Table* mTable = nullptr;
     String mDflt;
     
+    String mFkTableName;
+    String mFkFieldName;
+    
+    
 public:
     using SchemaInfoItem = std::pair<const char*, const char*>;
     using SchemaInfo     = std::vector<Field::SchemaInfoItem >;
@@ -64,7 +68,7 @@ public:
     static constexpr uint8_t PKAUTO = 0x05;
     static constexpr uint8_t Null   = 0x08;
     static constexpr uint8_t Index  = 0x10;
-    static constexpr uint8_t FK     = 0x20;
+    static constexpr uint8_t FK     = 0x20; ///< La table ainsi que la colonne r&eacute;f&eacute;r&eacute;e doivent &ecirc;tre pr&eacute;alablement d&eacuter;finies dans la "Vo&ucirc;te"
     
     
     Field() = default;
@@ -73,14 +77,14 @@ public:
     ~Field();
 
     Field(Table* Table_, std::string Name_);
-    Field(std::string Name_, Field::Type, Field::Attr Attr_);
-    Field(std::string Name_, Field::Type Type_);
-    
+    Field(std::string Name_, Field::Type, Field::Attr Attr_={0,0,0,1,0,0});
     Field(Table* Table_, const Field::SchemaInfo& SI_);
     
-    String Name() const { return mName; }
+    [[nodiscard]] String Name() const { return mName; }
     
     Field::Attr SetAttributes(uint8_t Attr_);
+    Return SetReference(const String& Table_, const String& Field_);
+    
     
     String Serialize();
 private:

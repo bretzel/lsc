@@ -20,14 +20,16 @@ Field::Field(std::string Name_, Field::Type Type_, Field::Attr Attr_):
 mName(std::move(Name_)),
 mType(Type_),
 mAttr(Attr_)
-{}
-
-Field::Field(std::string Name_, Field::Type Type_):
-mName(Name_),
-mType(Type_)
 {
 
 }
+
+//Field::Field(std::string Name_, Field::Type Type_):
+//mName(Name_),
+//mType(Type_)
+//{
+//
+//}
 Field::Attr Field::SetAttributes(uint8_t Attr_)
 {
     mAttr = {0};
@@ -75,6 +77,14 @@ String Field::Serialize()
     else
         Str << ' ';
     
+    
+    if(mAttr.FK)
+    {
+        Str.Clear(); /// vider le contenu de la String...
+        Str << "FOREIGN KEY(" << mName << ") REFERENCES " << mFkTableName << '(' << mFkFieldName << ')';
+        return Str;
+    }
+    
     Str << (mAttr.Primary ? "PRIMARY KEY " : mAttr.Unique ? "UNIQUE " : !mAttr.Null ? "NOT NULL " : mAttr.FK ? "FOREIGN KEY " :" ");
     if(mAttr.Auto)
         Str << " AUTOINCREMENT ";
@@ -119,6 +129,14 @@ Field::~Field()
     mName.Clear();
     mDflt.Clear();
     mDesc.Clear();
+}
+Return Field::SetReference(const String &Table_, const String &Field_)
+{
+    mAttr.FK = 1;
+    mFkFieldName=Field_;
+    mFkTableName=Table_;
+    return Rem::Int::Ok;
+    ///@note Pour l'instant on se contente de ca...
 }
 
 }
