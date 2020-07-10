@@ -40,7 +40,7 @@ Return VaultApp::operator()()
     Vault::Entity E = Vault::Entity("User", &Vault);
     
     try{
-        E += "User:UserName,A,Name, Mode:Name,Begin,End"; // Expect crash or ....
+        E += "User:UserName,A,Name, Mode:Name,Begin,End";
         std::cout << "\n--------------------------------------------------------------------\n";
         return Rem::Int::Ok;
     }
@@ -61,6 +61,8 @@ Return VaultApp::Field()
     Rem::Debug() << __PRETTY_FUNCTION__ <<": [" << F.Serialize() << "] ...";
     return Rem::Int::Ok;
 }
+
+
 
 
 /*!
