@@ -26,16 +26,16 @@ void Row::Reset()
     _C = mRow.begin();
 }
 
-Row::FColumn Row::Begin()
+Row::FieldCursor Row::Begin()
 {
     mColumn = mModel->Begin();
     return mColumn;
 }
 
 
-bool Row::End()
+bool Row::End(Row::FieldCursor Cursor_)
 {
-    return mModel->End(mColumn);
+    return mModel->End(Cursor_);
 }
 
 

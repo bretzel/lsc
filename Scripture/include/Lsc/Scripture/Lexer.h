@@ -12,7 +12,13 @@
 #include <map>
 namespace Lsc
 {
-
+/*!
+ * @brief Lexical Scanner(s)
+ *
+ * @author $copy; 2020, Serge Lussier(Bretzelus; bretzel; lonesomecoder; LordVorace...),  lussier.serge@gmail.com;
+ *
+ * @note Re-write of my lexical scanners; I shall dissociate Lexer from Lsc::String and only use std::string.
+ */
 class SCRIPTURE_LIB Lexer
 {
     struct InternalCursor

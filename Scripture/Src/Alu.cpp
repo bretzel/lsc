@@ -248,7 +248,7 @@ Alu Alu::operator/(const Alu &rv)
         
         if(vr == 0.0L)
         {
-            Rem::Error() <<  " in Alu arithmetic operation: division by zero error. (" <<  (*this)() << " / " << rv() << ")";
+            Rem::Exception() <<  " In Alu operation: division by zero error. (" <<  (*this)() << " / " << rv() << ")";
             return Alu();
         }
         return Alu(lr / vr);

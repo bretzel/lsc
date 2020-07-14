@@ -13,18 +13,19 @@
 namespace Lsc::Vault
 {
 
-class Entity;
+class Entity; ///< External definition because it will creates mutual dependancy on Entity<->Field
 
 class Row
 {
     Entity* mModel = nullptr;
     String::Collection mRow;
-    using FColumn = std::vector<Field*>::iterator;
     String::Collection::iterator _C;
-    FColumn mColumn;
+    
+    using FieldCursor = std::vector<Field*>::iterator;
+    FieldCursor        mColumn; ///< Internal;
     
     // NOTE (Sous reserve):
-    using RCursor = std::pair<Row::FColumn, String::Collection::iterator>;
+    using RCursor = std::pair<Row::FieldCursor, String::Collection::iterator>;
     // -------------------------------------------------------------------
 public:
     
@@ -36,10 +37,32 @@ public:
     
     explicit Row(Entity* E_);
     void Reset();
-    Row::FColumn Begin();
-    bool End();
+    Row::FieldCursor Begin();
+    bool End(Row::FieldCursor Cursor_);
     Expect<std::string&> operator[](const std::string& ColumnName_);
     
+    /*!
+     * @brief Input Data at the current column into the Row.
+     * @tparam T
+     * @param Data_
+     * @return Self.
+     */
+    template<typename T> Row& operator << (const T& Data_)
+    {
+        if(End(mColumn))
+        {
+            ///@todo throw or return failure.
+            return *this;
+        }
+        
+        String StrData; // Stringify(serializes?) and hold data.
+        ///@todo Check input data type VS Schema Column/Field's data type.
+        //...
+        StrData << Data_;
+        (*_C) = StrData();
+        ++mColumn;
+        return *this;
+    }
 };
 }
 //#endif //LSC_ROW_H

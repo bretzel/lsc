@@ -32,7 +32,7 @@ namespace Lsc
 class REM_LIB String
 {
     static std::string __nullstr__;
-    std::string _D;///< Private std::string instance.
+    std::string _D;///< Private/Encapsulated std::string instance.
     std::string::size_type _ArgPosition = 0; // Initialize Argument index position...
     static std::string _DefaultSeparators;
     uint8_t _Precision = 4;

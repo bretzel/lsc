@@ -66,6 +66,8 @@ Expect<Field *> Table::operator[](const std::string &Name_)
     
     throw Rem::Exception() << __PRETTY_FUNCTION__ << ": No such Field named '" << Name_ << "' in Table '" << mName << "'";
 }
+
+
 Table::~Table()
 {
     mFields.clear();
