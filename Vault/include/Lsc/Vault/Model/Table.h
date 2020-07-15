@@ -29,6 +29,9 @@ public:
     sqlite3* DB();
     [[nodiscard]] Field::Collection& Fields() { return mFields; }
     Expect<Field*>  operator [](const std::string& Name_);
+    Table& operator << (Field&& F_);
+    String Serialize();
+    
 };
 
 }

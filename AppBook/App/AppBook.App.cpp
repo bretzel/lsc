@@ -3,6 +3,8 @@
 //
 
 #include "./AppBook.App.h"
+#include <Lsc/Vault/Vault.h>
+#include <Lsc/Vault/Model/Table.h>
 
 auto main(int argc, char **argv)->int
 {
@@ -44,11 +46,17 @@ Return AppBookApp::operator()()
     return Lsc::Return();
 }
 
-
 Return AppBookApp::InitAndCreateDatabase()
 {
-    throw Rem::Internal() << __PRETTY_FUNCTION__ << ": Not yet implemented... Doh!";
-    return Lsc::Return();
+    //throw Rem::Internal() << __PRETTY_FUNCTION__ << ": Not yet implemented... Doh!";
+    Vault::Vault Vault;
+    Vault::Table T = {"Color", &Vault};
+    T << Vault::Field {&T, "ID", Vault::Field::Type::INTEGER, Vault::Field::PKAUTO}
+    << Vault::Field {&T, "Name", Vault::Field::Type::TEXT, Vault::Field::Unique};
+    
+    (*T["ID"])->SetAttributes(Vault::Field::PKAUTO);
+    
+    return Rem::Debug() << __PRETTY_FUNCTION__ <<": " << T.Serialize()();
 }
 
 }
