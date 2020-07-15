@@ -18,14 +18,14 @@ class Entity; ///< External definition because it will creates mutual dependancy
 class Row
 {
     Entity* mModel = nullptr;
-    String::Collection mRow;
-    String::Collection::iterator _C;
+    String::Collection           mStrData;
+    String::Collection::iterator mStrCursor;
     
     using FieldCursor = std::vector<Field*>::iterator;
-    FieldCursor        mColumn; ///< Internal;
+    FieldCursor mFieldCursor; ///< Internal;
     
-    // NOTE (Sous reserve):
-    using RCursor = std::pair<Row::FieldCursor, String::Collection::iterator>;
+    // NOTE (Likely Unused) (Sous reserve):
+    using RowCursor = std::pair<Row::FieldCursor, String::Collection::iterator>;
     // -------------------------------------------------------------------
 public:
     
@@ -39,7 +39,7 @@ public:
     void Reset();
     Row::FieldCursor Begin();
     bool End(Row::FieldCursor Cursor_);
-    Expect<std::string&> operator[](const std::string& ColumnName_);
+    Expect<std::string&> operator[](const std::string& FieldName_);
     
     /*!
      * @brief Input Data at the current column into the Row.
@@ -49,7 +49,7 @@ public:
      */
     template<typename T> Row& operator << (const T& Data_)
     {
-        if(End(mColumn))
+        if(End(mFieldCursor))
         {
             ///@todo throw or return failure.
             return *this;
@@ -59,8 +59,8 @@ public:
         ///@todo Check input data type VS Schema Column/Field's data type.
         //...
         StrData << Data_;
-        (*_C) = StrData();
-        ++mColumn;
+        (*mStrCursor) = StrData();
+        ++mFieldCursor;
         return *this;
     }
 };

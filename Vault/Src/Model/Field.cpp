@@ -125,7 +125,12 @@ mTable(Table_)
 }
 Field::~Field()
 {
-    Rem::Debug() << __PRETTY_FUNCTION__ << "["<< mName << "]: \\O/!";
+    String Str;
+    Str << '[';
+    if(mTable)
+        Str << mTable->Name() << ':';
+    Str << mName << ']';
+    Rem::Debug() << __PRETTY_FUNCTION__ << Str;
     mName.Clear();
     mDflt.Clear();
     mDesc.Clear();

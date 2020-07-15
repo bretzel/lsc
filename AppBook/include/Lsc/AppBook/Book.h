@@ -50,7 +50,8 @@ Alors au besoin, seulement, nous allons adapter les cas particuliers une fois re
     - ID  PRIMARY KEY AI
     - Code INTEGER UNIQUE ( static_cast<uint16_t>(Lsc::Color::*); ) ( Les couleurs EFFECTIVEMENT UTILISÉES )
     - Name              ( Name TEXT UNIQUE ) - Probablement le nom de la couleur enumeree sous Lsc::Color ... sinon la correction WEB/X11
-      Donc l'on va insérer des donnees au fur et a mesure que l'on voudra associer une couleur a un item ...
+    
+      Donc l'on va insérer des donn&eacute;es au fur et &agrave; mesure que l'on voudra associer une couleur &agrave; un item ...
     
     - Associer une ColorNum à un mode ( en l'occurence 'HTML' )
     [TABLE Mode] ... ? Whatever...
@@ -121,7 +122,7 @@ public:
         Book::Topic* mTopic;
         
     public:
-        // Ici non-plus je n'ai à lier une instance Section à une instance Topic --
+        // Ici non-plus je n'ai pas à lier une instance Section à une instance Topic --
         // Mais - Comme il n'y aura pas une tonne de sections, je devrais lier à l'instance de Topic parent.
         
         

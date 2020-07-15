@@ -11,9 +11,7 @@
 #include <Lsc/AppBook/AppBook.h>
 
 
-auto main() -> int{
-    return 0; 
-}
+
 namespace Lsc
 {
 
@@ -24,6 +22,9 @@ public:
     
     AppBookApp() = default;
     Return operator()();
+    
+    static Return InitAndCreateDatabase();
+    
     
     
 };
