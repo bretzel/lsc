@@ -1,5 +1,5 @@
 #include <Lsc/Vault/Vault.h>
-
+#include <Lsc/Vault/Data/Query.h>
 #ifdef _WIN32
 #include <shlwapi.h>
 #else
@@ -48,19 +48,19 @@ Return Vault::Open()
     
 #else
     if(access(str().c_str(), F_OK|R_OK|W_OK) != 0) // Just check if the db file exists.
-        return Rem::Error() << "error openning database '" << str() << "' - database file not found.";
+        throw Rem::Error() << "error openning database '" << str() << "' - database file not found.";
     
 #endif
     int res = sqlite3_open(str().c_str(), &mDB);
     if (res != SQLITE_OK)
-        return Rem::Error()<< " sqlitedb open db error(" << res << ") - " << sqlite3_errmsg(mDB);
+        throw Rem::Error()<< " sqlitedb open db error(" << res << ") - " << sqlite3_errmsg(mDB);
 
-    std::cout << "(" << res << ")" << sqlite3_errmsg(mDB) << "\n";
+    std::cout << " database is open...\n";
 
     
     Expect<std::size_t> R = PullSchema();
     if(!R)
-        return R();
+        throw R();
     
     Rem::Success() << __PRETTY_FUNCTION__ <<": " << *R << " Tables in DB " << mName;
     return Rem::Int::Accepted;
@@ -88,9 +88,7 @@ Return Vault::Create()
 #else
     int exists = access(str().c_str(), F_OK) == 0; // Just check if the db file exists.
     if (exists)
-        return Rem::Error() << "error creating database '" << mName << "' - database file already exists.";
-        
-    
+        throw Rem::Error() << "error creating database '" << mName << "' - database file already exists.";
 #endif
     int res = sqlite3_open(str().c_str(), &mDB);
     if (res != SQLITE_OK)
@@ -155,5 +153,23 @@ Expect<Table *> Vault::operator[](std::string Name_)
         Name_ << "' in Vault named '" << mName << "'";
 }
 
+
+Return Vault::ExecuteQuery(Query &Q)
+{
+    if(!mDB)
+        throw Rem::Exception() << __PRETTY_FUNCTION__ << ": null sqite3 handle: Is DB openned?";
+    
+    char * ErrStr;
+    Rem::Debug() << __PRETTY_FUNCTION__ << ": SQL: [" << Q.SqlText() << "]:";
+    int Ok  = sqlite3_exec(mDB,Q.SqlText().c_str(), nullptr,nullptr, &ErrStr);
+    if(Ok)
+    {
+        std::string str = ErrStr;
+        sqlite3_free(ErrStr);
+        throw Rem::Exception() << __PRETTY_FUNCTION__ << ":" << str;
+    }
+    
+    return Rem::Int::Ok;
+}
 
 }

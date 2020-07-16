@@ -5,7 +5,7 @@
 #include "./AppBook.App.h"
 #include <Lsc/Vault/Vault.h>
 #include <Lsc/Vault/Model/Table.h>
-
+#include <Lsc/Vault/Data/Query.h>
 auto main(int argc, char **argv)->int
 {
     
@@ -45,8 +45,8 @@ Return AppBookApp::operator()(const String::Collection& Args_)
     if(Args_[1] == "--init")
         mDbName = Args_[2];
     Rem::Debug() << __PRETTY_FUNCTION__ << ": DbName: '" << mDbName << "' :";
-    throw Rem::Internal() << " -- STOP. Must Implement a Vault::Query.";
-    //return InitAndCreateDatabase();
+    //throw Rem::Internal() << " -- STOP. Must Implement a Vault::Query.";
+    return InitAndCreateDatabase();
 }
 
 
@@ -62,7 +62,11 @@ Return AppBookApp::InitAndCreateDatabase()
     
     (*T["ID"])->SetAttributes(Vault::Field::PKAUTO);
     
-    return Rem::Debug() << __PRETTY_FUNCTION__ <<": " << T.Serialize()();
+    Vault::Query Q = Vault::Query{&Vault};
+    Q.SQL(T.Serialize()());
+    Vault.ExecuteQuery(Q);
+    
+    return Rem::Int::Ok;
 }
 
 }

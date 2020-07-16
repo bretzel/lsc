@@ -7,6 +7,9 @@
 namespace Lsc::Vault
 {
 
+class Query;
+
+
 class VAULT_LIB Vault
 {
     sqlite3* mDB = nullptr;
@@ -28,6 +31,7 @@ public:
     Return Create();
     Expect<Table*> operator [](std::string Name_);
     
+    Return ExecuteQuery(Query& Q);
     
     //Return Query();
     

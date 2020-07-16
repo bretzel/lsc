@@ -9,6 +9,8 @@
 
 #include <Lsc/Vault/Vault.h>
 #include <Lsc/Rem/Rem.h>
+#include <functional>
+#include <Lsc/Vault/Data/Row.h>
 
 namespace Lsc::Vault
 {
@@ -17,7 +19,11 @@ class VAULT_LIB Query
 {
     Vault* mVault = nullptr;
     String mSql;
+    
+    
 public:
+    
+    using DataCallBack = std::function<Return(const String::Collection&)>;
     Query() = default;
     Query(Query&& ) noexcept = default;
     
@@ -42,6 +48,10 @@ public:
     Query& NEQ();
     
     Query& SQL(const std::string& Sql_);
+    
+    [[nodiscard]]std::string SqlText() const { return mSql(); }
+    Return Execute(Query::DataCallBack Callback_=nullptr);
+    
     
 //
 //    // Testing the Overloaded arithmetic and boolean operators here.

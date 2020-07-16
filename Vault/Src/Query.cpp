@@ -82,11 +82,19 @@ Query &Query::NEQ()
 }
 Query &Query::SQL(const std::string &Sql_)
 {
+    mSql = Sql_;
     return *this;
 }
 Query::Query(Vault *Vault_)
 {
     mVault = Vault_;
+}
+Return Query::Execute(Query::DataCallBack Callback_)
+{
+    if((!mVault) || (!mVault->Handle()))
+        throw Rem::Exception() << __PRETTY_FUNCTION__ << ": Null DB.";
+    
+    return mVault->ExecuteQuery(*this);
 }
 
 }

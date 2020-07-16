@@ -69,20 +69,32 @@ String Field::Serialize()
     };
     
     String Str = mName;
+    std::cout << __PRETTY_FUNCTION__  << ": Field Name: " << mName() << ":\n";
     Str << ' ' << Types[mType];
+    std::cout << __PRETTY_FUNCTION__  << ": Field Type: " << Str() << ":\n";
+    String DebugStr = "%08b";
+    std::cout << __PRETTY_FUNCTION__ << ": Attr: {" << DebugStr() << "}\n";
+    DebugStr << *(uint8_t*)&mAttr;
+    std::cout << __PRETTY_FUNCTION__ << ": Attr: {" << DebugStr() << "}\n";
     
-    String Debug = "%08b";
-    Debug << *(uint8_t*)&mAttr;
-    Rem::Debug() << __PRETTY_FUNCTION__ << ": Attr: {" << Debug() << '}';
+    Rem::Debug() << __PRETTY_FUNCTION__ << ": Attr: {" << DebugStr() << '}';
+    
+    
+    std::cout << __PRETTY_FUNCTION__ << ": Attr END: {" << DebugStr() << "}\n";
+    
+    
     if(mLen > 0)
         Str << '(' << mLen << ") ";
     else
         Str << ' ';
     
+    
     if(mAttr.FK)
     {
         Str.Clear(); /// vider le contenu de la String...
+        std::cout << __PRETTY_FUNCTION__ << ": Empty Contents...\n";
         Str << "FOREIGN KEY(" << mName << ") REFERENCES " << mFkTableName << '(' << mFkFieldName << ')';
+        std::cout << __PRETTY_FUNCTION__ << ": FK: : {" << Str() << "}\n";
         return Str;
     }
     
@@ -156,7 +168,7 @@ Field::Field(Table *Table_, std::string&& Name_, Field::Type Type_, uint8_t Attr
 }
 std::string Field::TableName() const
 {
-    mName();
+    return mName();
 }
 
 }
