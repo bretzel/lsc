@@ -132,6 +132,7 @@ Expect<std::size_t> Vault::PullSchema()
     for(auto& Tbl : mTables)
     {
         Tbl.PullSchema();
+        Rem::Debug() << __PRETTY_FUNCTION__ << ": " << Tbl.Serialize() << "..";
     }
     return mTables.size();
 }

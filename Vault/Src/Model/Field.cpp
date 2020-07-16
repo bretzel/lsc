@@ -44,9 +44,6 @@ Field::Attr Field::SetAttributes(uint8_t Attr_)
         mAttr.FK     = 1;
     
     Field::Attr AA = {Attr_};
-    StrDebug << *(uint8_t*)&AA << *(uint8_t*)&mAttr;
-    
-    Rem::Debug() << __PRETTY_FUNCTION__ << " :Test:  {" << StrDebug() << "}:";
     return mAttr;
 }
 
@@ -69,32 +66,19 @@ String Field::Serialize()
     };
     
     String Str = mName;
-    std::cout << __PRETTY_FUNCTION__  << ": Field Name: " << mName() << ":\n";
     Str << ' ' << Types[mType];
-    std::cout << __PRETTY_FUNCTION__  << ": Field Type: " << Str() << ":\n";
-    String DebugStr = "%08b";
-    std::cout << __PRETTY_FUNCTION__ << ": Attr: {" << DebugStr() << "}\n";
-    DebugStr << *(uint8_t*)&mAttr;
-    std::cout << __PRETTY_FUNCTION__ << ": Attr: {" << DebugStr() << "}\n";
-    
-    Rem::Debug() << __PRETTY_FUNCTION__ << ": Attr: {" << DebugStr() << '}';
-    
-    
-    std::cout << __PRETTY_FUNCTION__ << ": Attr END: {" << DebugStr() << "}\n";
-    
+    //String DebugStr = "%08b";
+    //DebugStr << *(uint8_t*)&mAttr;
     
     if(mLen > 0)
         Str << '(' << mLen << ") ";
     else
         Str << ' ';
     
-    
     if(mAttr.FK)
     {
         Str.Clear(); /// vider le contenu de la String...
-        std::cout << __PRETTY_FUNCTION__ << ": Empty Contents...\n";
         Str << "FOREIGN KEY(" << mName << ") REFERENCES " << mFkTableName << '(' << mFkFieldName << ')';
-        std::cout << __PRETTY_FUNCTION__ << ": FK: : {" << Str() << "}\n";
         return Str;
     }
     
@@ -134,11 +118,14 @@ Field::Field(Table *Table_, const Field::SchemaInfo &SI_) : mTable(Table_)
     
     mAttr.Null = (SI_[3].second[0] != '1' ? 1 : 0);
     mDflt = SI_[4].second;
-    mAttr.Primary = (SI_[5].second[0] == '1' ? 1 : 0);
-    
-    //sqlite3* H = mTable->DB();
-    
+    Txt = SI_[5].second;
+    uint8_t B;
+    Txt >> B;
+    Rem::Debug() << __PRETTY_FUNCTION__ << ": B=" << B;
+    mAttr._ |= B;
 }
+
+
 Field::~Field()
 {
     String Str;

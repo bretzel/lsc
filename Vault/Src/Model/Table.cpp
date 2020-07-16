@@ -22,17 +22,14 @@ Lsc::Expect<size_t> Table::PullSchema()
     
     char *ErrMsg = nullptr;
     auto Lm = [](void *this_, int argc, char **argv, char **azColName)->int {
-        auto *This          = reinterpret_cast<Table *>(this_);
-        Rem::Debug() << "------------------------------------";
+        auto *This = reinterpret_cast<Table *>(this_);
         Field::SchemaInfo Infos;
-        for(int           i = 0; i < argc; i++)
+        for(int i = 0; i < argc; i++)
         {
             Rem::Debug() << "[" << azColName[i] << "]: " << argv[i];
             Infos.push_back({azColName[i], argv[i]});
         }
         This->mFields.push_back({This, Infos});
-        Rem::Debug() << "Field: " << This->mFields.back().Serialize();
-        Rem::Debug() << "------------------------------------";
         Infos.clear();
         return SQLITE_OK;
     };
@@ -88,9 +85,7 @@ String Table::Serialize()
     
     for(auto F : mFields)
     {
-        //Rem::Debug() << "Field: '" << F.Name() << '\'';
         StrFields += F.Serialize()();
-        // Rem::Debug() << " - [" << StrFields << "] -";
         ++fn;
         if(fn < fc)
             StrFields += ", ";
