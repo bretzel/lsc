@@ -154,6 +154,10 @@ Field::Field(Table *Table_, std::string&& Name_, Field::Type Type_, uint8_t Attr
     mTable = Table_;
     mType  = Type_;
 }
+std::string Field::TableName() const
+{
+    mName();
+}
 
 }
 

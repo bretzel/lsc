@@ -94,7 +94,7 @@ Return Vault::Create()
 #endif
     int res = sqlite3_open(str().c_str(), &mDB);
     if (res != SQLITE_OK)
-        return Rem::Error() << " sqlite3 create db error(" << res <<  ") - " <<  sqlite3_errmsg(mDB);
+        throw Rem::Error() << " sqlite3 create db error(" << res <<  ") - " <<  sqlite3_errmsg(mDB);
     
     return Rem::Int::Accepted;
 }

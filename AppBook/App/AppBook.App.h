@@ -18,12 +18,14 @@ namespace Lsc
 
 class AppBookApp
 {
+    String mDbName;
+    
 public:
     
     AppBookApp() = default;
-    Return operator()();
+    Return operator()(const String::Collection& Args_);
     
-    static Return InitAndCreateDatabase();
+    Return InitAndCreateDatabase();
     
     
     

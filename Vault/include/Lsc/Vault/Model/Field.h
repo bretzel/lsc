@@ -19,6 +19,7 @@ class VAULT_LIB Field
 
 DECLOBJ_ID
     
+    
     String mName; ///< Nom de la colonne de la table du schema sqlite3 - ET - d'un item du Modele donne par le nom de la classe. ( CLASSNAME_IMPL )
     String mDesc; ///< Description de la colonne.
     Table *mTable = nullptr;
@@ -89,7 +90,7 @@ public:
     Field::Attr SetAttributes(uint8_t Attr_);
     Return SetReference(const String& Table_, const String& Field_);
     
-    
+    std::string TableName() const;
     String Serialize();
 private:
     Field::Type mType = Field::Type::INTEGER;
