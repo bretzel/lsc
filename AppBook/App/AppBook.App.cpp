@@ -6,6 +6,7 @@
 #include <Lsc/Vault/Vault.h>
 #include <Lsc/Vault/Model/Table.h>
 #include <Lsc/Vault/Data/Query.h>
+
 auto main(int argc, char **argv)->int
 {
     
@@ -13,7 +14,8 @@ auto main(int argc, char **argv)->int
     try
     {
         Lsc::String::Collection Args;
-        for(int a = 0; a<argc; a++) Args.push_back(argv[a]);
+        for(int                 a = 0; a < argc; a++)
+            Args.push_back(argv[a]);
         
         Lsc::AppBookApp App;
         App(Args);
@@ -37,7 +39,7 @@ auto main(int argc, char **argv)->int
 namespace Lsc
 {
 
-Return AppBookApp::operator()(const String::Collection& Args_)
+Return AppBookApp::operator()(const String::Collection &Args_)
 {
     if(Args_.size() != 3)
     {
@@ -50,23 +52,25 @@ Return AppBookApp::operator()(const String::Collection& Args_)
     return InitAndCreateDatabase();
 }
 
-
 Return AppBookApp::InitAndCreateDatabase()
 {
     //throw Rem::Internal() << __PRETTY_FUNCTION__ << ": Not yet implemented... Doh!";
     Vault::Vault Vault(mDbName());
     Vault.Create(); // Throws on error.
     
-    Vault::Table TObject = {"Object", &Vault};
-    TObject << Vault::Field {&TObject, "ID", Vault::Field::Type::INTEGER, Vault::Field::PKAUTO}
-      << Vault::Field {&TObject, "Name", Vault::Field::Type::TEXT, Vault::Field::Unique}
-      << Vault::Field {&TObject, "TagName", Vault::Field::Type::TEXT};
-      
+    Vault::Table TElement = {"Element", &Vault};
+    TElement
+    << Vault::Field {&TElement, "ID", Vault::Field::Type::INTEGER, Vault::Field::PKAUTO}
+    << Vault::Field {&TElement, "Name", Vault::Field::Type::TEXT, Vault::Field::Unique}
+    << Vault::Field {&TElement, "TagName", Vault::Field::Type::TEXT}
+    << Vault::Field {&TElement, "Prefix", Vault::Field::Type::TEXT}
+    << Vault::Field {&TElement, "Suffix", Vault::Field::Type::TEXT};
     
-    (*TObject["ID"])->SetAttributes(Vault::Field::PKAUTO);
+    (*TElement["ID"])->SetAttributes(Vault::Field::PKAUTO);
     
-    Vault::Query Q = Vault::Query{&Vault};
-    Q.SQL(T.Serialize()());
+    //Vault::Table
+    Vault::Query Q = Vault::Query {&Vault};
+    Q.SQL(TElement.Serialize()());
     Vault.ExecuteQuery(Q);
     
     return Rem::Int::Ok;
