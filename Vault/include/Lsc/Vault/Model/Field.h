@@ -50,44 +50,29 @@ public:
         CURRENCY
     };
     uint32_t mLen = 0;
-    /*!
-     * @brief Not necessarely exclusive (merged) serial bit selections;
-     */
-    union Attr
-    {
-        uint8_t _;
-        struct
-        {
-            uint8_t Primary: 1;
-            uint8_t Unique: 1;
-            uint8_t Auto: 1;
-            uint8_t Null: 1;
-            uint8_t Index: 1;
-            uint8_t FK: 1;
-        };
-    }mAttr;
     
     static constexpr uint8_t PK     = 0x1;
     static constexpr uint8_t Unique = 0x2;
-    static constexpr uint8_t PKAUTO = 0x5;
-    static constexpr uint8_t Null   = 0x8;
+    static constexpr uint8_t PKAUTO = 0x4;
+    static constexpr uint8_t NotNull = 0x8;
     static constexpr uint8_t Index  = 0x10;
     static constexpr uint8_t FK     = 0x20; ///< La table ainsi que la colonne r&eacute;f&eacute;r&eacute;e doivent &ecirc;tre pr&eacute;alablement d&eacuter;finies dans la "Vo&ucirc;te"
     
-    
+    using Attr = uint8_t ;
+    uint8_t mAttr = 0;
     Field() = default;
     Field(const Field&) = default;
     Field(Field&&) noexcept = default;
     ~Field();
 
     Field(Table* Table_, std::string Name_);
-    Field(std::string Name_, Field::Type, Field::Attr Attr_ = {Field::Null});
+    Field(std::string Name_, Field::Type, Field::Attr Attr_ = 0);
     Field(Table *Table_, std::string&& Name_, Field::Type Type_, uint8_t AttrBits_ = 0);
     Field(Table* Table_, const Field::SchemaInfo& SI_);
     
     [[nodiscard]] String Name() const { return mName; }
     
-    Field::Attr SetAttributes(uint8_t Attr_);
+    uint8_t SetAttributes(uint8_t Attr_);
     Return SetReference(const String& Table_, const String& Field_);
     
     std::string TableName() const;
