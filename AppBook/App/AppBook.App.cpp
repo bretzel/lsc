@@ -19,6 +19,7 @@ auto main(int argc, char **argv)->int
         App(Args);
         
     }
+    
     catch(Rem &R)
     { ;
     }
@@ -56,11 +57,13 @@ Return AppBookApp::InitAndCreateDatabase()
     Vault::Vault Vault(mDbName());
     Vault.Create(); // Throws on error.
     
-    Vault::Table T = {"Color", &Vault};
-    T << Vault::Field {&T, "ID", Vault::Field::Type::INTEGER, Vault::Field::PKAUTO}
-    << Vault::Field {&T, "Name", Vault::Field::Type::TEXT, Vault::Field::Unique};
+    Vault::Table TObject = {"Object", &Vault};
+    TObject << Vault::Field {&TObject, "ID", Vault::Field::Type::INTEGER, Vault::Field::PKAUTO}
+      << Vault::Field {&TObject, "Name", Vault::Field::Type::TEXT, Vault::Field::Unique}
+      << Vault::Field {&TObject, "TagName", Vault::Field::Type::TEXT};
+      
     
-    (*T["ID"])->SetAttributes(Vault::Field::PKAUTO);
+    (*TObject["ID"])->SetAttributes(Vault::Field::PKAUTO);
     
     Vault::Query Q = Vault::Query{&Vault};
     Q.SQL(T.Serialize()());
