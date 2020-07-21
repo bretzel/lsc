@@ -56,7 +56,7 @@ public:
     static constexpr uint8_t PKAUTO = 0x4;
     static constexpr uint8_t NotNull = 0x8;
     static constexpr uint8_t Index  = 0x10;
-    static constexpr uint8_t FK     = 0x20; ///< La table ainsi que la colonne r&eacute;f&eacute;r&eacute;e doivent &ecirc;tre pr&eacute;alablement d&eacuter;finies dans la "Vo&ucirc;te"
+    static constexpr uint8_t FK     = 0x20; ///< La table ainsi que la colonne r&eacute;f&eacute;r&eacute;e doivent &ecirc;tre pr&eacute;alablement d&eacute;finies dans la "Vo&ucirc;te"
     
     using Attr = uint8_t ;
     uint8_t mAttr = 0;
