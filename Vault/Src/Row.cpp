@@ -28,8 +28,8 @@ void Row::Reset()
 
 Row::FieldCursor Row::Begin()
 {
-    mFieldCursor = mModel->Begin();
-    return mFieldCursor;
+    return (mFieldCursor = mModel->Begin());
+    //return mFieldCursor;
 }
 
 

@@ -112,7 +112,7 @@ String Field::Serialize()
     Str << (mAttr & Field::PK ? "PRIMARY KEY " : mAttr & Unique ? "UNIQUE " : "");
     
     if(mAttr & PKAUTO)
-        Str << "AUTOINCREMENT ";
+        Str << "AUTO INCREMENT ";
     else
     {
         if(mAttr & NotNull)

@@ -192,5 +192,12 @@ Return Entity::ProcessField(const String &Text_)
     mStack.pop();
     return Rem::Int::Ok;
 }
+Return Entity::GenerateSchema()
+{
+    if(!mVault)
+        throw Rem::Exception() << __PRETTY_FUNCTION__ << ": Entity '" << mName << "' must be linked to a Vault prior to generate it's schema.";
+    
+    return Rem::Int::Implement;
+}
 
 }
