@@ -75,7 +75,7 @@ public:
         //...
         return *this;
     }
-    Return GenerateSchema();
+    std::string  GenerateSchema();
     #pragma endregion EntityCompose
     //-----------------------------------------------------------------------------
     std::string Name() { return mName(); }

@@ -78,6 +78,9 @@ public:
     std::string TableName() const;
     String Serialize();
 private:
+    friend class Entity;
+    friend class Table;
+    friend class Vault;
     Field::Type mType = Field::Type::INTEGER;
     int CID=-1;
     

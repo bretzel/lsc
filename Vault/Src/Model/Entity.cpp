@@ -192,12 +192,25 @@ Return Entity::ProcessField(const String &Text_)
     mStack.pop();
     return Rem::Int::Ok;
 }
-Return Entity::GenerateSchema()
+
+
+/*!
+ * @brief Only creates a single table. Uses internal table storage
+ * @return Rem::Int
+ */
+std::string Entity::GenerateSchema()
 {
     if(!mVault)
         throw Rem::Exception() << __PRETTY_FUNCTION__ << ": Entity '" << mName << "' must be linked to a Vault prior to generate it's schema.";
     
-    return Rem::Int::Implement;
+    // Using mName as the Table name:
+    Table TSqlTbl = {mName, mVault};
+    for(auto const& F : mLocalFields)
+    {
+        TSqlTbl << Field{&TSqlTbl, F.Name(),F.mType, F.mAttr};
+    }
+    
+    return TSqlTbl.Serialize()();
 }
 
 }
