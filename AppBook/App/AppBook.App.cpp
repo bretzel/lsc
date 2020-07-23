@@ -4,7 +4,7 @@
 
 #include "./AppBook.App.h"
 #include <Lsc/Vault/Vault.h>
-#include <Lsc/Vault/Model/Table.h>
+#include <Lsc/Vault/Model/Entity.h>
 #include <Lsc/Vault/Data/Query.h>
 
 auto main(int argc, char **argv)->int
@@ -58,19 +58,27 @@ Return AppBookApp::InitAndCreateDatabase()
     Vault::Vault Vault(mDbName());
     Vault.Create(); // Throws on error.
     
-    Vault::Table TElement = {"Element", &Vault};
-    TElement
-    << Vault::Field {&TElement, "ID", Vault::Field::Type::INTEGER, Vault::Field::PKAUTO}
-    << Vault::Field {&TElement, "Name", Vault::Field::Type::TEXT, Vault::Field::Unique}
-    << Vault::Field {&TElement, "TagName", Vault::Field::Type::TEXT}
-    << Vault::Field {&TElement, "Prefix", Vault::Field::Type::TEXT}
-    << Vault::Field {&TElement, "Suffix", Vault::Field::Type::TEXT};
+//    Vault::Table TElement = {"Element", &Vault};
+//    TElement
+//    << Vault::Field {&TElement, "ID", Vault::Field::Type::INTEGER, Vault::Field::PKAUTO}
+//    << Vault::Field {&TElement, "Name", Vault::Field::Type::TEXT, Vault::Field::Unique}
+//    << Vault::Field {&TElement, "TagName", Vault::Field::Type::TEXT}
+//    << Vault::Field {&TElement, "Prefix", Vault::Field::Type::TEXT}
+//    << Vault::Field {&TElement, "Suffix", Vault::Field::Type::TEXT};
+//
+//    (*TElement["ID"])->SetAttributes(Vault::Field::PKAUTO);
+//
+//    //Vault::Table
+//
+    Vault::Entity E = {"Element", &Vault};
+    E + Vault::Field {E.Model(), "ID", Vault::Field::Type::INTEGER, Vault::Field::PKAUTO} +
+    Vault::Field {E.Model(), "Name", Vault::Field::Type::TEXT, Vault::Field::Unique} +
+    Vault::Field {E.Model(), "TagName", Vault::Field::Type::TEXT} +
+    Vault::Field {E.Model(), "Prefix", Vault::Field::Type::TEXT} +
+    Vault::Field {E.Model(), "Suffix", Vault::Field::Type::TEXT};
     
-    (*TElement["ID"])->SetAttributes(Vault::Field::PKAUTO);
-    
-    //Vault::Table
     Vault::Query Q = Vault::Query {&Vault};
-    Q.SQL(TElement.Serialize()());
+    Q.SQL(E.GenerateSchema());
     Vault.ExecuteQuery(Q);
     
     return Rem::Int::Ok;

@@ -203,14 +203,42 @@ std::string Entity::GenerateSchema()
     if(!mVault)
         throw Rem::Exception() << __PRETTY_FUNCTION__ << ": Entity '" << mName << "' must be linked to a Vault prior to generate it's schema.";
     
-    // Using mName as the Table name:
-    Table TSqlTbl = {mName, mVault};
+    
+    if(!mTable)// Using mName as the Table name:
+        (void) CreateTableFromName();
+
     for(auto const& F : mLocalFields)
     {
-        TSqlTbl << Field{&TSqlTbl, F.Name(),F.mType, F.mAttr};
+        (*mTable) << Field{mTable, F.Name(),F.mType, F.mAttr};
     }
     
-    return TSqlTbl.Serialize()();
+    return mTable->Serialize()();
+}
+
+
+Table *Entity::CreateTableFromName()
+{
+    return (mTable = *mVault->NewTable(mName()));
+}
+
+Entity &Entity::operator+=(Field && F)
+{
+    mLocalFields.emplace_back(F);
+    return *this;
+}
+
+Table *Entity::Model()
+{
+    if(!mVault)
+        throw Rem::Exception() << __PRETTY_FUNCTION__ << ": Entity::Model is null if not linked with Vault";
+    
+    if(!mTable)
+    {
+        Rem::Warning() << __PRETTY_FUNCTION__ << ": " << "No Table, creating '" << mName << "' ...";
+        return (mTable = *mVault->NewTable(mName()));
+    }
+    
+    return mTable;
 }
 
 }

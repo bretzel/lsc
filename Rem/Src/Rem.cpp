@@ -7,9 +7,12 @@
 
 using namespace Lsc;
 
+
+
 Rem::Collection Rem::_Array;
 
 Rem  Rem::_Null;
+Rem::Type Rem::sType=Rem::Type::None;
 
 Rem::Rem(Rem &&R) noexcept
 {
@@ -84,30 +87,44 @@ std::size_t Rem::Clear(std::function<void(Rem &)> LambdaFN)
     return Sz;
 }
 
+
+/*!
+ * @brief ...
+ * @param T
+ * @return
+ */
 std::string Rem::ToStr(Rem::Type T)
 {
-    
-    std::map<Rem::Type, std::string> _ = {{Rem::Type::None,        "None"},
-                                          {Rem::Type::Info,        "Info"},
-                                          {Rem::Type::Internal,    "Internal"},
-                                          {Rem::Type::Error,       "Error"},
-                                          {Rem::Type::SyntaxError, "Syntax Error"},
-                                          {Rem::Type::Warning,     "Warning"},
-                                          {Rem::Type::Fatal,       "Fatal Error"},
-                                          {Rem::Type::Success,     "Success"},
-                                          {Rem::Type::Message,     "Message"},
-                                          {Rem::Type::Return,      "Return"},
-                                          {Rem::Type::Value,       "Value"},
-                                          {Rem::Type::State,       "State"},
-                                          {Rem::Type::Debug,       "Debug"},
-                                          {Rem::Type::Event,       "Event"},
-                                          {Rem::Type::System,      "System"},
-                                          {Rem::Type::Application, "Application"},
-                                          {Rem::Type::Network,     "Network"},
-                                          {Rem::Type::Exception,   "Exception"}
+    std::map<Rem::Type, std::string> _ = {{Rem::Type::None,        "\033[0mNone"},
+                                          {Rem::Type::Info,        "\033[38;5;12m⚫ Info\033[0m"},
+                                          {Rem::Type::Internal,    "\033[38;5;247m⚑ Internal\033[0m"},
+                                          {Rem::Type::Error,       "\033[38;5;124m✘ Error\033[0m"},
+                                          {Rem::Type::SyntaxError, "\033[38;5;9m☠ Syntax Error\033[0m"},
+                                          {Rem::Type::Warning,     "\033[38;5;106m⚠ Warning\033[0m"},
+                                          {Rem::Type::Fatal,       "\033[38;5;12m☠ Fatal Error\033[0m"},
+                                          {Rem::Type::Success,     "\033[38;5;12m✔ Success\033[0m"},
+                                          {Rem::Type::Message,     "\033[38;5;70m@ Message\033[0m"},
+                                          {Rem::Type::Return,      "\033[38;5;12m⏎ Return\033[0m"},
+                                          {Rem::Type::Value,       "\033[38;5;12m  Value\033[0m"},
+                                          {Rem::Type::State,       "\033[38;5;12m  Status\033[0m"},
+                                          {Rem::Type::Debug,       "\033[38;5;130m➤ Debug\033[0m"},
+                                          {Rem::Type::Event,       "\033[38;5;74m  Event\033[0m"},
+                                          {Rem::Type::System,      "\033[38;5;12m  System\033[0m"},
+                                          {Rem::Type::Application, "\033[38;5;12m⚫ Application\033[0m"},
+                                          {Rem::Type::Network,     "\033[38;5;12m  Network\033[0m"},
+                                          {Rem::Type::Exception,   "\033[38;5;57m☠ Exception\033[0m"}
         
     };
-    return "Rem::" + _[T];
+    
+    String Str;
+    switch(mPrefix)
+    {
+        case Rem::Clr: break;
+        default:break;
+    }
+    
+    Str += _[T];
+    return Str();
 }
 
 std::string Rem::ToStr(Rem::Int C)
@@ -153,32 +170,68 @@ Rem::~Rem()
 
 Rem &Rem::Debug()
 {
-    Rem R;
-    R << Rem::Type::Debug << ": ";
+       Rem R;
+    if(Rem::sType != Rem::Type::Debug)
+    {
+        R << Rem::Type::Debug << ": ";
+        Rem::sType = Rem::Type::Debug;
+    }
+    else
+    {
+        R << "          ";
+    }
+    
     Rem::_Array.push_back(R);
     return Rem::_Array.back();
 }
 
 Rem &Rem::Info()
 {
-    Rem R;
-    R << Rem::Type::Info << ": ";
+       Rem R;
+    if(Rem::sType != Rem::Type::Info)
+    {
+        R << Rem::Type::Info << ": ";
+        Rem::sType = Rem::Type::Info;
+    }
+    else
+    {
+        R << "          ";
+    }
+    
     Rem::_Array.push_back(R);
     return Rem::_Array.back();
 }
 
 Rem &Rem::Internal()
 {
-    Rem R;
-    R << Rem::Type::Internal << ": ";
+       Rem R;
+    if(Rem::sType != Rem::Type::Internal)
+    {
+        R << Rem::Type::Internal << ": ";
+        Rem::sType = Rem::Type::Internal;
+    }
+    else
+    {
+        R << "          ";
+    }
+    
     Rem::_Array.push_back(R);
     return Rem::_Array.back();
 }
 
 Rem &Rem::Error()
 {
-    Rem R;
-    R << Rem::Type::Error << ": ";
+       Rem R;
+    if(Rem::sType != Rem::Type::Error)
+    {
+        R << Rem::Type::Error << ": ";
+        Rem::sType = Rem::Type::Error;
+    }
+    else
+    {
+        R << "          ";
+    }
+    
     Rem::_Array.push_back(R);
     return Rem::_Array.back();
 }
@@ -186,15 +239,33 @@ Rem &Rem::Error()
 Rem &Rem::SyntaxError()
 {
     Rem R;
-    R << Rem::Type::SyntaxError << ": ";
+    if(Rem::sType != Rem::Type::SyntaxError)
+    {
+        R << Rem::Type::SyntaxError << ": ";
+        Rem::sType = Rem::Type::SyntaxError;
+    }
+    else
+    {
+        R << "          ";
+    }
+    
     Rem::_Array.push_back(R);
     return Rem::_Array.back();
 }
 
 Rem &Rem::Warning()
 {
-    Rem R;
-    R << Rem::Type::Warning << ": ";
+   Rem R;
+    if(Rem::sType != Rem::Type::Warning)
+    {
+        R << Rem::Type::Warning << ": ";
+        Rem::sType = Rem::Type::Warning;
+    }
+    else
+    {
+        R << "          ";
+    }
+    
     Rem::_Array.push_back(R);
     return Rem::_Array.back();
 }
@@ -281,8 +352,31 @@ Rem &Rem::Network()
 Rem &Rem::Exception()
 {
     Rem R;
-    R << Rem::Type::Exception << ": ";
+    if(Rem::sType != Rem::Type::Exception)
+    {
+        R << Rem::Type::Exception << ": ";
+        Rem::sType = Rem::Type::Exception;
+    }
+    else
+    {
+        R << "          ";
+    }
+    
     Rem::_Array.push_back(R);
     return Rem::_Array.back();
+}
+
+Rem &Rem::operator<<(Ansi::Color C)
+{
+    Rem R;
+    R << "\033[38;5;" << static_cast<int>(C) << 'm';
+    Rem::_Array.push_back(R);
+    return *this;
+}
+
+Rem &Rem::operator<<(Rem::Prefix P)
+{
+    mPrefix = P;
+    return *this;
 }
 

@@ -45,12 +45,14 @@ public:
     
     Entity(std::string Name_, Vault* Vault_);
     Entity(std::string Name_);
-    
+    Table* Model()  ; // Maybe null ...
     //--------------------Composition de l'Entity : -------------------------------
     #pragma region EntityCompose
+    Table*  CreateTableFromName();
     Entity& operator + (Field&&);
     Entity& operator + (const String&);
     Entity& operator += (const String&);
+    Entity& operator += (Field&&);
     Entity& operator << (Field*) noexcept;
     int     operator [](const std::string& Name_);
     
@@ -58,23 +60,6 @@ public:
     Entity::Cursor Begin() { mCursor = mModel.begin(); return mCursor;}
     
     
-    
-    /*!
-     * @brief Temporaire...
-     * @param T
-     * @param D_
-     * @return
-     */
-    template<typename T=const std::string&> Entity& operator << (T D_)
-    {
-        Rem::Debug() << __PRETTY_FUNCTION__ << "?";
-        String Str;
-        Str << D_;
-        //... Selon la donnee versus le type de donnee de la colonne(field) courante,
-        // on ne verifie que si le type est grossierement compatible.
-        //...
-        return *this;
-    }
     std::string  GenerateSchema();
     #pragma endregion EntityCompose
     //-----------------------------------------------------------------------------

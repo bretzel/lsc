@@ -172,5 +172,10 @@ Return Vault::ExecuteQuery(Query &Q)
     
     return Rem::Int::Ok;
 }
+Expect<Table *> Vault::NewTable(const std::string &Name_)
+{
+    mTables.push_back({Name_,this});
+    return &mTables.back();
+}
 
 }

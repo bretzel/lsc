@@ -30,7 +30,7 @@ public:
     Return Close();
     Return Create();
     Expect<Table*> operator [](std::string Name_);
-    
+    Expect<Table*> NewTable(const std::string& Name_);
     Return ExecuteQuery(Query& Q);
     
     //Return Query();

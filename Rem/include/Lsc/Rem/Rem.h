@@ -13,6 +13,7 @@
 #include <stack>
 //#include <functional> // Already loaded from String.h
 #include <any>  // Used by the Expect template class.
+#include <Lsc/Rem/RemColor.h>
 
 namespace Lsc
 {
@@ -22,7 +23,7 @@ class REM_LIB Rem
     
     std::string        mText;
     String::Collection mVerticalData;
-
+    
 public:
     
     enum class Int : uint8_t
@@ -72,14 +73,21 @@ public:
 private:
     
     Type mType = Rem::Type::None;
+    static Type sType;
     Int  mCode = Rem::Int::Unknown;
     
     using Collection = std::vector<Rem>;
     static Collection _Array;
     
     static Rem _Null;
-public:
     
+public:
+    enum Prefix{
+        Clr,
+        FuncName,
+        FullName,
+        HoroData
+    };
     Rem() = default;
     ~Rem();
     
@@ -118,11 +126,13 @@ public:
     
     static Rem &Null();
     
-    static std::string ToStr(Rem::Type T);
-    static std::string ToStr(Rem::Int C);
+/*    static*/ std::string ToStr(Rem::Type T);
+/*    static*/ std::string ToStr(Rem::Int C);
     
     Rem &operator<<(Rem::Type T);
     Rem &operator<<(Rem::Int C);
+    Rem &operator<<(Ansi::Color C);
+    Rem &operator<<(Rem::Prefix P);
     
     template<typename T> Rem &operator<<(const T &Arg)
     {
@@ -133,6 +143,9 @@ public:
     }
     
     static std::size_t Clear(std::function<void(Rem &)> LambdaFN = nullptr);
+    
+private:
+    Rem::Prefix mPrefix=Rem::Clr;
 };
 
 template<typename T = Rem::Int> class Expect
@@ -145,7 +158,7 @@ public:
     
     Expect(Rem &R)
     {
-        mVal = R; // new notification();
+        mVal = R;
         mF   = false;
     }
     
