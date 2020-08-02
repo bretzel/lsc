@@ -10,7 +10,7 @@
 
 auto main(int arc, char**argv) -> int
 {
-    Lsc::AppBook mApp;
+    Lsc::App mApp;
     mApp();
     Lsc::Rem::Clear([](Lsc::Rem& R) {
        std::cout << R() << '\n';
@@ -22,18 +22,18 @@ auto main(int arc, char**argv) -> int
 namespace Lsc
 {
 
-AppBook::~AppBook()
+App::~App()
 {
     mString.Clear();
 }
 
-Return AppBook::operator()()
+Return App::operator()()
 {
     //...
     mString = "Hello, And welcome to the Lsc::Scripture Tests!:\n--------------------------------------------------------------------\n";
     std::cout << mString();
     
-    (void) AppBook::Type("Binary/Operator/TypeId/Number/Float");
+    (void) App::Type("Binary/Operator/TypeId/Number/Float");
     (void) Tokens("<>;");
     (void) LexerScan("Abcdere = 0xb09AFcfdaghj >< 0xabcd + -4.012ac(;");
     (void) ArithmeticLogicalUnit();
@@ -41,7 +41,7 @@ Return AppBook::operator()()
     return Rem::Int::Ok;
 }
 
-Return AppBook::Type(std::string Txt_)
+Return App::Type(std::string Txt_)
 {
     Type::T T;
     T << Txt_;
@@ -59,7 +59,7 @@ Return AppBook::Type(std::string Txt_)
 
 
 
-Return AppBook::Tokens(std::string Txt_)
+Return App::Tokens(std::string Txt_)
 {
     TokenData Token_ = TokenData::Scan(Txt_.c_str()); // => sin(+4) / 2a;
     
@@ -77,7 +77,7 @@ Return AppBook::Tokens(std::string Txt_)
 
 
 
-Return AppBook::LexerScan(std::string Txt_)
+Return App::LexerScan(std::string Txt_)
 {
     std::cout << "App::LexerScan(" << Txt_ << "):\n";
     Lexer Lex;
@@ -97,7 +97,7 @@ Return AppBook::LexerScan(std::string Txt_)
 
 
 
-Return AppBook::ArithmeticLogicalUnit()
+Return App::ArithmeticLogicalUnit()
 {
     Rem::Debug() << __PRETTY_FUNCTION__  << ":\n";
     Alu A = 1.1f;

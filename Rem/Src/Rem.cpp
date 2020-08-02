@@ -187,7 +187,7 @@ Rem &Rem::Debug()
 
 Rem &Rem::Info()
 {
-       Rem R;
+    Rem R;
     if(Rem::sType != Rem::Type::Info)
     {
         R << Rem::Type::Info << ": ";
