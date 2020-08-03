@@ -375,9 +375,11 @@ public:
      *
      * @code
      *      AppBook::Instance().Config() = {
-     *          "The Application LogBook!",
-     *          "Filename.log",
-     *          AppBook::Ansi
+     *          .Title = "The Application LogBook!", (c++-20 new init list syntax)
+     *          .Path = "Filename.log",
+     *          .Name = AppBook::Ansi,
+     *          .Mode = 0,
+     *          .Indent = 4
      *      };
      *
      * @endcode
