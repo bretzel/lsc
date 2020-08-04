@@ -52,24 +52,16 @@ Return AppBookApp::operator()(const String::Collection &Args_)
     return InitAndCreateDatabase();
 }
 
+
+/*!
+ * @brief En test ...
+ * @return code Rem::Int
+ */
 Return AppBookApp::InitAndCreateDatabase()
 {
-    //throw Rem::Internal() << __PRETTY_FUNCTION__ << ": Not yet implemented... Doh!";
     Vault::Vault Vault(mDbName());
     Vault.Create(); // Throws on error.
     
-//    Vault::Table TElement = {"Element", &Vault};
-//    TElement
-//    << Vault::Field {&TElement, "ID", Vault::Field::Type::INTEGER, Vault::Field::PKAUTO}
-//    << Vault::Field {&TElement, "Name", Vault::Field::Type::TEXT, Vault::Field::Unique}
-//    << Vault::Field {&TElement, "TagName", Vault::Field::Type::TEXT}
-//    << Vault::Field {&TElement, "Prefix", Vault::Field::Type::TEXT}
-//    << Vault::Field {&TElement, "Suffix", Vault::Field::Type::TEXT};
-//
-//    (*TElement["ID"])->SetAttributes(Vault::Field::PKAUTO);
-//
-//    //Vault::Table
-//
     Vault::Entity E = {"Element", &Vault};
     E + Vault::Field {E.Model(), "ID", Vault::Field::Type::INTEGER, Vault::Field::PKAUTO} +
     Vault::Field {E.Model(), "Name", Vault::Field::Type::TEXT, Vault::Field::Unique} +
