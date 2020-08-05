@@ -67,7 +67,7 @@ bool Lexer::InternalCursor::Eof(const char *P) const
 }
 
 /*!
- * @brief Synchronize the Location data from the M pointer.
+ * @brief Synchronize the Location data from the IC pointer.
  *
  * @return none.
  */
