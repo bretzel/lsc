@@ -12,17 +12,18 @@
 namespace Lsc
 {
 
-class App
+class VaultApp
 {
     String mString;
     
 public:
-    App() = default;
-    ~App();
+    VaultApp() = default;
+    ~VaultApp();
     
     Return operator()();
     
-    Expect<Vault::Field> Field();
+    Return Field();
+    Return Row();
     
 private:
     

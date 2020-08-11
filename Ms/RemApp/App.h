@@ -8,16 +8,18 @@
 #include <Lsc/Rem/Rem.h>
 #include <Lsc/Rem/Object.h>
 
+
+
 namespace Lsc
 {
 
-class App
+class AppBook
 {
     String mString;
     
 public:
-    App() = default;
-    ~App();
+    AppBook() = default;
+    ~AppBook();
     
     Return operator()();
     
@@ -25,7 +27,6 @@ private:
     
     //Return  Log();
     Return  LscObject();
-   
 };
 }
 //#endif //LSC_APP_H
