@@ -159,9 +159,13 @@
     <ClCompile Include="Src\Model\Field.cpp" />
     <ClCompile Include="Src\Model\Entity.cpp" />
     <ClCompile Include="Src\Model\Table.cpp" />
+    <ClCompile Include="Src\Query.cpp" />
+    <ClCompile Include="Src\Row.cpp" />
     <ClCompile Include="Src\Vault.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Lsc\Vault\Data\Query.h" />
+    <ClInclude Include="include\Lsc\Vault\Data\Row.h" />
     <ClInclude Include="include\Lsc\Vault\Lib.h" />
     <ClInclude Include="include\Lsc\Vault\Model\Entity.h" />
     <ClInclude Include="include\Lsc\Vault\Model\Table.h" />

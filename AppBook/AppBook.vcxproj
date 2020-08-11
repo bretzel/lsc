@@ -153,10 +153,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Lsc\AppBook\AppBook.h" />
+    <ClInclude Include="include\Lsc\AppBook\Book.h" />
     <ClInclude Include="include\Lsc\AppBook\Lib.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\AppBook.cpp" />
+    <ClCompile Include="Src\Book.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -25,9 +25,9 @@
 #       if __GNUC__ >= 4
 #           define APPBOOK_LIB __attribute__ ((visibility ("default")))
 #           define PRIVATE_LIB  __attribute__ ((visibility ("hidden")))
-#       else
-#           define APPBOOK_LIB
-#           define PRIVATE_LIB
+#       //else
+#       //    define APPBOOK_LIB
+#       //    define PRIVATE_LIB
 #       endif
 #   else
 #       define APPBOOK_LIB __declspec(dllimport)

@@ -21,9 +21,15 @@
     <ClInclude Include="include\Lsc\AppBook\AppBook.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="include\Lsc\AppBook\Book.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\AppBook.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Book.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
