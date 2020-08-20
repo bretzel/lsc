@@ -132,7 +132,7 @@ Expect<std::size_t> Vault::PullSchema()
     for(auto& Tbl : mTables)
     {
         Tbl.PullSchema();
-        Rem::Debug() << __PRETTY_FUNCTION__ << ": " << Tbl.Serialize() << "..";
+        Rem::Debug() << __PRETTY_FUNCTION__ << ": " << Tbl.Serialize() << "...";
     }
     return mTables.size();
 }
@@ -140,9 +140,9 @@ Expect<std::size_t> Vault::PullSchema()
 
 Expect<Table *> Vault::operator[](std::string Name_)
 {
-    if(mTables.empty())
-        return Rem::Error() << __PRETTY_FUNCTION__ << ": No such table schema named '" <<
-            Name_ << "' in Vault named '" << mName << "'";
+//    if(mTables.empty())
+//        return Rem::Error() << __PRETTY_FUNCTION__ << ": No such table schema named '" <<
+//            Name_ << "' in Vault, named '" << mName << "'";
     
     for(auto& T : mTables)
     {
@@ -151,14 +151,14 @@ Expect<Table *> Vault::operator[](std::string Name_)
     }
     
     return Rem::Error() << __PRETTY_FUNCTION__ << ": No such table schema named '" <<
-        Name_ << "' in Vault named '" << mName << "'";
+        Name_ << "' in Vault, named '" << mName << "'";
 }
 
 
 Return Vault::ExecuteQuery(Query &Q)
 {
     if(!mDB)
-        throw Rem::Exception() << __PRETTY_FUNCTION__ << ": null sqite3 handle: Is DB openned?";
+        throw Rem::Exception() << __PRETTY_FUNCTION__ << ": null sqite3 handle: Is the DB file open ?";
     
     char * ErrStr;
     Rem::Debug() << __PRETTY_FUNCTION__ << ": SQL: [" << Q.SqlText() << "]:";
@@ -172,6 +172,8 @@ Return Vault::ExecuteQuery(Query &Q)
     
     return Rem::Int::Ok;
 }
+
+
 Expect<Table *> Vault::NewTable(const std::string &Name_)
 {
     mTables.push_back({Name_,this});
