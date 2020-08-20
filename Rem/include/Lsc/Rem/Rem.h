@@ -142,7 +142,7 @@ public:
         return *this;
     }
     
-    static std::size_t Clear(std::function<void(Rem &)> LambdaFN = nullptr);
+    static std::size_t Clear(const std::function<void(Rem &)>& LambdaFN = nullptr);
     
 private:
     Rem::Prefix mPrefix=Rem::Clr;

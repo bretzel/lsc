@@ -73,16 +73,25 @@ Rem &Rem::Null()
     return Rem::_Null;
 }
 
-std::size_t Rem::Clear(std::function<void(Rem &)> LambdaFN)
+
+
+std::size_t Rem::Clear(const std::function<void(Rem &)>& LambdaFN)
 {
     std::size_t Sz = Rem::_Array.size();
     if(!Sz)
-        std::cout << " No Rem to clear.\n";
-    for(auto &R : Rem::_Array)
     {
-        if(LambdaFN)
-            LambdaFN(R);
+        std::cout << " No Rem to clear.\n";
+        return 0;
     }
+    
+    if(LambdaFN)
+    {
+        for(auto &R : Rem::_Array)
+        {
+            LambdaFN(R);
+        }
+    }
+    
     Rem::_Array.clear();
     return Sz;
 }
