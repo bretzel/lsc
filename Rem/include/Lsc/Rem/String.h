@@ -163,9 +163,9 @@ public:
     
     bool operator==(const String &aStr) const;
     
-    bool Empty()
+    bool Empty() const
     { return _D.empty(); }
-    operator bool()
+    operator bool() const
     { return !_D.empty(); }
     operator std::string()
     { return _D; }
@@ -507,6 +507,8 @@ template<typename T> String &String::Printf(const T &_argv)
             break;
         case 's':
         case 'c':fmt.S = *c++;
+            break;
+        default:
             break;
     }
 
