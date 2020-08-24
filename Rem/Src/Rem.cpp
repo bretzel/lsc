@@ -105,23 +105,23 @@ std::size_t Rem::Clear(const std::function<void(Rem &)>& LambdaFN)
 std::string Rem::ToStr(Rem::Type T)
 {
     std::map<Rem::Type, std::string> _ = {{Rem::Type::None,        "\033[0mNone"},
-                                          {Rem::Type::Info,        "\033[38;5;12m⚫ Info\033[0m"},
-                                          {Rem::Type::Internal,    "\033[38;5;247m⚑ Internal\033[0m"},
-                                          {Rem::Type::Error,       "\033[38;5;124m✘ Error\033[0m"},
-                                          {Rem::Type::SyntaxError, "\033[38;5;9m☠ Syntax Error\033[0m"},
-                                          {Rem::Type::Warning,     "\033[38;5;106m⚠ Warning\033[0m"},
-                                          {Rem::Type::Fatal,       "\033[38;5;12m☠ Fatal Error\033[0m"},
-                                          {Rem::Type::Success,     "\033[38;5;12m✔ Success\033[0m"},
-                                          {Rem::Type::Message,     "\033[38;5;70m@ Message\033[0m"},
-                                          {Rem::Type::Return,      "\033[38;5;12m⏎ Return\033[0m"},
-                                          {Rem::Type::Value,       "\033[38;5;12m  Value\033[0m"},
-                                          {Rem::Type::State,       "\033[38;5;12m  Status\033[0m"},
-                                          {Rem::Type::Debug,       "\033[38;5;130m➤ Debug\033[0m"},
-                                          {Rem::Type::Event,       "\033[38;5;74m  Event\033[0m"},
-                                          {Rem::Type::System,      "\033[38;5;12m  System\033[0m"},
-                                          {Rem::Type::Application, "\033[38;5;12m⚫ Application\033[0m"},
-                                          {Rem::Type::Network,     "\033[38;5;12m  Network\033[0m"},
-                                          {Rem::Type::Exception,   "\033[38;5;57m☠ Exception\033[0m"}
+                                          {Rem::Type::Info,        "\033[0;38;5;12m⚫ Info\033[0m"},
+                                          {Rem::Type::Internal,    "\033[0;38;5;247m⚑ Internal\033[0m"},
+                                          {Rem::Type::Error,       "\033[0;38;5;124m✘ Error\033[0m"},
+                                          {Rem::Type::SyntaxError, "\033[0;38;5;9m☠ Syntax Error\033[0m"},
+                                          {Rem::Type::Warning,     "\033[0;38;5;106m⚠ Warning\033[0m"},
+                                          {Rem::Type::Fatal,       "\033[0;38;5;12m☠ Fatal Error\033[0m"},
+                                          {Rem::Type::Success,     "\033[0;38;5;12m✔ Success\033[0m"},
+                                          {Rem::Type::Message,     "\033[0;38;5;70m@ Message\033[0m"},
+                                          {Rem::Type::Return,      "\033[0;38;5;12m⏎ Return\033[0m"},
+                                          {Rem::Type::Value,       "\033[0;38;5;12m  Value\033[0m"},
+                                          {Rem::Type::State,       "\033[0;38;5;12m  Status\033[0m"},
+                                          {Rem::Type::Debug,       "\033[0;38;5;130m➤ Debug\033[0m"},
+                                          {Rem::Type::Event,       "\033[0;38;5;74m  Event\033[0m"},
+                                          {Rem::Type::System,      "\033[0;38;5;12m  System\033[0m"},
+                                          {Rem::Type::Application, "\033[0;38;5;12m⚫ Application\033[0m"},
+                                          {Rem::Type::Network,     "\033[0;38;5;12m  Network\033[0m"},
+                                          {Rem::Type::Exception,   "\033[0;38;5;57m☠ Exception\033[0m"}
         
     };
     
@@ -187,7 +187,7 @@ Rem &Rem::Debug()
     }
     else
     {
-        R << "          ";
+        R << "\033[0m          ";
     }
     
     Rem::_Array.push_back(R);
@@ -204,7 +204,7 @@ Rem &Rem::Info()
     }
     else
     {
-        R << "          ";
+        R << "\033[0m          ";
     }
     
     Rem::_Array.push_back(R);
@@ -213,7 +213,7 @@ Rem &Rem::Info()
 
 Rem &Rem::Internal()
 {
-       Rem R;
+    Rem R;
     if(Rem::sType != Rem::Type::Internal)
     {
         R << Rem::Type::Internal << ": ";
@@ -221,7 +221,7 @@ Rem &Rem::Internal()
     }
     else
     {
-        R << "          ";
+        R << "\033[0m          ";
     }
     
     Rem::_Array.push_back(R);
@@ -230,7 +230,7 @@ Rem &Rem::Internal()
 
 Rem &Rem::Error()
 {
-       Rem R;
+    Rem R;
     if(Rem::sType != Rem::Type::Error)
     {
         R << Rem::Type::Error << ": ";
@@ -238,7 +238,7 @@ Rem &Rem::Error()
     }
     else
     {
-        R << "          ";
+        R << "\033[0m         ";
     }
     
     Rem::_Array.push_back(R);
@@ -255,7 +255,7 @@ Rem &Rem::SyntaxError()
     }
     else
     {
-        R << "          ";
+        R << "\033[0m        ";
     }
     
     Rem::_Array.push_back(R);
@@ -272,7 +272,7 @@ Rem &Rem::Warning()
     }
     else
     {
-        R << "          ";
+        R << "\033[0m        ";
     }
     
     Rem::_Array.push_back(R);
@@ -368,7 +368,7 @@ Rem &Rem::Exception()
     }
     else
     {
-        R << "          ";
+        R << "\033[0m        ";
     }
     
     Rem::_Array.push_back(R);
@@ -377,9 +377,9 @@ Rem &Rem::Exception()
 
 Rem &Rem::operator<<(Ansi::Color C)
 {
-    Rem R;
+    String  R;
     R << "\033[38;5;" << static_cast<int>(C) << 'm';
-    Rem::_Array.push_back(R);
+    mVerticalData.push_back(R());
     return *this;
 }
 

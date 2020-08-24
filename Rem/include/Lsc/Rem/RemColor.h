@@ -7,6 +7,7 @@
 #pragma once
 #include <Lsc/Rem/Lib.h>
 #include <map>
+#include <Lsc/Rem/String.h>
 
 
 
@@ -26,7 +27,7 @@ enum class Color : uint16_t
     /*1   */ Maroon           ,//#800000	rgb(128,0,0)	hsl(0,100%,25%)
     /*2   */ Green            ,//#008000	rgb(0,128,0)	hsl(120,100%,25%)
     /*3   */ Olive            ,//#808000	rgb(128,128,0)	hsl(60,100%,25%)
-    /*4   */ Navy             ,//#000080S.Debug() << "..." ;	rgb(0,0,128)	hsl(240,100%,25%)
+    /*4   */ Navy             ,//#000080	rgb(0,0,128)	hsl(240,100%,25%)
     /*5   */ Purple           ,//#800080	rgb(128,0,128)	hsl(300,100%,25%)
     /*6   */ Teal             ,//#008080	rgb(0,128,128)	hsl(180,100%,25%)
     /*7   */ Silver           ,//#c0c0c0	rgb(192,192,192)	hsl(0,0%,75%)
@@ -277,7 +278,9 @@ enum class Color : uint16_t
     /*252 */ Grey82           ,//#d0d0d0	rgb(208,208,208)	hsl(0,0%,81%)
     /*253 */ Grey85           ,//#dadada	rgb(218,218,218)	hsl(0,0%,85%)
     /*254 */ Grey89           ,//#e4e4e4	rgb(228,228,228)	hsl(0,0%,89%)
-    /*255 */ Grey93                   //#eeeeee	rgb(238,238,238)	hsl(0,0%,93%)
+    /*255 */ Grey93           ,//#eeeeee	rgb(238,238,238)	hsl(0,0%,93%)
+    /*Reset*/ Reset           
+
 };
 //
 //struct REM_LIB RemColors
@@ -295,6 +298,9 @@ enum class Color : uint16_t
 //
 //
 //};
+
+    String REM_LIB ToString(Color C_);
+
 }
 
 //#endif //LSC_REMCOLOR_H
