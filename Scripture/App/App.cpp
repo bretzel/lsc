@@ -33,11 +33,11 @@ Return App::operator()()
     mString = "Hello, And welcome to the Lsc::Scripture Tests!:\n--------------------------------------------------------------------\n";
     std::cout << mString();
     
-    (void) App::Type("Binary/Operator/TypeId/Number/Float");
-    (void) Tokens("<>;");
-    (void) LexerScan("Abcdere = 0xb09AFcfdaghj >< 0xabcd + -4.012ac(;");
-    (void) ArithmeticLogicalUnit();
-    std::cout << "\n--------------------------------------------------------------------\n";
+    //(void) App::Type("Binary/Operator/TypeId/Number/Float");
+    //(void) Tokens("<>;");
+    (void) LexerScan("if A >< ^e return 1/A;");
+    //(void) ArithmeticLogicalUnit();
+    std::cout << "\n-----------------------------------------/---------------------------\n";
     return Rem::Int::Ok;
 }
 

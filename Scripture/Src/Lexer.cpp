@@ -281,6 +281,7 @@ std::map<Lexer::InputPair, Lexer::ScannerFn> Lexer::_ProductionTable = {
     {{Type::Operator,     Type::Hex},         &Lexer::_InputHex},
     {{Type::Null,         Type::Unary},       &Lexer::_InputUnaryOperator},
     {{Type::Null,         Type::Keyword},     &Lexer::_InputKeyword},
+    {{Type::Keyword,      0xFFFFFFFFFFFFFFFF},     &Lexer::_InputDefault},
     {{Type::Null,         Type::Binary},      &Lexer::ScanSignPrefix},
     {{Type::ClosePair,    Type::Binary},      &Lexer::_InputBinaryOperator},
     {{Type::ClosePair,    Type::Unary},       &Lexer::ScanPostfix},
@@ -298,6 +299,7 @@ std::map<Lexer::InputPair, Lexer::ScannerFn> Lexer::_ProductionTable = {
     {{Type::Operator,     Type::Null},        &Lexer::_InputDefault}, // Required mCursor._F flag to be set.
     {{Type::Id,           Type::Unary},       &Lexer::_InputUnaryOperator},
     {{Type::Id,           Type::Unary},       &Lexer::_InputUnaryOperator},
+    {{Type::Id,         Type::Keyword},     &Lexer::_InputKeyword},
     
     // ----------------------------------------------------------------
     
