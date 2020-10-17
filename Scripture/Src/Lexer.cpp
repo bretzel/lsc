@@ -275,31 +275,32 @@ Type::T Lexer::NumScanner::operator()() const
 
 std::map<Lexer::InputPair, Lexer::ScannerFn> Lexer::_ProductionTable = {
     // Begin from empty tokens stream:
-    {{Type::Null,         Type::Null},        &Lexer::_InputDefault},
-    {{0xFFFFFFFFFFFFFFFF, Type::Punctuation}, &Lexer::_InputPunctuation},
-    {{0xFFFFFFFFFFFFFFFF, Type::Text},        &Lexer::_InputText},
-    {{Type::Operator,     Type::Hex},         &Lexer::_InputHex},
-    {{Type::Null,         Type::Unary},       &Lexer::_InputUnaryOperator},
-    {{Type::Null,         Type::Keyword},     &Lexer::_InputKeyword},
-    {{Type::Keyword,      0xFFFFFFFFFFFFFFFF},     &Lexer::_InputDefault},
-    {{Type::Null,         Type::Binary},      &Lexer::ScanSignPrefix},
-    {{Type::ClosePair,    Type::Binary},      &Lexer::_InputBinaryOperator},
-    {{Type::ClosePair,    Type::Unary},       &Lexer::ScanPostfix},
-    {{Type::Number,       Type::Unary},       &Lexer::ScanPostfix},
-    {{Type::Id,           Type::Unary},       &Lexer::ScanPostfix},
-    {{Type::Binary,       Type::Unary},       &Lexer::ScanPrefix},
-    {{Type::Null,         Type::Unary},       &Lexer::ScanPrefix},
-    {{Type::Punctuation,  Type::Unary},       &Lexer::ScanPrefix},
-    {{Type::Postfix,      Type::Binary},      &Lexer::_InputBinaryOperator},
-    {{Type::Id,           Type::Binary},      &Lexer::_InputBinaryOperator},
-    {{Type::Number,       Type::Binary},      &Lexer::_InputBinaryOperator},
-    {{Type::Text,         Type::Binary},      &Lexer::_InputBinaryOperator},
-    {{Type::Binary,       Type::Binary},      &Lexer::ScanSignPrefix},
-    {{Type::Binary,       Type::Null},        &Lexer::_InputDefault},
-    {{Type::Operator,     Type::Null},        &Lexer::_InputDefault}, // Required mCursor._F flag to be set.
-    {{Type::Id,           Type::Unary},       &Lexer::_InputUnaryOperator},
-    {{Type::Id,           Type::Unary},       &Lexer::_InputUnaryOperator},
-    {{Type::Id,         Type::Keyword},     &Lexer::_InputKeyword},
+    {{Type::Null,           Type::Null},        &Lexer::_InputDefault},
+    {{0xFFFFFFFFFFFFFFFF,   Type::Punctuation}, &Lexer::_InputPunctuation},
+    {{0xFFFFFFFFFFFFFFFF,   Type::Text},        &Lexer::_InputText},
+    {{Type::Operator,       Type::Hex},         &Lexer::_InputHex},
+    {{Type::Null,           Type::Unary},       &Lexer::_InputUnaryOperator},
+    {{Type::Null,           Type::Keyword},     &Lexer::_InputKeyword},
+    {{Type::Keyword,        0xFFFFFFFFFFFFFFFF},&Lexer::_InputDefault},
+    {{Type::Null,           Type::Binary},      &Lexer::ScanSignPrefix},
+    {{Type::ClosePair,      Type::Binary},      &Lexer::_InputBinaryOperator},
+    {{Type::ClosePair,      Type::Unary},       &Lexer::ScanPostfix},
+    {{Type::Number,         Type::Unary},       &Lexer::ScanPostfix},
+    {{Type::Id,             Type::Unary},       &Lexer::ScanPostfix},
+    {{Type::Binary,         Type::Unary},       &Lexer::ScanPrefix},
+    {{Type::Null,           Type::Unary},       &Lexer::ScanPrefix},
+    {{Type::Punctuation,    Type::Unary},       &Lexer::ScanPrefix},
+    {{Type::Postfix,        Type::Binary},      &Lexer::_InputBinaryOperator},
+    {{Type::Id,             Type::Binary},      &Lexer::_InputBinaryOperator},
+    {{Type::Number,         Type::Binary},      &Lexer::_InputBinaryOperator},
+    {{Type::OpenPair,       Type::Binary},      &Lexer::_InputBinaryOperator},
+    {{Type::Text,           Type::Binary},      &Lexer::_InputBinaryOperator},
+    {{Type::Binary,         Type::Binary},      &Lexer::ScanSignPrefix},
+    {{Type::Binary,         Type::Null},        &Lexer::_InputDefault},
+    {{Type::Operator,       Type::Null},        &Lexer::_InputDefault}, // Required mCursor._F flag to be set.
+    {{Type::Id,             Type::Unary},       &Lexer::_InputUnaryOperator},
+    {{Type::Id,             Type::Unary},       &Lexer::_InputUnaryOperator},
+    {{Type::Id,             Type::Keyword},     &Lexer::_InputKeyword},
     
     // ----------------------------------------------------------------
     
@@ -496,7 +497,7 @@ Return Lexer::ScanIdentifier(TokenData &Token_)
  *         4(ac...) => 4 x ( a x c ...)
  *         4pi/sin/cos/atan/asin/acos ... => 4 x p x i / 4 x s x i x n ... And NOT 4 x pi or 4 x sin ...
  * *
- * @note   Required that the Left hand side token is a Number and that the Input token is contiguous and of unknown type (Type::Null) to be scanned as an identifier.
+ * @note   Required that the Left hand side token is a ContNumber and that the Input token is contiguous and of unknown type (Type::Null) to be scanned as an identifier.
  *         Input Token_ is either scanned in the Ref Table or not.
  * @return Execp<>
  */
@@ -552,7 +553,7 @@ Return Lexer::ScanSignPrefix(TokenData &Token_)
         Token_.S = (Token_.S & ~Type::Binary) | Type::Sign | Type::Unary | Type::Prefix; // Type::Operator bit already set
         return Push(Token_);
     }
-    return _InputBinaryOperator(Token_);
+    return Rem::Push() << Rem::Type::Fatal << ": " << Rem::Int::UnExpected << " Token type: [" << Token_.SemanticTypes() << "]\n" << mCursor.Mark();
 }
 
 /*!
@@ -562,7 +563,6 @@ Return Lexer::ScanSignPrefix(TokenData &Token_)
  */
 Return Lexer::ScanPrefix(TokenData &Token_)
 {
-    
     return Push(Token_);
 }
 
@@ -576,7 +576,8 @@ Return Lexer::ScanPostfix(TokenData &Token_)
     if(!((Token_.M == Mnemonic::Decr) || (Token_.M == Mnemonic::Incr) || (Token_.M == Mnemonic::Bitnot))) return Rem::Int::Rejected;
     Token_.T = Type::Postfix;
     Token_.S = (Token_.S & ~Type::Prefix) | Type::Postfix; // Unary/Operator ...  already set.
-    Token_.M = Mnemonic::Factorial;
+    if(Token_.M == Mnemonic::Bitnot) Token_.M = Mnemonic::Factorial;
+    
     //mCursor.Sync();
     return Push(Token_);
 }
