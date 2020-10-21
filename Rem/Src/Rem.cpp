@@ -179,7 +179,7 @@ Rem::~Rem()
 
 Rem &Rem::Debug()
 {
-       Rem R;
+    Rem R;
     if(Rem::sType != Rem::Type::Debug)
     {
         R << Rem::Type::Debug << ": ";
@@ -387,5 +387,14 @@ Rem &Rem::operator<<(Rem::Prefix P)
 {
     mPrefix = P;
     return *this;
+}
+
+
+Rem &Rem::Fatal(std::string &&CtxName)
+{
+    Rem R;
+    R << "In " << std::string(std::move(CtxName)) << '\n' << Rem::Type::Fatal << ": ";
+    Rem::_Array.push_back(R);
+    return Rem::_Array.back();
 }
 

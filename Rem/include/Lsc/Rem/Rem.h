@@ -113,6 +113,7 @@ public:
     static Rem &SyntaxError();
     static Rem &Warning();
     static Rem &Fatal();
+    static Rem &Fatal(std::string&& CtxName);
     static Rem &Success();
     static Rem &Message();
     static Rem &Return();

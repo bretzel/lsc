@@ -553,7 +553,7 @@ Return Lexer::ScanSignPrefix(TokenData &Token_)
         Token_.S = (Token_.S & ~Type::Binary) | Type::Sign | Type::Unary | Type::Prefix; // Type::Operator bit already set
         return Push(Token_);
     }
-    return Rem::Push() << Rem::Type::Fatal << ": " << Rem::Int::UnExpected << " Token type: [" << Token_.SemanticTypes() << "]\n" << mCursor.Mark();
+    return Rem::Fatal("Lexical Analyser")  << Rem::Int::UnExpected << " Token type: [" << Token_.SemanticTypes() << "]\n" << mCursor.Mark();
 }
 
 /*!
