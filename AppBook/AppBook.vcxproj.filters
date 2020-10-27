@@ -15,18 +15,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Lsc\AppBook\Lib.h">
+    <ClInclude Include="include\Lsc\App\Lib.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="include\Lsc\AppBook\AppBook.h">
+    <ClInclude Include="include\Lsc\App\App.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="include\Lsc\AppBook\Book.h">
+    <ClInclude Include="include\Lsc\App\Book.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Src\AppBook.cpp">
+    <ClCompile Include="Src\App.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Src\Book.cpp">

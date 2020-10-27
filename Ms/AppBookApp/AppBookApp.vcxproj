@@ -118,7 +118,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <CompileAsManaged>false</CompileAsManaged>
-      <AdditionalIncludeDirectories>$(SolutionDir)Rem/include;$(SolutionDir)AppBook/include;$(SolutionDir)Vault/include;$(SolutionDir)Scripture/include;C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Python\Miniconda\Miniconda3-x64\Library\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Rem/include;$(SolutionDir)App/include;$(SolutionDir)Vault/include;$(SolutionDir)Scripture/include;C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Python\Miniconda\Miniconda3-x64\Library\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -142,13 +142,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AppBook.App.cpp" />
+    <ClCompile Include="App.App.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AppBook.App.h" />
+    <ClInclude Include="App.App.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\AppBook\AppBook.vcxproj">
+    <ProjectReference Include="..\..\App\App.vcxproj">
       <Project>{ab470da9-8311-48ca-afc8-86d4650d7632}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\Rem\Rem.vcxproj">

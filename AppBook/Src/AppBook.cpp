@@ -14,12 +14,12 @@ namespace Lsc
  *
  *
  
-AppBook &AppBook::Init()
+App &App::Init()
 {
-    if(!AppBook::mStaticInstance->mComponentData.empty()) return *AppBook::mStaticInstance;
-    AppBook& Book = *AppBook::mStaticInstance;
+    if(!App::mStaticInstance->mComponentData.empty()) return *App::mStaticInstance;
+    App& Book = *App::mStaticInstance;
     
-    AppBook::mStaticInstance->mComponentData = {
+    App::mStaticInstance->mComponentData = {
         {TextCtl::Reset   ,"\033[0m"},
 //        {TextCtl::Italic  ,""},
         {TextCtl::Sup     ,"<sup>"},
@@ -30,9 +30,9 @@ AppBook &AppBook::Init()
 //        {TextCtl::EndPre  ,""},
         {TextCtl::Eol     ,"\n"}
     };
-    AppBook::mStaticInstance->mText
-    << AppBook::mStaticInstance->mConfig.Title
-    << AppBook::mStaticInstance->mComponentData[TextCtl::Eol];
+    App::mStaticInstance->mText
+    << App::mStaticInstance->mConfig.Title
+    << App::mStaticInstance->mComponentData[TextCtl::Eol];
     
     if(!Book.mConfig.Path.empty())
     {
@@ -44,113 +44,113 @@ AppBook &AppBook::Init()
         
     // Continue init...
     
-    return *AppBook::mStaticInstance;
+    return *App::mStaticInstance;
 }
 
-AppBook::ConfigData &AppBook::Config()
+App::ConfigData &App::Config()
 {
-    if(!AppBook::mStaticInstance)
-        AppBook::mStaticInstance = new AppBook;
+    if(!App::mStaticInstance)
+        App::mStaticInstance = new App;
     
-    return AppBook::mStaticInstance->mConfig;
+    return App::mStaticInstance->mConfig;
 }
 
-AppBook::Log &AppBook::Begin(AppBook::Prefix Prefix_)
+App::Log &App::Begin(App::Prefix Prefix_)
 {
-    Log::Shared L = std::make_shared<AppBook::Log>(nullptr, AppBook::Prefix::Debug);
-    if(AppBook::mStaticInstance->mCurrentLog)
+    Log::Shared L = std::make_shared<App::Log>(nullptr, App::Prefix::Debug);
+    if(App::mStaticInstance->mCurrentLog)
     {
-        L->SetParent(AppBook::mStaticInstance->mCurrentLog);
-        AppBook::mStaticInstance->mCurrentLog->SetChild(L);
+        L->SetParent(App::mStaticInstance->mCurrentLog);
+        App::mStaticInstance->mCurrentLog->SetChild(L);
     }
     
-    AppBook::mStaticInstance->mCurrentLog = L;
+    App::mStaticInstance->mCurrentLog = L;
     (*L) << Prefix_ << ':';
     //...
     return *L;
 }
 
 
-std::string AppBook::ToStr(AppBook::Prefix Prefix_)
+std::string App::ToStr(App::Prefix Prefix_)
 {
-    std::map<AppBook::Prefix, std::string> _ = {
-        {AppBook:: Debug    ,"\x1b[38;5;245m➤ Debug\x1b[0m"},
-        {AppBook:: Info     ,"\x1b[38;5;68m⚫ Info\x1b[0m"},
-        {AppBook:: Error    ,"\x1b[38;5;52m✘ Error\x1b[0m"},
-        {AppBook:: Warning  ,"\x1b[38;5;100m⚠ Warning\x1b[0m"},
-        {AppBook:: Exception,"\x1b[38;5;177m⚡ Exception\x1b[0m"},
-        {AppBook:: Fatal    ,"\x1b[38;5;52m☠ Fatal\x1b[0m"},
-        {AppBook:: Success  ,"\x1b[38;5;46m✔ Success\x1b[0m"},
-        {AppBook:: Notice   ,"\x1b[38;5;71m✎ Notice\x1b[0m"}
+    std::map<App::Prefix, std::string> _ = {
+        {App:: Debug    ,"\x1b[38;5;245m➤ Debug\x1b[0m"},
+        {App:: Info     ,"\x1b[38;5;68m⚫ Info\x1b[0m"},
+        {App:: Error    ,"\x1b[38;5;52m✘ Error\x1b[0m"},
+        {App:: Warning  ,"\x1b[38;5;100m⚠ Warning\x1b[0m"},
+        {App:: Exception,"\x1b[38;5;177m⚡ Exception\x1b[0m"},
+        {App:: Fatal    ,"\x1b[38;5;52m☠ Fatal\x1b[0m"},
+        {App:: Success  ,"\x1b[38;5;46m✔ Success\x1b[0m"},
+        {App:: Notice   ,"\x1b[38;5;71m✎ Notice\x1b[0m"}
     };
     return _[Prefix_];
 }
 
 
 
-void AppBook::End(std::function<void(const std::string &)> EndFN)
+void App::End(std::function<void(const std::string &)> EndFN)
 {
-    AppBook::Instance().mText << AppBook::Instance().mCurrentLog->mText;
+    App::Instance().mText << App::Instance().mCurrentLog->mText;
     if(EndFN)
-        EndFN(AppBook::Instance().mText());
+        EndFN(App::Instance().mText());
     
     
     delete mStaticInstance;
 }
 
-std::string AppBook::Text()
+std::string App::Text()
 {
-    return AppBook::Instance().mText();
+    return App::Instance().mText();
 }
 
 
-std::string AppBook::Icon(AppBook::Prefix Prefix_)
+std::string App::Icon(App::Prefix Prefix_)
 {
     ///@note This is a quick pre-coding test...
-    std::map<AppBook::Prefix, std::string > mIcons = {
-        {AppBook::Debug    ,"\x1b[38;5;245m➤ "},
-        {AppBook::Info     ,"\x1b[38;5;68m⚫ "},
-        {AppBook::Error    ,"\x1b[38;5;52m✘ "},
-        {AppBook::Warning  ,"\x1b[38;5;100m⚠ "},
-        {AppBook::Exception,"\x1b[38;5;177m⚡ "},
-        {AppBook::Fatal    ,"\x1b[38;5;52m☠ "},
-        {AppBook::Success  ,"\x1b[38;5;46m✔ "},
-        {AppBook::Notice   ,"\x1b[38;5;71m✎ "}
+    std::map<App::Prefix, std::string > mIcons = {
+        {App::Debug    ,"\x1b[38;5;245m➤ "},
+        {App::Info     ,"\x1b[38;5;68m⚫ "},
+        {App::Error    ,"\x1b[38;5;52m✘ "},
+        {App::Warning  ,"\x1b[38;5;100m⚠ "},
+        {App::Exception,"\x1b[38;5;177m⚡ "},
+        {App::Fatal    ,"\x1b[38;5;52m☠ "},
+        {App::Success  ,"\x1b[38;5;46m✔ "},
+        {App::Notice   ,"\x1b[38;5;71m✎ "}
     };
     return mIcons[Prefix_];
 }
 
 
-AppBook::Log &AppBook::Create(std::string Name_)
+App::Log &App::Create(std::string Name_)
 {
-    return *std::make_shared<AppBook::Log>(AppBook::mStaticInstance->mCurrentLog, AppBook::Prefix::Debug);
+    return *std::make_shared<App::Log>(App::mStaticInstance->mCurrentLog, App::Prefix::Debug);
 }
 
-AppBook::Log &AppBook::Log::operator<<(AppBook::Prefix Prefix_)
+App::Log &App::Log::operator<<(App::Prefix Prefix_)
 {
-    mText << "%-30s" << AppBook::ToStr(Prefix_);
+    mText << "%-30s" << App::ToStr(Prefix_);
     return *this;
 }
 
 
-AppBook::Log &AppBook::Log::operator<<(Lsc::TextCtl C)
+App::Log &App::Log::operator<<(Lsc::TextCtl C)
 {
-    mText << AppBook::Instance().mComponentData[C];
+    mText << App::Instance().mComponentData[C];
     mNewLine = C == TextCtl::Eol;
     return *this;
 }
 
 
-AppBook::Log::~Log()
+App::Log::~Log()
 {
     std::cout << __PRETTY_FUNCTION__ << " ⚒ \\O/\n";
     mText.Clear();
 //    delete mChild;
 }
 
-AppBook::Log::Log(AppBook::Prefix Prefix_):mPrefix(Prefix_){}
+App::Log::Log(App::Prefix Prefix_):mPrefix(Prefix_){}
 
-AppBook::Log::Log(AppBook::Log::Shared Parent_, AppBook::Prefix Prefix_):
+App::Log::Log(App::Log::Shared Parent_, App::Prefix Prefix_):
     mParent(Parent_),
     mPrefix(Prefix_)
 {}
@@ -159,32 +159,32 @@ AppBook::Log::Log(AppBook::Log::Shared Parent_, AppBook::Prefix Prefix_):
 
 
 
-void AppBook::Log::SetChild(AppBook::Log::Shared Child_)
+void App::Log::SetChild(App::Log::Shared Child_)
 {
     if(!Child_) return;
     mChild = Child_;
-    mChild->mIndent = mIndent + 4; // Hard coded indent for now -> Will get Indent value from the AppBook::Config Data
+    mChild->mIndent = mIndent + 4; // Hard coded indent for now -> Will get Indent value from the App::Config Data
 }
 
 
-void AppBook::Log::End()
+void App::Log::End()
 {
     if(mChild)
         mText << mChild->mText;
 }
 
-AppBook::Log &AppBook::Log::operator<<(Lsc::Color C)
+App::Log &App::Log::operator<<(Lsc::Color C)
 {
     mText <<  "\x1b[38;5;%3dm" << static_cast<int>(C);
     return *this;
 }
-std::string AppBook::Log::Endl()
+std::string App::Log::Endl()
 {
-    return AppBook::mStaticInstance->mComponentData[TextCtl::Eol];
+    return App::mStaticInstance->mComponentData[TextCtl::Eol];
 }
 
 
-void AppBook::Log::SetParent(AppBook::Log::Shared Parent_)
+void App::Log::SetParent(App::Log::Shared Parent_)
 {
     mParent = Parent_;
 }

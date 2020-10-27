@@ -35,7 +35,7 @@
 //journal::m_type_table.push_back(journal::m_attr_table[(int)hgreen] + std::string("✔") + " succes:    "); // and ...succes ... :-)
 
 
-// À part le travail de moine ( liste des couleurs ), Je reprend AppBook à partir de zéro...
+// À part le travail de moine ( liste des couleurs ), Je reprend App à partir de zéro...
 namespace Lsc
 {
 
@@ -312,10 +312,10 @@ enum class Color : uint16_t
 /*
     Notes: 
         (fr) 
-            La configuration (globale/générale) de AppBook est stockée dans une database ( en l'occurence SQLite3 ) sous forme de fichier.
+            La configuration (globale/générale) de App est stockée dans une database ( en l'occurence SQLite3 ) sous forme de fichier.
             
         (en)
-            The global configuration data of the AppBook is stored into a database ( such as SQLite3 ) file.
+            The global configuration data of the App is stored into a database ( such as SQLite3 ) file.
             
 */
 
@@ -324,7 +324,7 @@ enum class Color : uint16_t
 
     # JE VAIS MONTRER CE Que JE VEUX Éviter...Donc ça doit aller dans une database....
     Le prob est que je réfléchis encore et encore à comment structurer cette foutue DB!!
-    J'aimerais bien faire fonctionner ce AppBook durant le developpement de l'interpreteur sous la lib. Scripture...
+    J'aimerais bien faire fonctionner ce App durant le developpement de l'interpreteur sous la lib. Scripture...
     Avoir un journal dont le sujet sous la rubrique "Scripture::R&D", par exemple.
      -- Donc ayant un Livre relatant le cheminement du developpement du projet.
     
@@ -343,15 +343,15 @@ enum class Color : uint16_t
  * @note Single Instance.
  */
  
-class APPBOOK_LIB AppBook
+class APPBOOK_LIB App
 {
     
-    String mText; // ??
-    static AppBook *mStaticInstance;
+    String        mText; // ??
+    static App    *mStaticInstance;
     std::ofstream mOutFile;         ///< the instance of file.
     std::ostream  *mFile = nullptr; ///< pointer to the ofstream { stdout; or file stream}.
     
-    AppBook() = default;
+    App() = default;
 public:
     
     // Colors
@@ -360,8 +360,8 @@ public:
     struct ConfigData
     {
         std::string Title;      ///< Application Book's Title
-        std::string Path;       ///< Specific AppBook SQLite Files Path.
-        std::string Name;       ///< Name part of the SQLITE[3] AppBook Configurations Database File ( [%{Path}/]AppBook.Config.%{DbName}.sqlite3 ).
+        std::string Path;       ///< Specific App SQLite Files Path.
+        std::string Name;       ///< Name part of the SQLITE[3] App Configurations Database File ( [%{Path}/]App.Config.%{DbName}.sqlite3 ).
         int          Mode   = 0;
         int          Indent = 4;
         
@@ -374,10 +374,10 @@ public:
      * @brief Expose ConfigData instance for filling its parameters
      *
      * @code
-     *      AppBook::Instance().Config() = {
+     *      App::Instance().Config() = {
      *          .Title = "The Application LogBook!", (c++-20 new init list syntax)
      *          .Path = "Filename.log",
-     *          .Name = AppBook::Ansi,
+     *          .Name = App::Ansi,
      *          .Mode = 0,
      *          .Indent = 4
      *      };
@@ -385,7 +385,7 @@ public:
      * @endcode
      * @return Reference to the ConfigData;
      */
-    static AppBook::ConfigData& Config();
+    static App::ConfigData& Config();
     
     
     

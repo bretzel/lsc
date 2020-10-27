@@ -8,7 +8,7 @@
 
 auto main(int arc, char**argv) -> int
 {
-    Lsc::AppBook mApp;
+    Lsc::Terminal mApp;
     mApp();
     Lsc::Rem::Clear([](Lsc::Rem& R) {
        std::cout <<  R() << '\n';
@@ -21,56 +21,48 @@ namespace Lsc
 {
 
 
-AppBook::~AppBook()
+Terminal::~Terminal()
 {
-    mString.Clear();
+
 }
 
 
 
-Return AppBook::operator()()
+Return Terminal::operator()()
 {
     //...
-    mString = "Hello, And welcome to the Lsc World!\n";
-    std::cout << mString();
-    LscObject();
+    TAA::Rect R = {0,0,150,150};
+    Rem::Debug("TerminalAppApi Tests") << "Rect: " << R.ToString();
     return Rem::Int::Ok;
 }
 
 
-//Return AppBook.App::Log()
+//Return Terminal.App::Log()
 //{
 //
-//    AppBook::Config() = {
+//    Terminal::Config() = {
 //        "Lsc::Rem",     // Title
 //        "",     // Filename (path)
-//        AppBook::Mode::Ansi,      // Mode
+//        Terminal::Mode::Ansi,      // Mode
 //        "Passwd",     // Db Passwd.  ?? sqlite3 ?? duh!
 //    };
-//    AppBook::Init();
-//    AppBook::Log& mLog = AppBook::Begin(AppBook::Debug);
+//    Terminal::Init();
+//    Terminal::Log& mLog = Terminal::Begin(Terminal::Debug);
 //    mLog << "Testing debug log ..." << TextCtl::Eol;
 //    mLog << "Second log entry [";
 //    mLog << "third entry on the same line ?]" << TextCtl::Eol;
 //    mLog << "Fourth entry..." << TextCtl::Eol;
-//    mLog << "Ok, On met AppBook sur la glace... Il faut continuer à travailler sur Lsc::Object!";
+//    mLog << "Ok, On met Terminal sur la glace... Il faut continuer à travailler sur Lsc::Object!";
 //    mLog.End();
 //
 //
-//    AppBook::End([](const std::string& Txt) {
+//    Terminal::End([](const std::string& Txt) {
 //       std::cout << Txt << '\n';
 //    });
 //
 //    return ( Rem::Push()  << Rem::Int::Implement << " : Not there yet." );
 //}
 //
-
-Return AppBook::LscObject()
-{
-    Object Obj;
-    
-    return Rem::Int::Ok;
-}
 
 
 

@@ -20,7 +20,7 @@ namespace Lsc
 /*!
  * @brief Executable Instruction Object
  *
- * @note Avant de coder sur l'interpréteur, je voudrais bien implémenter AppBook pour y foutre le journal de développement UN MINIMUM
+ * @note Avant de coder sur l'interpréteur, je voudrais bien implémenter App pour y foutre le journal de développement UN MINIMUM
  * FONCTIONNEL ...
  */
 class SCRIPTURE_LIB ExIO

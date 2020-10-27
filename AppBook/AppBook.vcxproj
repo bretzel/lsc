@@ -22,7 +22,7 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{ab470da9-8311-48ca-afc8-86d4650d7632}</ProjectGuid>
-    <RootNamespace>AppBook</RootNamespace>
+    <RootNamespace>App</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -152,12 +152,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Lsc\AppBook\AppBook.h" />
-    <ClInclude Include="include\Lsc\AppBook\Book.h" />
-    <ClInclude Include="include\Lsc\AppBook\Lib.h" />
+    <ClInclude Include="include\Lsc\App\App.h" />
+    <ClInclude Include="include\Lsc\App\Book.h" />
+    <ClInclude Include="include\Lsc\App\Lib.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Src\AppBook.cpp" />
+    <ClCompile Include="Src\App.cpp" />
     <ClCompile Include="Src\Book.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

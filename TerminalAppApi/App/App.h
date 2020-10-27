@@ -7,26 +7,21 @@
 #pragma once
 #include <Lsc/Rem/Rem.h>
 #include <Lsc/Rem/Object.h>
+#include <Lsc/TerminalAppApi/Rect.h>
 
 
 
 namespace Lsc
 {
 
-class AppBook
+class Terminal
 {
-    String mString;
-    
 public:
-    AppBook() = default;
-    ~AppBook();
+    
+    Terminal() = default;
+    ~Terminal();
     
     Return operator()();
-    
-private:
-    
-    //Return  Log();
-    Return  LscObject();
 };
 }
 //#endif //LSC_APP_H

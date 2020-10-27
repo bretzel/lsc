@@ -39,7 +39,7 @@ install(TARGETS ${TargetName}
 #    COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${TargetName}
 #
 #        "--Test=\\'Util::String::Words\\' ${CMAKE_INSTALL_PREFIX}"
-#        "--Test=\\'Util::AppBook\\' --File=/home/bretzel/Applications/bin/logs/AppBook-Test.log"
+#        "--Test=\\'Util::App\\' --File=/home/bretzel/Applications/bin/logs/App-Test.log"
 #        "--Test=\\'Lexer::TokenScan\\' ${EXPR}"
 #
 #    WORKING_DIRECTORY ${CMAKE_CURRENT_BIN_DIR}

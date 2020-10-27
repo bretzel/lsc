@@ -13,13 +13,13 @@
 namespace Lsc
 {
 
-class AppBook
+class App
 {
     String mString;
     
 public:
-    AppBook() = default;
-    ~AppBook();
+    App() = default;
+    ~App();
     
     Return operator()();
     

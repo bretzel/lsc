@@ -8,7 +8,7 @@
 
 auto main(int arc, char**argv) -> int
 {
-    Lsc::AppBook mApp;
+    Lsc::App mApp;
     mApp();
     Lsc::Rem::Clear([](Lsc::Rem& R) {
        std::cout <<  R() << '\n';
@@ -21,14 +21,14 @@ namespace Lsc
 {
 
 
-AppBook::~AppBook()
+App::~App()
 {
     mString.Clear();
 }
 
 
 
-Return AppBook::operator()()
+Return App::operator()()
 {
     //...
     mString = "Hello, And welcome to the Lsc World!\n";
@@ -38,26 +38,26 @@ Return AppBook::operator()()
 }
 
 
-//Return AppBook.App::Log()
+//Return App.App::Log()
 //{
 //
-//    AppBook::Config() = {
+//    App::Config() = {
 //        "Lsc::Rem",     // Title
 //        "",     // Filename (path)
-//        AppBook::Mode::Ansi,      // Mode
+//        App::Mode::Ansi,      // Mode
 //        "Passwd",     // Db Passwd.  ?? sqlite3 ?? duh!
 //    };
-//    AppBook::Init();
-//    AppBook::Log& mLog = AppBook::Begin(AppBook::Debug);
+//    App::Init();
+//    App::Log& mLog = App::Begin(App::Debug);
 //    mLog << "Testing debug log ..." << TextCtl::Eol;
 //    mLog << "Second log entry [";
 //    mLog << "third entry on the same line ?]" << TextCtl::Eol;
 //    mLog << "Fourth entry..." << TextCtl::Eol;
-//    mLog << "Ok, On met AppBook sur la glace... Il faut continuer à travailler sur Lsc::Object!";
+//    mLog << "Ok, On met App sur la glace... Il faut continuer à travailler sur Lsc::Object!";
 //    mLog.End();
 //
 //
-//    AppBook::End([](const std::string& Txt) {
+//    App::End([](const std::string& Txt) {
 //       std::cout << Txt << '\n';
 //    });
 //
@@ -65,7 +65,7 @@ Return AppBook::operator()()
 //}
 //
 
-Return AppBook::LscObject()
+Return App::LscObject()
 {
     Object Obj;
     
