@@ -25,6 +25,9 @@ list(
     APPEND INCLUDE_PATHS
     "${REM_INCLUDE_DIR}"
     "${SCRIPTURE_INCLUDE_DIR}"
+	"${VAULT_INCLUDE_DIR}"
+	"${TerminalAppApi_INCLUDE_DIR}"
+	"${APP_BOOK_INCLUDE_DIR}"
 
 )
 
