@@ -1,7 +1,7 @@
 //
 // Created by lsc on 20-10-17.
 //
-
+/*
 #include <Lsc/Scripture/Interpreter/Compiler/Grammar.h>
 
 
@@ -198,7 +198,7 @@ teacc_grammar::result teacc_grammar::parse_identifier(utils::xstr::iterator & cr
                 a.reset();
                 break;
             }*/
-
+/*
             lexer::type::T t = lexer::type::to_i(*crs);
             if (t != lexer::type::bloc) // Quick and dirty hack about bypassing the lexer::type::bloc type:
             {
@@ -658,3 +658,4 @@ std::string attr::operator()()
 }
 
 }
+ */

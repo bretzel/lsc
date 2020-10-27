@@ -106,7 +106,7 @@ public:
     static Rem &Pop();
     
     static Rem &Debug();
-    
+    static Rem &Debug(std::string&& CtxName);
     static Rem &Info();
     static Rem &Internal();
     static Rem &Error();

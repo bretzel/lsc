@@ -3,12 +3,14 @@ cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 # Project name
 project(Lsc VERSION 0.1.0 LANGUAGES CXX)
 set(FrameWorkName "Lsc")
+message ("**************** Lsc Master Project ********************")
 
 option(BUILD_REM "Enable building the Rem Utility library" ON)
 option(BUILD_VAULT "Enable building the Vault/[SQLite,...] Database support  Library" ON)
 option(BUILD_SCRIPTURE "Enable building the Scripture interpreter Library" ON)
 option(BUILD_APPBOOK "Enable building the AppBook Library" ON)
 option(BUILD_DIAGNOSTICS "Enable building the Diagnostics Library" OFF)
+option(BUILD_TAA "Enable building the Terminal Application Api" ON)
 
 SET(LSC_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 SET(LSC_ROOT_PATH ${LSC_ROOT})
@@ -34,6 +36,12 @@ if(BUILD_DIAGNOTICS)
     SET(DIAGNOSTICS_INCLUDE_DIR ${LSC_ROOT}/Diagnostics/include)
     add_subdirectory(Diagnostics)
 endif()
+
+if(BUILD_TAA)
+    SET(TerminalAppApi_INCLUDE_DIR ${LSC_ROOT}/TerminalAppApi/include)
+    add_subdirectory(TerminalAppApi)
+endif()
+
 
 if(BUILD_APPBOOK)
     SET(APPBOOK_INCLUDE_DIR ${LSC_ROOT}/AppBook/include)
