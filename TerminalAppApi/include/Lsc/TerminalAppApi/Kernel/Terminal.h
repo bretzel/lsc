@@ -7,6 +7,7 @@
 #pragma once
 #include <ncurses.h>
 #include <Lsc/TerminalAppApi/Rect.h>
+#include <Lsc/Rem/Rem.h>
 
 
 namespace Lsc::TAA
@@ -16,7 +17,13 @@ class Terminal
 {
     WINDOW*  _W = nullptr;
     Size     _SZ;
+    Point    _XY;
+public:
+    Terminal();
+    virtual ~Terminal();
     
+    void Close();
+    void Init();
     
 };
 }

@@ -7,7 +7,7 @@
 #pragma once
 #include <Lsc/Rem/Rem.h>
 #include <Lsc/Rem/Object.h>
-#include <Lsc/TerminalAppApi/Rect.h>
+#include <Lsc/TerminalAppApi/Kernel/Terminal.h>
 
 
 
@@ -16,6 +16,8 @@ namespace Lsc
 
 class Terminal
 {
+    
+    TAA::Terminal* _T = nullptr;
 public:
     
     Terminal() = default;

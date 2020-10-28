@@ -53,7 +53,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
         $<INSTALL_INTERFACE:include/${FrameWorkName}/${PROJECT_NAME}>  # <prefix>/include/mylib
         )
 
-target_link_libraries(${PROJECT_NAME} ${CMAKE_DL_LIBS} Rem )
+target_link_libraries(${PROJECT_NAME} ${CMAKE_DL_LIBS} Rem Scripture Vault ncurses)
 
 
 install(DIRECTORY

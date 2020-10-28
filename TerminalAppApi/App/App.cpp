@@ -33,6 +33,10 @@ Return Terminal::operator()()
     //...
     TAA::Rect R = {0,0,150,150};
     Rem::Debug("TerminalAppApi Tests") << "Rect: " << R.ToString();
+    _T = new TAA::Terminal ;
+    _T->Init();
+    getch();
+    delete _T;
     return Rem::Int::Ok;
 }
 
