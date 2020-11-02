@@ -252,7 +252,7 @@ public:
         return Printf<std::string > (os.str());
     }
     
-    size_t Length()
+    size_t Length() const
     { return _D.size(); }
     char &operator[](size_t p)
     { return _D[p]; }

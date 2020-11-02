@@ -3,6 +3,7 @@
 //
 
 #include <Lsc/TerminalAppApi/Kernel/Terminal.h>
+#include <Lsc/TerminalAppApi/Kernel/VCell.h>
 
 
 
@@ -47,11 +48,14 @@ void Terminal::Init()
     Rem::Info() << " the terminal baudrate is : " << Ansi::Color::Yellow << b;
     Rem::Info() << " mouse version is " << Ansi::Color::Yellow << NCURSES_MOUSE_VERSION;
     
+    VCell::Initialize();
     
     Rem::Info() << " Can redefine RGB: " <<  (can_change_color() ? "YES" : "No");
     Rem::Info() << " color_pairs: " << Ansi::Color::DeepSkyBlue1 << COLOR_PAIRS;
     Rem::Info() << " Colors : " << Ansi::Color::DeepPink8 << COLORS;
     Rem::Info() << " Size of cchar_t:" << Ansi::Color::Lime << sizeof(cchar_t);
+    Rem::Info() << " Size of VCell:" << Ansi::Color::Lime << sizeof(VCell);
+    
     Lsc::String Str = " Color BITS: %s [%08b]";
     Str << Lsc::Ansi::ToString(Ansi::Color::White) << A_COLOR;
     Rem::Info() << Str();
@@ -74,17 +78,14 @@ void Terminal::Init()
             addch(p<<8 | H[Char++]);
     }
     
-    
-//    short fg = (short)Lsc::Ansi::Color::Silver;
-//    short bg = (short)Lsc::Ansi::Color::Purple;
-//    int p = bg<<4|fg;
-//    mvaddch(8,55,p<<8|0x20);
-//    VCA A;
-//    A = 'C';
-//    A.SetColor(Color::Yellow, Color::Black);
-//    A.SetAttr(A_ITALIC);
-    
-//    mvaddch(9,55,*A);
+    VCell::Str Bloc = nullptr;
+    VCell C;
+    C.SetFG(Lsc::Ansi::Color::White);
+    C.SetBG(Lsc::Ansi::Color::Blue);
+    VCell::Render(Str, C);
+    mvaddchnstr(1,1,(chtype*)Bloc,Str.Length());
+    VCell::Free(Bloc);
+
     
 }
 }
