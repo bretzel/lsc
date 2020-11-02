@@ -55,14 +55,20 @@ Return VCell::Initialize()
         
     return Rem::Int::Implement;
 }
+
+
 VCell::Str VCell::Render(const String &S_, const VCell& V_)
 {
     auto Bloc = new VCell[S_.Length() + 1];
-    Rem::Debug() << "Bloc of " << S_.Length() << " bytes created...";
-    
+    std::memset(Bloc, 0,S_.Length()*sizeof(chtype));
+    Rem::Debug(__PRETTY_FUNCTION__ ) << "Bloc of " << S_.Length() << " bytes created...";
+    Rem::Debug() << "[< " << S_ << " >]";
     int i=0;
     for(auto c : S_())
-        Bloc[i] = V_.A|c;
+    {
+        Bloc[i++] = V_.A | c;
+        Rem::Debug() << "[" << c << "]";
+    }
     return Bloc;
 }
 

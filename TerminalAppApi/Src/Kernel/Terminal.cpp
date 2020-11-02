@@ -80,8 +80,10 @@ void Terminal::Init()
     
     VCell::Str Bloc = nullptr;
     VCell C;
-    C.SetFG(Lsc::Ansi::Color::White);
-    C.SetBG(Lsc::Ansi::Color::Blue);
+    C.SetColor(Lsc::Ansi::Color::Blue,Lsc::Ansi::Color::White);
+    Str = " Color BITS: [%08b]";
+    Str <<  A_COLOR;
+    
     VCell::Render(Str, C);
     mvaddchnstr(1,1,(chtype*)Bloc,Str.Length());
     VCell::Free(Bloc);
