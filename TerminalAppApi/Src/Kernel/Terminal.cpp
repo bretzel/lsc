@@ -87,6 +87,7 @@ void Terminal::Init()
     VCell::Render(Str, C);
     mvaddchnstr(1,1,(chtype*)Bloc,Str.Length());
     VCell::Free(Bloc);
+    refresh();
 
     
 }
