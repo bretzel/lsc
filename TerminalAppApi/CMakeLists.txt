@@ -7,11 +7,12 @@ project(TerminalAppApi VERSION 0.1.0 LANGUAGES CXX)
 include(GNUInstallDirs)
 #SET(REM_INCLUDE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/include)
 message("${PROJECT_NAME}_INCLUDE_DIR:" ${${PROJECT_NAME}_INCLUDE_DIR})
-FILE(GLOB HDRS ${${PROJECT_NAME}_INCLUDE_DIR}/* ${${PROJECT_NAME}_INCLUDE_DIR}/Kernel/* ) # ${SCRIPTURE_INCLUDE_DIR}/Interpreter/Compiler/*
+FILE(GLOB HDRS ${${PROJECT_NAME}_INCLUDE_DIR}/* ${${PROJECT_NAME}_INCLUDE_DIR}/Kernel/* )
 FILE(GLOB SRCS Src/* Src/Kernel/* )
 SET( CMAKE_EXPORT_COMPILE_COMMANDS ON )
 
 
+message(" ------>TerminalAppApi Headers :" ${HDRS})
 
 
 add_library(
@@ -21,13 +22,15 @@ add_library(
         ${SRCS}
 )
 
+message("Headers:" ${HDRS})
+
 list(
     APPEND INCLUDE_PATHS
     "${REM_INCLUDE_DIR}"
     "${SCRIPTURE_INCLUDE_DIR}"
-	"${VAULT_INCLUDE_DIR}"
-	"${TerminalAppApi_INCLUDE_DIR}"
-	"${APP_BOOK_INCLUDE_DIR}"
+    "${VAULT_INCLUDE_DIR}"
+    "${TerminalAppApi_INCLUDE_DIR}"
+    "${APP_BOOK_INCLUDE_DIR}"
 
 )
 

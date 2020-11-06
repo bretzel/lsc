@@ -31,10 +31,9 @@ Return VaultApp::operator()()
     mString = "Hello, Testing Vault:\n------------------------------------------------\n";
     std::cout << mString();
     
-    Rem::Message() << " First thing first: Test the Field: ";
-    
     try
     {
+        Rem::Message() << " First thing first: Test the Field: ";
         Field();
         Rem::Message() << " Now the Entity:";
         Vault::Vault Vault("lab");
