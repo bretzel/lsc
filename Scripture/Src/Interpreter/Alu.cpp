@@ -2,7 +2,7 @@
 // Created by lsc on 20-05-28.
 //
 
-#include <Lsc/Scripture/Alu.h>
+#include <Lsc/Scripture/Interpreter/Alu.h>
 #include <Lsc/Rem/Rem.h>
 
 namespace Lsc
@@ -200,7 +200,7 @@ Alu Alu::operator-(const Alu &rv)
     
     lr_text(rv)
     {
-        Rem::Warning() << " substraction operator not yet supported";
+        Rem::Warning() << " substraction operator strings is not yet supported";
         //return remove_substr_copy(rv.Value<std::string>());
         return *this;
     }

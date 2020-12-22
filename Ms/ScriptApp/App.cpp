@@ -6,7 +6,7 @@
 
 
 #include <Lsc/Scripture/Lexer.h>
-#include <Lsc/Scripture/Alu.h>
+#include <Lsc/Scripture/Interpreter/Alu.h>
 
 auto main(int arc, char**argv) -> int
 {

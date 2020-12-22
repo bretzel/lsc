@@ -6,7 +6,8 @@
 
 
 #include <Lsc/Scripture/Lexer.h>
-#include <Lsc/Scripture/Alu.h>
+#include <Lsc/Scripture/Interpreter/Alu.h>
+#include <Lsc/Scripture/Interpreter/ExIO.h>
 
 auto main(int arc, char**argv) -> int
 {
@@ -36,8 +37,8 @@ Return App::operator()()
     (void) App::Type("Binary/Operator/TypeId/Number/Float");
     //(void) Tokens("<>;");
     (void) LexerScan("if A >< e return 1/-A;");
-    //(void) ArithmeticLogicalUnit();
-    std::cout << "\n-----------------------------------------/---------------------------\n";
+    (void) ExIOCanUseShared();
+    std::cout << "\n---------------------------------------------------------------------\n";
     return Rem::Int::Ok;
 }
 
@@ -111,5 +112,15 @@ Return App::ArithmeticLogicalUnit()
     Rem::Debug() << "A / C: => " << (A/C)() << "[" << Type::Name(C.TypeOf()) << "]";
     return Rem::Int::Good;
 }
+
+
+
+Return App::ExIOCanUseShared()
+{
+    ExIO::Shared Xio = ExIO::New(nullptr, nullptr, nullptr);
+    
+    return Lsc::Return();
+}
+
 
 } // namespace [Lsc::]Type

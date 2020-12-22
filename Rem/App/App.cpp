@@ -3,8 +3,7 @@
 //
 
 #include "App.h"
-
-
+#include "../../Scripture/App/App.h"
 
 auto main(int arc, char**argv) -> int
 {

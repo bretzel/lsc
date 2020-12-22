@@ -28,6 +28,7 @@ private:
     Return Tokens(std::string Txt_);
     Return LexerScan(std::string Txt_);
     Return ArithmeticLogicalUnit();
+    Return ExIOCanUseShared();
 
 };
 }
