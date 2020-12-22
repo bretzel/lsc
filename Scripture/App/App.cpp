@@ -35,7 +35,7 @@ Return App::operator()()
     
     (void) App::Type("Binary/Operator/TypeId/Number/Float");
     //(void) Tokens("<>;");
-    (void) LexerScan("if A >< ^e return 1/A;");
+    (void) LexerScan("if A >< e return 1/-A;");
     //(void) ArithmeticLogicalUnit();
     std::cout << "\n-----------------------------------------/---------------------------\n";
     return Rem::Int::Ok;
