@@ -320,14 +320,14 @@ Lexer::Scanner Lexer::GetScanner(Lexer::InputPair Pair)
     Rem::Internal() << "Lexer::GetScanner():\n";
     for(auto M : Lexer::_ProductionTable)
     {
-        String Str;
-        Str << "    {" << (F_ << M.first.first) << ", " << (R_ << M.first.second) << "} <- ";
-        F_.clear();
-        R_.clear();
-        Str << "{" << (F_ << Pair.first) << ", " << (R_ << Pair.second) << "}:";
-        F_.clear();
-        R_.clear();
-        Rem::Internal() << Str();
+//        String Str;
+//        Str << "    {" << (F_ << M.first.first) << ", " << (R_ << M.first.second) << "} <- ";
+//        F_.clear();
+//        R_.clear();
+//        Str << "{" << (F_ << Pair.first) << ", " << (R_ << Pair.second) << "}:";
+//        F_.clear();
+//        R_.clear();
+//        Rem::Internal() << Str();
         
         if(M.first && Pair)
         {
