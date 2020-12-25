@@ -36,7 +36,15 @@ Return App::operator()()
     
     (void) App::Type("Binary/Operator/TypeId/Number/Float");
     //(void) Tokens("<>;");
-    (void) LexerScan("if A >< e return 1/-A;");
+    (void) LexerScan(R"(
+if A >< pi
+    return 1/-A;
+else
+{
+    console << "Le circuit A et pi est fermé (donc allumé) ...";
+    return .0;
+}
+)");
     (void) ExIOCanUseShared();
     std::cout << "\n---------------------------------------------------------------------\n";
     return Rem::Int::Ok;

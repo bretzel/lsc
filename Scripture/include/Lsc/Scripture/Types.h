@@ -195,7 +195,7 @@ constexpr T Boolean    = 16;
 constexpr T Ternary    = 17;
 constexpr T Comma      = 18;
 constexpr T Identifier = 19;
-constexpr T Assign     = 20; // a = b + c = 0 - 1
+constexpr T Assign     = 20; // a + b * c = 0 - 1
 constexpr T Noop       = 21;
 }
 

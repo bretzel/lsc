@@ -25,8 +25,7 @@ bool Lexer::InternalCursor::operator++()
     if(C >= E)
         return false;
     ++C;
-    while((C < E) && (isspace(*C)))
-        ++C;
+    while((C < E) && (isspace(*C))) ++C;
     return true;
 }
 
@@ -50,7 +49,16 @@ bool Lexer::InternalCursor::operator++(int)
 [[maybe_unused]] bool Lexer::InternalCursor::SkipWS()
 {
     while((C < E) && (isspace(*C)))
+    {
+        ++Col;
+        if(*C == '\n' || *C == '\r')
+        {
+            ++L;
+            Col=1;
+        }
+        
         ++C;
+    }
     return C <= E;
 }
 
@@ -73,24 +81,23 @@ bool Lexer::InternalCursor::Eof(const char *P) const
  */
 void Lexer::InternalCursor::Sync()
 {
-    const char *C_ = C;
+    const char *C_;
     L = 1;
-    while(C_ > B)
+    Col = 1;
+    C_  = B;
+    while((C_ >= B)  && (C_ <= E) && (C_ < C))
     {
         if((*C_ == '\n') || (*C_ == '\r'))
-            ++L;
-        --C_;
+        {
+            Col=1;
+            L++;
+        }
+        else
+            ++Col;
+        ++C_;
     }
     
-    Col = 1;
-    C_  = C;
-    while((C_ > B) && (*C_ != '\n') && (*C_ != '\r'))
-    {
-        --C_;
-        ++Col;
-    }
-    
-    //Rem::Debug() << __PRETTY_FUNCTION__ << ": " << Location();
+    Rem::Debug(__PRETTY_FUNCTION__) << ": " << Location();
 }
 
 /*!
@@ -177,6 +184,7 @@ std::string Lexer::InternalCursor::Mark() const
 
 Expect<std::string> Lexer::InternalCursor::ScanString()
 {
+    Rem::Debug(__PRETTY_FUNCTION__ +':'+ __LINE__) << '\n';
     const char  *be    = C;
     char        Quote_ = *be;
     std::string Str;
@@ -277,11 +285,10 @@ std::map<Lexer::InputPair, Lexer::ScannerFn> Lexer::_ProductionTable = {
     // Begin from empty tokens stream:
     {{Type::Null,           Type::Null},        &Lexer::_InputDefault},
     {{0xFFFFFFFFFFFFFFFF,   Type::Punctuation}, &Lexer::_InputPunctuation},
-    {{0xFFFFFFFFFFFFFFFF,   Type::Text},        &Lexer::_InputText},
+    {{Type::Operator,       Type::Text},        &Lexer::_InputText},
     {{Type::Operator,       Type::Hex},         &Lexer::_InputHex},
     {{Type::Null,           Type::Unary},       &Lexer::_InputUnaryOperator},
     {{Type::Null,           Type::Keyword},     &Lexer::_InputKeyword},
-    {{Type::Keyword,        0xFFFFFFFFFFFFFFFF},&Lexer::_InputDefault},
     {{Type::Null,           Type::Binary},      &Lexer::ScanSignPrefix},
     {{Type::ClosePair,      Type::Binary},      &Lexer::_InputBinaryOperator},
     {{Type::ClosePair,      Type::Unary},       &Lexer::ScanPostfix},
@@ -290,6 +297,7 @@ std::map<Lexer::InputPair, Lexer::ScannerFn> Lexer::_ProductionTable = {
     {{Type::Binary,         Type::Unary},       &Lexer::ScanPrefix},
     {{Type::Null,           Type::Unary},       &Lexer::ScanPrefix},
     {{Type::Punctuation,    Type::Unary},       &Lexer::ScanPrefix},
+    {{Type::Punctuation,    Type::Keyword},     &Lexer::_InputKeyword},
     {{Type::Postfix,        Type::Binary},      &Lexer::_InputBinaryOperator},
     {{Type::Id,             Type::Binary},      &Lexer::_InputBinaryOperator},
     {{Type::Number,         Type::Binary},      &Lexer::_InputBinaryOperator},
@@ -297,16 +305,20 @@ std::map<Lexer::InputPair, Lexer::ScannerFn> Lexer::_ProductionTable = {
     {{Type::Text,           Type::Binary},      &Lexer::_InputBinaryOperator},
     {{Type::Binary,         Type::Binary},      &Lexer::ScanSignPrefix},
     {{Type::Binary,         Type::Null},        &Lexer::_InputDefault},
+    {{Type::Operator,       Type::Leaf|Type::Keyword},      &Lexer::_InputKeyword},
+    {{Type::Binary,         Type::Number},      &Lexer::_InputKeyword},
     {{Type::Operator,       Type::Null},        &Lexer::_InputDefault}, // Required mCursor._F flag to be set.
     {{Type::Id,             Type::Unary},       &Lexer::_InputUnaryOperator},
     {{Type::Id,             Type::Unary},       &Lexer::_InputUnaryOperator},
-    {{Type::Id,             Type::Keyword},     &Lexer::_InputKeyword},
-    
-    // ----------------------------------------------------------------
-    
-    // (Restricted) Factor Notation Syntax Style:
+    {{Type::Leaf,           Type::Keyword},     &Lexer::_InputKeyword},
     {{Type::Number,       Type::Null},        &Lexer::ScanFactorNotation},
     {{Type::Id,           Type::Null},        &Lexer::ScanFactorNotation}, // Required mCursor._F flag to be set.
+    {{Type::Punctuation,    Type::Binary},       &Lexer::_InputBinaryOperator},
+    {{Type::Punctuation,    Type::Unary},       &Lexer::_InputUnaryOperator},
+    {{Type::Punctuation,    Type::Keyword},       &Lexer::_InputKeyword},
+    {{Type::Keyword,        Type::Binary},    &Lexer::_InputBinaryOperator},
+    {{Type::Keyword,        Type::Unary},    &Lexer::_InputUnaryOperator},
+    {{Type::Keyword,        0xFFFFFFFFFFFFFFFF},&Lexer::_InputDefault},
     //{{Type::Id,           Type::OpenPair},    &Lexer::ScanFactorNotation}, // Required mCursor._F flag to be set.
     
     
@@ -415,7 +427,12 @@ Return Lexer::_InputHex(TokenData &Token_)
 }
 
 
-
+/*!
+ * @brief Scans conste numeric constrtuct
+ * @param Token_
+ * @return Rem::Int::Accepted;
+ * @todo Scan Scientific Notation!!!
+ */
 Return Lexer::ScanNumber(TokenData &Token_)
 {
     NumScanner Num = NumScanner(mCursor.C, mCursor.E);
@@ -589,16 +606,16 @@ Return Lexer::Push(TokenData &Token_)
     if(!Token_)
         return Rem::Push() << Rem::Type::Error << ": Attempt to push a Null TokenData into the Tokens stream.";
     
-    mCursor.Sync();
+    //mCursor.Sync();
     Token_.mLoc.L = mCursor.L;
     Token_.mLoc.C = mCursor.Col;
     
     std::size_t sz = Token_.mLoc.End - Token_.mLoc.Begin + 1;
     Token_.mLoc.I = static_cast<ptrdiff_t>(Token_.mLoc.Begin - mCursor.B);
     mCursor.C += sz;
+    mCursor.Col += sz;
     mConfig.Tokens->push_back(Token_);
     mCursor.SkipWS();
-    mCursor.Sync();
     Rem::Debug() << "Lexer::Push: Size of Token:" << sz << ", TokenData " << Token_.Details(true);
     Rem::Debug() << "Lexer::Push: Cursor(Next Token):" << mCursor.Location() << '\n' << mCursor.Mark();
     return Rem::Int::Accepted;
@@ -636,7 +653,7 @@ Return Lexer::Exec()
         Token_ = TokenData::Scan(mCursor.C);
         
         std::pair<Type::T, Type::T> P = {mConfig.Tokens->empty() ? Type::Null : mConfig.Tokens->back().S, Token_.S};
-        Scanner                     S = GetScanner(P);
+        Scanner S = GetScanner(P);
         if(S)
             if(!(R = (this->**S)(Token_)))
                 return R;
@@ -659,8 +676,17 @@ Return Lexer::_InputText(TokenData &Token_)
 {
     Rem::Debug() << __PRETTY_FUNCTION__ << ":\n";
     Expect<std::string> R =  mCursor.ScanString();
+    std::string str = *R;
+    Token_.mLoc.Begin = mCursor.C;
+    Token_.mLoc.End   = mCursor.C + str.length()-1;
+    Token_.mLoc.L     = mCursor.L;
+    Token_.mLoc.C     = mCursor.Col;
+    Token_.mLoc.I     = mCursor.Index();
+    
     Rem::Debug() << "Scanned String: " << *R << '\n';
-    return Rem::Internal() << __PRETTY_FUNCTION__ << ": " << Rem::Int::Implement;
+    
+    Push(Token_);
+    return Rem::Int::Accepted;
 }
 
 }

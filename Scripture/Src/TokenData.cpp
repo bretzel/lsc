@@ -277,13 +277,6 @@ TokenData TokenData::Scan(const char *C_)
             continue;
         }
         ++index;
-//        String L1, L2, Str;
-//        L1 += *crs;
-//        L2 += *rtxt;
-//        Str               = "\n%s\n%s";
-//        Str << L1 << L2;
-//        Rem::Debug() << "Scan:\n" << Str();
-//
          /*
          * I arbitrary assume that the UNICODE UNIT is a signed 16 bits AND THAT THE VALUE OF FIRST BYTE IS NEGATIVE.
          * Then I take the next byte to determine the unicode ...code...
@@ -295,12 +288,6 @@ TokenData TokenData::Scan(const char *C_)
                 ++unicode;
             ++crs;
             ++rtxt;
-//            L1 += *crs;
-//            L2 += *rtxt;
-//            Str = "\n%s\n%s";
-//            Str << L1 << L2;
-//            Rem::Debug() << "Scan:\n" << Str();
-            ////std::cout << *crs << *rtxt << ','; sin0x4A
         }
         
         if(*rtxt == 0)

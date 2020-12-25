@@ -30,35 +30,6 @@ teacc_grammar::dictionary_t teacc_grammar::grammar_dictionary = {
 rule_t::collection teacc_grammar::_rules;
 static bool built = false;
 // Rough, first esquisse / sketch of my rules set for the x.i.o language interpreter.
-std::string grammar_txt =
-    "expression         : +#expr_token.\n" // assignstmt ';',
-    "stmts              : +statement.\n"
-    "statement          : assignstmt ';', declvar ';', expression ';', instruction ';', var_id ';', ';'.\n"
-    "assignstmt         : declvar assign expression, var_id assign expression.\n"
-    "declvar            : *typename #newvar .\n" // new_var.\n"
-    "funcsig            : *typename function_id '(' *params ')'.\n"
-    "declfunc           : funcsig ';', funcsig bloc.\n"
-    "paramseq           : ',' param.\n"
-    "param              : *typename identifier.\n"
-    "params             : param *+paramseq.\n"
-    "objcarg            : identifier ':' expression.\n"
-    "arg                : objcarg, expression.\n"
-    "argseq             : ',' arg.\n"
-    "args               : arg *+argseq.\n"
-    "typename           : *'static' ?'i8' ?'u8' ?'i16' ?'u16' ?'i32' ?'u32' ?'i64' ?'u64' ?'real' ?'number' ?'string' ?#objectid.\n"
-    "instruction        : ?'if' ?'switch' ?'for' ?'while' ?'repeat' ?'until' ?'do'.\n" // to be continued.
-    "if                 : 'if' condexpr ifbody, 'if' '(' condexpr ')' ifbody.\n"
-    "bloc               :  '{' stmts '}'.\n"
-    "truebloc           : *'then' bloc, *'then' statement.\n"
-    "elsebloc           : 'else' bloc, 'else' statement.\n"
-    "ifbody             : truebloc *elsebloc, truebloc.\n"
-    "condexpr           : assignstmt, expression.\n"
-    "var_id             .\n"
-    //"new_var            : identifier.\n"
-    "objectid           .\n"
-    "function_id        : *'::' #functionid, #objectid '::' #functionid, #var_id '.' #functionid.\n"
-    "objcfncall         : '[' function_id  *args ']'.";
-//"function_id        .";
 
 using logger = utils::journal;
 std::string std_expr = R"(
@@ -92,7 +63,12 @@ var_id             : identifier.
 objectid           : identifier.
 function_id        : *'::' #functionid, #objectid '::' #functionid, #var_id '.' #functionid.
 objcfncall         : '[' function_id  *args ']'.
+scnotation         : 'E' *?'+' *?'-' number.
 )";
+
+
+// scnotation         : 'E' *?'+' *?'-' number.:
+// ==>  42.01E+30
 
 utils::result_code teacc_grammar::build()
 {

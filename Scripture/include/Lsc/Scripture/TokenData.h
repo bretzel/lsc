@@ -33,14 +33,14 @@ struct SCRIPTURE_LIB TokenData
         std::string operator()();
         std::string Text();
         std::string Position();
-    }              mLoc;
+    }  mLoc;
     
     struct SCRIPTURE_LIB Flag
     {
         int8_t V: 1; ///< Pre-parsed as a value ArgToken;
         int8_t S: 1; ///< Post parsed as assignable
         int8_t M: 1; ///< Virtual multiplication operator. (...4ac...)
-    }              mFlags = {0, 0, 0};
+    }   mFlags = {0, 0, 0};
     
     static TokenData mNull;
     
