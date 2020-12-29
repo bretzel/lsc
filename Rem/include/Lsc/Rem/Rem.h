@@ -82,7 +82,7 @@ private:
     static Rem _Null;
     
 public:
-    enum Prefix{
+    enum class Prefix{
         Clr,
         FuncName,
         FullName,
@@ -146,7 +146,7 @@ public:
     static std::size_t Clear(const std::function<void(Rem &)>& LambdaFN = nullptr);
     
 private:
-    Rem::Prefix mPrefix=Rem::Clr;
+    Rem::Prefix mPrefix=Rem::Prefix::Clr;
 };
 
 
