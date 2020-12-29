@@ -20,7 +20,7 @@ namespace Lsc
  * @note Re-write of my lexical scanners; I shall dissociate Lexer from Lsc::String and only use std::string.
  */
 class SCRIPTURE_LIB Lexer
-{
+{ 
     struct InternalCursor
     {
         const char *B  = nullptr; ///> Absolute Beginning of the source text.
@@ -39,7 +39,7 @@ class SCRIPTURE_LIB Lexer
         [[nodiscard]]std::string Line() const;
         [[nodiscard]]std::string Mark() const;
         [[nodiscard]]std::string Location() const;
-        bool       _F  = false;
+        bool       _F  = false; ///< Used as "state machine" for math factor notation syntax style
         Rem::Int ScanTo(const char *SubStr_);
         Expect<std::string> ScanString();
         
@@ -64,7 +64,7 @@ class SCRIPTURE_LIB Lexer
             Oct,
             Dec,
             Hex,/* ..., */ //  FUCK!!!
-        }    Num     = None;
+        }Num = None;
         
         NumScanner() = default;
         NumScanner(const char *_c, const char *_eos);
@@ -109,11 +109,11 @@ private:
     
     using ScannerFn = Return(Lexer::*)(TokenData&);
     using InputPair = std::pair<Type::T, Type::T>;
+    using ProductionAssocTable = std::vector<std::pair<Lexer::InputPair, Lexer::ScannerFn>>;
     static std::map<Lexer::InputPair , ScannerFn> _ProductionTable;
-    
+    static Lexer::ProductionAssocTable _AssocTable;
     using Scanner = Expect<Lexer::ScannerFn>;
-    
-    
+
     #pragma region Scanners
     Scanner GetScanner(InputPair Pair);
     
@@ -122,7 +122,6 @@ private:
     Return _InputUnaryOperator(TokenData&);
     Return _InputPunctuation(TokenData&);
     Return _InputKeyword(TokenData&);
-    Return _InputString(TokenData&);
     Return _InputHex(TokenData&);
     Return _InputText(TokenData&);
     Return ScanNumber(TokenData&);

@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{ed2711bd-3b8d-40bd-b213-d8738fe2208f}</ProjectGuid>
+    <ProjectGuid>{7a5ef1f1-1cfc-40d6-85c9-87f6c7e8d293}</ProjectGuid>
     <RootNamespace>Scripture</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -86,10 +86,9 @@
     <ClCompile>
       <WarningLevel>Level1</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>SCRIPTURE_DLL_EXPORT</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SCRIPTURE_DLL_EXPORT;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)Rem\include</AdditionalIncludeDirectories>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>$(ProjectDir)\include;$(SolutionDir)Rem\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -103,10 +102,9 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>SCRIPTURE_DLL_EXPORT</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SCRIPTURE_DLL_EXPORT;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)Rem\include</AdditionalIncludeDirectories>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>$(ProjectDir)\include;$(SolutionDir)Rem\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -120,10 +118,9 @@
     <ClCompile>
       <WarningLevel>Level1</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>SCRIPTURE_DLL_EXPORT</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SCRIPTURE_DLL_EXPORT;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)Rem\include</AdditionalIncludeDirectories>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>$(ProjectDir)\include;$(SolutionDir)Rem\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -137,10 +134,9 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>SCRIPTURE_DLL_EXPORT</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SCRIPTURE_DLL_EXPORT;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(SolutionDir)Rem\include</AdditionalIncludeDirectories>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>$(ProjectDir)\include;$(SolutionDir)Rem\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -151,14 +147,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\Lsc\Scripture\Alu.h" />
+    <ClInclude Include="include\Lsc\Scripture\Interpreter\Alu.h" />
+    <ClInclude Include="include\Lsc\Scripture\Interpreter\Compiler\Grammar.h" />
+    <ClInclude Include="include\Lsc\Scripture\Interpreter\ExIO.h" />
     <ClInclude Include="include\Lsc\Scripture\Lexer.h" />
     <ClInclude Include="include\Lsc\Scripture\Lib.h" />
     <ClInclude Include="include\Lsc\Scripture\TokenData.h" />
     <ClInclude Include="include\Lsc\Scripture\Types.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Src\Alu.cpp" />
+    <ClCompile Include="Src\Interpreter\Alu.cpp" />
+    <ClCompile Include="Src\Interpreter\Compiler\Grammar.cpp" />
+    <ClCompile Include="Src\Interpreter\ExIO.cpp" />
     <ClCompile Include="Src\Lexer.cpp" />
     <ClCompile Include="Src\TokenData.cpp" />
     <ClCompile Include="Src\Types.cpp" />

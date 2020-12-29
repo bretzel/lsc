@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{6ab96deb-5009-49d2-95d8-3e6df57c00f2}</ProjectGuid>
+    <ProjectGuid>{1F4332FF-82BF-4914-93AA-3E3AAE434E29}</ProjectGuid>
     <RootNamespace>RemApp</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>

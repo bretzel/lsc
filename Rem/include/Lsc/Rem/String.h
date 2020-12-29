@@ -481,7 +481,7 @@ template<typename T> String &String::Printf(const T &_argv)
         {
             if constexpr (!std::is_same<T, const std::string &>::value)
             {
-                // Special Bretzelus :
+                
                 bool pad = fmt.F == '0';
                 BinaryStr = String::ToBinary<T>(_argv, pad, fmt.W <= 128 ? fmt.W : 128); // Limit grouping digits to 128 ...
 
@@ -492,8 +492,9 @@ template<typename T> String &String::Printf(const T &_argv)
                 _ArgPosition = 0;
                 return *this;
             }
+            break;
         }
-
+        
         case 'd': // Decimale ou entier
         case 'i':fmt.S = *c++;
             break;

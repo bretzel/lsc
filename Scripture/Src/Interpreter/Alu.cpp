@@ -8,7 +8,7 @@
 namespace Lsc
 {
 
-std::string  Alu::mNil = "";
+std::string  SCRIPTURE_LIB Alu::mNil = "";
 
 #define UCTor(Rhs_) { T |= Type::Number|Type::Leaf; R = (Rhs_);}
 #define SCTor(Rhs_) { T |= Type::Number|Type::Sign|Type::Leaf; R = (Rhs_);}

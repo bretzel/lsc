@@ -179,6 +179,7 @@
     <ClCompile Include="Src\Object.cpp" />
     <ClCompile Include="Src\PtrList.cpp" />
     <ClCompile Include="Src\Rem.cpp" />
+    <ClCompile Include="Src\RemColor.cpp" />
     <ClCompile Include="Src\String.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

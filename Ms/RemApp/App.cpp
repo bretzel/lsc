@@ -8,7 +8,7 @@
 
 auto main(int arc, char**argv) -> int
 {
-    Lsc::AppBook mApp;
+    Lsc::TestRem mApp;
     mApp();
     Lsc::Rem::Clear([](Lsc::Rem& R) {
        std::cout <<  R() << '\n';
@@ -21,14 +21,14 @@ namespace Lsc
 {
 
 
-AppBook::~AppBook()
+TestRem::~TestRem()
 {
     mString.Clear();
 }
 
 
 
-Return AppBook::operator()()
+Return TestRem::operator()()
 {
     //...
     mString = "Hello, And welcome to the Lsc World!\n";
@@ -65,7 +65,7 @@ Return AppBook::operator()()
 //}
 //
 
-Return AppBook::LscObject()
+Return TestRem::LscObject()
 {
     Object Obj;
     

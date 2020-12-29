@@ -35,7 +35,7 @@ Return App::operator()()
     
     (void) App::Type("Binary/Operator/TypeId/Number/Float");
     (void) Tokens("<>;");
-    (void) LexerScan("Abcdere = 0xb09AFcfdaghj >< 0xabcd + -4.012ac(;");
+    (void) LexerScan("Abcdere = 0xb09AFcfdaghj >< 0xabcd + -4.012ac();");
     (void) ArithmeticLogicalUnit();
     std::cout << "\n--------------------------------------------------------------------\n";
     return Rem::Int::Ok;
@@ -92,12 +92,11 @@ Return App::LexerScan(std::string Txt_)
         &Tokens
 #endif
     };
-    auto R = Lex();
-    
-    Lex.Flush([](TokenData Token_) { // On s'en foutre que ce soit une (deep) copie ou une reference...
-       Rem::Debug() << Token_.Details();
-    });
-    return Rem::Int::Implement;
+    if(auto R = Lex())
+        Lex.Flush([](TokenData Token_) { // On s'en foutre que ce soit une (deep) copie ou une reference...
+            Rem::Debug() << Token_.Details();
+        });
+    return Rem::Int::Accepted;
 }
 
 

@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include <xio/lexer/lexer.h>
-#include <xio/utils/expect>
+#include <Lsc/Scripture/Lexer.h>
+#include <Lsc/Rem/Rem.h>
 #include <map>
 #include <stack>
 #include <memory>
@@ -16,125 +16,128 @@
 
  */
 
-namespace teacc::parsers
+namespace Lsc
 {
-struct  attr
+
+    struct Rule;
+    class Grammar;
+
+
+struct  Attr
 {
-    int8_t z : 1; ///< Zero or one (optional * )
-    int8_t r : 1; ///< Repeat      (        + )
-    int8_t l : 1; ///< List        (one of  ~ ?)
-    int8_t x : 1; ///< directive    ( ast direcive )
-    int8_t s : 8; ///< Litteral List Separator
-    attr &operator|(attr const &a)
+    int8_t Z : 1; ///< Zero or one (optional * )
+    int8_t R : 1; ///< Repeat      (        + )
+    int8_t L : 1; ///< List        (one of  ~ ?)
+    int8_t X : 1; ///< directive    ( ast direcive )
+    int8_t S : 8; ///< Litteral List Separator
+    Attr &operator|(Attr const &_)
     {
-        z |= a.z;
-        r |= a.r;
-        l |= a.l;
-        x |= a.x;
+        Z |= _.Z;
+        R |= _.R;
+        L |= _.L;
+        X |= _.X;
         //S = A.S;
         return *this;
     }
     
-    attr &operator+()
+    Attr &operator+()
     {
-        r = 1;
+        R = 1;
         return *this;
     }
-    attr &operator*()
+    Attr &operator*()
     {
-        z = 1;
+        Z = 1;
         return *this;
     }
-    attr &operator!()
+    Attr &operator!()
     {
-        x = 1;
+        X = 1;
         return *this;
     }
-    attr &operator~()
+    Attr &operator~()
     {
-        l = 1;
+        L = 1;
         return *this;
     }
-    void reset() { z = r = l = x = s = 0; }
+    void Reset() { Z = R = L = X = S = 0; }
     std::string operator()();
-    bool is_opt() const { return z != 0; }
-    bool is_one_of() const { return l != 0; }
-    bool is_strict() const { return z == 0 && l == 0 && r == 0; }
-    bool is_repeat() const { return r != 0; }
-    bool is_accepted() const { return x != 0; }
-    void accept() { x = 1; }
-    void reject() { x = 0; }
+    bool IsOpt() const { return Z != 0; }
+    bool IsOneOf() const { return L != 0; }
+    bool IsStrict() const { return Z == 0 && L == 0 && R == 0; }
+    bool IsRepeat() const { return R != 0; }
+    bool Accepted() const { return X != 0; } 
+    void Accept() { X = 1; }
+    void Reject() { X = 0; }
 };
 
-struct rule_t;
-class teacc_grammar;
 
-struct  term_t
+struct  Term
 {
-    mutable attr a = {0, 0, 0, 0, 0}; ///< default : punctual, strict match
+    mutable Attr a = {0, 0, 0, 0, 0}; ///< default : punctual, strict match
 
-    enum class type : uint8_t
+    enum class Type : uint8_t
     {
         //term,
-        rule = 0,
-        sem,
-        code,
-        nil
+        R = 0,
+        S,
+        M,
+        Nil
     };
 
-    void accept() { a.accept(); }
-    void reject() { a.reject(); }
+    void Accept() { a.Accept(); }
+    void Reject() { a.Reject(); }
 
-    term_t::type _type = term_t::type::nil;
+    Term::Type _type = Term::Type::Nil;
 
-    union mem_t {
-        rule_t *r;
-        lexer::type::T sem;
-        lexer::lexem::mnemonic c;
-    } mem = {nullptr};
+    union Mem {
+        Rule *R;
+        Lsc::Type::T sem;
+        Mnemonic c;
+    } _Mem = {nullptr};
 
-    using collection = std::vector<term_t>;
+    using collection = std::vector<Term>;
     using iterator = collection::iterator;
     using const_iterator = collection::const_iterator;
 
     // pas le choix... 'y faut un parser....
 
-    term_t();
-    term_t(rule_t *r, attr a_ = {0, 0, 0, 0, 0});
-    term_t(lexer::type::T a_sem, attr a_ = {0, 0, 0, 0, 0});
-    term_t(lexer::lexem::mnemonic a_code, attr a_ = {0, 0, 0, 0, 0});
+    Term();
+    Term(Rule *r, Attr a_ = {0, 0, 0, 0, 0});
+    Term(Lsc::Type::T a_sem, Attr a_ = {0, 0, 0, 0, 0});
+    Term(Mnemonic a_code, Attr a_ = {0, 0, 0, 0, 0});
 
-    term_t(const std::string &a_lexem);
+    Term(const std::string &a_lexem);
 
-    term_t(term_t &&_t);
-    term_t(const term_t &_t);
+    Term(Term &&_t);
+    Term(const Term &_t);
 
-    term_t &operator=(term_t &&_t);
-    term_t &operator=(const term_t &_t);
+    Term &operator=(Term &&_t);
+    Term &operator=(const Term &_t);
 
-    bool operator==(const term_t &t) const;
-    bool operator==(const lexer::type::token_t &t) const;
-    bool operator!=(const lexer::type::token_t &t) const;
+    bool operator==(const Term &t) const;
+    bool operator==(const TokenData &t) const;
+    bool operator!=(const TokenData &t) const;
 
-    operator bool() { return _type != type::nil; }
-    ~term_t();
+    operator bool() { return _type != Term::Type::Nil; }
+    ~Term();
 
-    term_t &operator*()
+    Term &operator*()
     {
         *a;
         return *this;
     }
-    term_t &operator+()
+    Term &operator+()
     {
         +a;
         return *this;
     }
-    term_t &operator!()
+    Term &operator!()
     {
         !a;
         return *this;
     }
-    term_t &operator~()
+    Term &operator~()
     {
         ~a;
         return *this;
@@ -142,110 +145,97 @@ struct  term_t
 
     std::string operator()() const;
 
-    bool is_rule() const { return _type == type::rule; }
-    bool is_semantic() const { return _type == type::sem; }
-    bool is_mnemonic() const { return _type == type::code; }
-    bool is_null() const { return _type == type::nil; }
+    bool IsRule() const { return _type == Type::R; }
+    bool IsSemantic() const { return _type == Type::S; }
+    bool IsMnemonic() const { return _type == Type::M; }
+    bool IsNull() const { return _type == Type::Nil; }
 
-    static term_t query(const char *);
-    static term_t query(lexer::type::T);
-    static term_t query(lexer::lexem::mnemonic);
+    static Term Query(const char * C_);
+    static Term Query(Lsc::Type::T T_);
+    static Term Query(Mnemonic M_);
 };
 
-//struct  term_list_t {
-//    attr a = { 0,0,0,0,0 }; ///< default : punctual, strict match
-//    term_t::collection terms;
-//    term_t::iterator t;
-//
-//    void push_back(term_t _t) {
-//        terms.push_back(_t);
-//    }
-//
-//    term_t::iterator begin() { return terms.begin(); }
-//
-//};
 
-struct  seq_t
+struct  Seq
 {
 
-    attr a = {0, 0, 0, 0, 0}; ///< default : punctual, strict match
+    Attr a = {0, 0, 0, 0, 0}; ///< default : punctual, strict match
 
     //using data = std::vector<term_list_t>;
 
-    term_t::collection terms;
+    Term::collection terms;
 
-    using collection = std::vector<seq_t>;
+    using collection = std::vector<Seq>;
     using const_iterator = collection::const_iterator;
     using iterator = collection::iterator;
     using stack = std::stack<iterator>;
 
-    seq_t() = default;
+    Seq() = default;
 
-    term_t::const_iterator begin() const { return terms.cbegin(); }
+    Term::const_iterator begin() const { return terms.cbegin(); }
 
-    bool end(term_t::const_iterator t) const
+    bool end(Term::const_iterator t) const
     {
         return terms.cend() == t;
     }
 
-    term_t next(term_t::const_iterator &it) const;
+    Term next(Term::const_iterator &it) const;
 
-    ~seq_t()
+    ~Seq()
     {
         terms.clear();
     }
-    seq_t &operator<<(term_t a_t);
+    Seq &operator<<(Term a_t);
 
     // Emplace_back:
-    seq_t &operator<<(lexer::type::T a_t);
-    seq_t &operator<<(lexer::lexem::mnemonic a_t);
-    seq_t &operator<<(rule_t *a_t);
+    Seq &operator<<(Lsc::Type::T a_t);
+    Seq &operator<<(Mnemonic a_t);
+    Seq &operator<<(Rule *a_t);
 };
 
-struct INTERPRETERAPI rule_t
+struct SCRIPTURE_LIB Rule
 {
 
-    seq_t::collection sequences;
+    Seq::collection sequences;
     // ---------------------------------------
-    seq_t::iterator seq; // Temporary held for building this rule.
+    Seq::iterator seq; // Temporary held for building this rule.
     // ---------------------------------------
-    //seq_t::stack seq_stack;
+    //Seq::stack seq_stack;
 
-    using collection = std::map<std::string, rule_t *>;
+    using collection = std::map<std::string, Rule *>;
     using iterator = collection::const_iterator;
 
-    attr a = {0, 0, 0, 0, 0}; /// Volatile attribute infos. ( Copied into the rule's recursion context  )
-    attr inject = {0, 0, 0, 0, 0};
+    Attr a = {0, 0, 0, 0, 0}; /// Volatile attribute infos. ( Copied into the rule's recursion context  )
+    Attr inject = {0, 0, 0, 0, 0};
 
     std::string _id;
 
-    rule_t() = default;
-    rule_t(const std::string &a_id);
+    Rule() = default;
+    Rule(const std::string &a_id);
 
-    rule_t(int) {}
-    ~rule_t();
+    Rule(int) {}
+    ~Rule();
     bool empty() const { return sequences.empty() ? true : sequences.begin()->terms.empty(); }
-    void inject_attr(attr a_a) { inject = a_a; }
-    rule_t &new_sequence();
-    rule_t &operator|(rule_t *_r);
-    //rule_t& operator |(const char*   _t);
-    rule_t &operator|(lexer::type::T _t);
-    rule_t &operator|(lexer::lexem::mnemonic _t);
+    void inject_attr(Attr a_a) { inject = a_a; }
+    Rule &new_sequence();
+    Rule &operator|(Rule *_r);
+    //Rule& operator |(const char*   _t);
+    Rule &operator|(Lsc::Type::T _t);
+    Rule &operator|(Mnemonic _t);
 
-    seq_t::const_iterator begin() const { return sequences.cbegin(); }
-    bool end(seq_t::const_iterator s) const { return s == sequences.cend(); }
+    Seq::const_iterator Begin() const { return sequences.cbegin(); }
+    bool End(Seq::const_iterator s) const { return s == sequences.cend(); }
 };
 
 
 
-class  teacc_grammar
+class  Grammar
 {
 public:
-    using result = utils::expect<utils::notification::code>; // accepted, rejected.
-    teacc_grammar();
-    ~teacc_grammar();
-    utils::xstr &text() { return _text; }
-    utils::result_code build();
+    Grammar();
+    ~Grammar();
+    String &text() { return _text; }
+    Return build();
     void dump();
 
 private:
@@ -260,45 +250,45 @@ private:
         st_end_rule   ///< terminate rule : cursor on '.'.
     };
 
-    attr a = {0, 0, 0, 0, 0}; ///< default : punctual, strict match
+    Attr a = {0, 0, 0, 0, 0}; ///< default : punctual, strict match
 
-    state_mac _state = teacc_grammar::st_begin;
+    state_mac _state = Grammar::st_begin;
 
     int init();
-    static rule_t::collection _rules;
-    rule_t *_rule = nullptr;
-    rule_t *query_rule(const std::string &a_id);
+    static Rule::collection _rules;
+    Rule *_rule = nullptr;
+    Rule *QueryRule(const std::string &a_id);
 
-    using grammar_t = teacc_grammar::result (teacc_grammar::*)(utils::xstr::iterator &);
-    utils::xstr::word::collection tokens;
-    utils::xstr _text;
+    using grammar_t = Return (Grammar::*)(String::Iterator &);
+    String::Word::Collection tokens;
+    String _text;
 
-    using dictionary_t = std::map<char, teacc_grammar::grammar_t>;
+    using dictionary_t = std::map<char, Grammar::grammar_t>;
     static dictionary_t grammar_dictionary;
 
 public:
-    const rule_t *operator[](const std::string &r_id) const
+    const Rule *operator[](const std::string &r_id) const
     {
         return _rules[r_id];
-        //rule_t* r = _rules[r_id]; return (const rule_t*)r;
+        //Rule* r = _rules[r_id]; return (const Rule*)r;
     }
 
     static bool built() { return _rules.size() != 0; }
 
 private:
-    teacc_grammar::dictionary_t::iterator _rule_it;
+    Grammar::dictionary_t::iterator _rule_it;
 
     //--------------- Rules builders -------------------
 
-    teacc_grammar::result parse_identifier(utils::xstr::iterator &crs);
-    teacc_grammar::result enter_rule_def(utils::xstr::iterator &crs);
-    teacc_grammar::result new_sequence(utils::xstr::iterator &crs);
-    teacc_grammar::result end_rule(utils::xstr::iterator &crs);
-    teacc_grammar::result set_repeat(utils::xstr::iterator &crs);
-    teacc_grammar::result set_optional(utils::xstr::iterator &crs);
-    teacc_grammar::result enter_litteral(utils::xstr::iterator &crs);
-    teacc_grammar::result set_oneof(utils::xstr::iterator &crs);
-    teacc_grammar::result set_directive(utils::xstr::iterator &crs);
+    Return ParseIdentifier(String::Iterator &crs);
+    Return EnterRule_def(String::Iterator &crs);
+    Return NewSequence(String::Iterator &crs);
+    Return EndRule(String::Iterator &crs);
+    Return SetRepeat(String::Iterator &crs);
+    Return SetOptional(String::Iterator &crs);
+    Return EnterLitteral(String::Iterator &crs);
+    Return SetOneof(String::Iterator &crs);
+    Return SetDirective(String::Iterator &crs);
 };
 
 } // namespace teacc
