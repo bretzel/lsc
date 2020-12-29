@@ -128,7 +128,7 @@ std::string Rem::ToStr(Rem::Type T)
     String Str;
     switch(mPrefix)
     {
-        case Rem::Clr: break;
+        case Rem::Prefix::Clr: break;
         default:break;
     }
     

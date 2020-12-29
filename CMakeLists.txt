@@ -10,7 +10,7 @@ option(BUILD_VAULT "Enable building the Vault/[SQLite,...] Database support  Lib
 option(BUILD_SCRIPTURE "Enable building the Scripture interpreter Library" ON)
 option(BUILD_APPBOOK "Enable building the AppBook Library" ON)
 option(BUILD_DIAGNOSTICS "Enable building the Diagnostics Library" OFF)
-option(BUILD_TAA "Enable building the Terminal Application Api" ON)
+option(BUILD_TAA "Enable building the Terminal Application Api" OFF)
 
 SET(LSC_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 SET(LSC_ROOT_PATH ${LSC_ROOT})
