@@ -14,7 +14,7 @@ auto main(int argc, char **argv)->int
     try
     {
         Lsc::String::Collection Args;
-        for(int                 a = 0; a < argc; a++)
+        for(int a = 0; a < argc; a++)
             Args.push_back(argv[a]);
         
         Lsc::AppBookApp App;

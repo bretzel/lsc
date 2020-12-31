@@ -88,6 +88,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>E:\VisualStudioIDE\Common7\IDE\Extensions\Microsoft\Python\Miniconda\Miniconda3-x64\Library\include;$(Solutiondir)Vault/include;$(Solutiondir)Rem/include;$(SolutionDir)AppBook\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -102,6 +104,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>E:\VisualStudioIDE\Common7\IDE\Extensions\Microsoft\Python\Miniconda\Miniconda3-x64\Library\include;$(Solutiondir)Vault/include;$(Solutiondir)Rem/include;$(SolutionDir)AppBook\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -118,7 +122,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <CompileAsManaged>false</CompileAsManaged>
-      <AdditionalIncludeDirectories>$(SolutionDir)Rem/include;$(SolutionDir)App/include;$(SolutionDir)Vault/include;$(SolutionDir)Scripture/include;C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Python\Miniconda\Miniconda3-x64\Library\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\VisualStudioIDE\Common7\IDE\Extensions\Microsoft\Python\Miniconda\Miniconda3-x64\Library\include;$(Solutiondir)Vault/include;$(Solutiondir)Rem/include;$(SolutionDir)AppBook\include;$(SolutionDir)Rem/include;$(SolutionDir)App/include;$(SolutionDir)Vault/include;$(SolutionDir)Scripture/include;C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\Extensions\Microsoft\Python\Miniconda\Miniconda3-x64\Library\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -133,6 +137,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>E:\VisualStudioIDE\Common7\IDE\Extensions\Microsoft\Python\Miniconda\Miniconda3-x64\Library\include;$(Solutiondir)Vault/include;$(Solutiondir)Rem/include;$(SolutionDir)AppBook\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -142,12 +148,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="App.App.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="App.App.h" />
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\..\AppBook\AppBook.vcxproj">
+      <Project>{80d76990-cf8f-4d90-819a-68019aea0df6}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\App\App.vcxproj">
       <Project>{ab470da9-8311-48ca-afc8-86d4650d7632}</Project>
     </ProjectReference>
@@ -160,6 +163,12 @@
     <ProjectReference Include="..\..\Vault\Vault.vcxproj">
       <Project>{8aa87cf5-1ce5-4a36-a841-dc8a4b4c295f}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AppBook.App.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AppBook.App.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
