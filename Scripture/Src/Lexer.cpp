@@ -62,7 +62,7 @@ bool Lexer::InternalCursor::operator++(int)
 */
 [[maybe_unused]] bool Lexer::InternalCursor::SkipWS()
 {
-    while((C < E) && (isspace(*C)))
+    while((C <= E) && (isspace(*C)))
     {
         ++Col;
         if(*C == '\n' || *C == '\r')
