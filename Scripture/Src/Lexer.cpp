@@ -326,19 +326,18 @@ Type::T Lexer::NumScanner::operator()() const
 
 
 Lexer::ProductionAssocTable Lexer::_AssocTable = {
-    {{Type::Punctuation|Type::Null|Type::Operator, Type::Hex}, &Lexer::_InputHex},
-    {{Type::Null|Type::Operator, Type::Keyword},               &Lexer::_InputKeyword},
+    {{Type::Punctuation|Type::Null|Type::Operator,                          Type::Hex}, &Lexer::_InputHex},
+    {{Type::Null|Type::Operator|Type::Leaf|Type::Punctuation,               Type::Keyword},  &Lexer::_InputKeyword},
     {{Type::Null|Type::Operator|Type::Punctuation|Type::Unary|Type::Binary, Type::Binary}, &Lexer::_InputBinaryOperator},
-    {{Type::Null|Type::Punctuation|Type::Binary|Type::Leaf, Type::Binary},&Lexer::_InputBinaryOperator},
+    {{Type::Null|Type::Punctuation|Type::Binary|Type::Leaf,                 Type::Binary},&Lexer::_InputBinaryOperator},
     {{Type::Null|Type::Operator|Type::Binary|Type::Punctuation|Type::OpenPair, Type::Unary}, &Lexer::ScanPrefix},
-    {{Type::Null|Type::Operator|Type::Leaf, Type::Hex},        &Lexer::_InputHex},
-    {{Type::Leaf| Type::Operator|Type::ClosePair, Type::Postfix},              &Lexer::ScanPostfix},
-    {{Type::Null|Type::Operator|Type::Punctuation|Type::Keyword, Type::Text}, &Lexer::_InputText},
-    {{Type::Null|Type::Operator, Type::Unary},                 &Lexer::_InputUnaryOperator},
-    {{Type::Number|Type::Id|Type::OpenPair, Type::Null},       &Lexer::ScanFactorNotation},
-    {{Type::Leaf | Type::Operator | Type::ClosePair, Type::Punctuation}, &Lexer::_InputPunctuation},
+    {{Type::Null|Type::Operator|Type::Leaf,                                 Type::Hex},        &Lexer::_InputHex},
+    {{Type::Leaf| Type::Operator|Type::ClosePair,                           Type::Postfix},              &Lexer::ScanPostfix},
+    {{Type::Null|Type::Operator|Type::Punctuation|Type::Keyword,            Type::Text}, &Lexer::_InputText},
+    {{Type::Null|Type::Operator,                                            Type::Unary}, &Lexer::_InputUnaryOperator},
+    {{Type::Number|Type::Id|Type::OpenPair,                                 Type::Null},  &Lexer::ScanFactorNotation},
+    {{Type::Leaf | Type::Operator | Type::ClosePair,                        Type::Punctuation}, &Lexer::_InputPunctuation},
     {{Type::Null|Type::Operator|Type::Punctuation|Type::Keyword|Type::Leaf, Type::Null},  &Lexer::_InputDefault}
-    
 };
 
 
@@ -585,8 +584,7 @@ Return Lexer::ScanFactorNotation(TokenData &Token_)
 Return Lexer::ScanSignPrefix(TokenData &Token_)
 {
     Token_.T = Type::Prefix;
-    //Token_.S = (Token_.S & ~Type::Binary) | Type::Sign | Type::Unary | Type::Prefix; // Type::Operator bit already set
-    Token_.S &= ~Type::Binary | Type::Sign | Type::Unary | Type::Prefix; // Type::Operator bit already set
+    Token_.S = (Token_.S & ~Type::Binary) | Type::Sign | Type::Unary | Type::Prefix; // Type::Operator bit already set
     return Push(Token_);
 }
 
@@ -677,7 +675,7 @@ Return Lexer::Exec()
                 return Rem::Fatal("Lexer:") << "Aborted: Unexpected token:\n" << Token_.Mark();
         }
         else
-            return Rem::Fatal("Lexer:") << "Scanning aborted:\n" << mCursor.Mark();
+            Push(Token_);
     }
     return Rem::Int::Ok;
 }
