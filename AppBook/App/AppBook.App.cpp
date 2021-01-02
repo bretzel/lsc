@@ -45,7 +45,7 @@ Return AppBookApp::operator()(const String::Collection &Args_)
     {
         throw Rem::Exception() << __PRETTY_FUNCTION__ << ": This version strictly expects 2 arguments.";
     }
-    if(Args_[1] == "--init")
+    if(Args_[1] == "--Init")
         mDbName = Args_[2];
     Rem::Debug() << __PRETTY_FUNCTION__ << ": DbName: '" << mDbName << "' :";
     //throw Rem::Internal() << " -- STOP. Must Implement a Vault::Query.";

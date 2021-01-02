@@ -1,11 +1,11 @@
 //
 // Created by lsc on 20-10-17.
 //
-/*
+
 #include <Lsc/Scripture/Interpreter/Compiler/Grammar.h>
 
 
-namespace Lsc::Scripture
+namespace Lsc
 {
 
 //
@@ -15,28 +15,23 @@ namespace Lsc::Scripture
 
 
 
-teacc_grammar::dictionary_t teacc_grammar::grammar_dictionary = {
-    {':', &teacc_grammar::enter_rule_def      },
-    {',', &teacc_grammar::new_sequence        },
-    {'.', &teacc_grammar::end_rule            },
-    {'+', &teacc_grammar::set_repeat          },
-    {'*', &teacc_grammar::set_optional        },
-    {'?', &teacc_grammar::set_oneof           }, // One of
-    {'\'',&teacc_grammar::enter_litteral      },
-    {'"' ,&teacc_grammar::enter_litteral      },
-    {'#' ,&teacc_grammar::set_directive       },
+Grammar::Dictionary Grammar::TeaGrammarDictionary = {
+    {':', &Grammar::EnterRuleDef },
+    {',', &Grammar::NewSequence  },
+    {'.', &Grammar::EndRule      },
+    {'+', &Grammar::SetRepeat    },
+    {'*', &Grammar::SetOptional  },
+    {'?', &Grammar::SetOneof     }, // One of
+    {'\'',&Grammar::EnterLitteral},
+    {'"' ,&Grammar::EnterLitteral},
+    {'#' ,&Grammar::SetDirective },
 };
 
-rule_t::collection teacc_grammar::_rules;
+Rule::collection Grammar::_Rules;
 static bool built = false;
-// Rough, first esquisse / sketch of my rules set for the x.i.o language interpreter.
 
-using logger = utils::journal;
-std::string std_expr = R"(
 
-)";
-
-std::string teacc_grammar_text = R"(
+std::string TeaccGrammarText = R"(
 expression         : +#expr_token.
 stmts              : +statement.
 statement          : assignstmt ';', declvar ';', expression ';', instruction ';', var_id ';', ';'.
@@ -67,97 +62,86 @@ scnotation         : 'E' *?'+' *?'-' number.
 )";
 
 
-// scnotation         : 'E' *?'+' *?'-' number.:
-// ==>  42.01E+30
-
-utils::result_code teacc_grammar::build()
+Return Grammar::Build()
 {
  
-    if (built())
-        return { (
-                    utils::notification::push(utils::notification::type::warning),
-                    "x.i.o. grammar is already built"
-              ) };
+    if (Built())
+        return Rem::Warning() << "Tea Grammar is already Built";
+    
+    _Text = TeaccGrammarText;
+    Rem::Debug(__PRETTY_FUNCTION__ )
+        << Ansi::Color::White << ": [ Building rules :\n"
+        << Ansi::Color::Yellow << _Text
+        << Ansi::Color::White << ']';
 
-    _text = teacc_grammar_text;
-    logdebugfn
-       << logger::White << ": [ Building rules :" << logger::brk()
-       << logger::Yellow << _text
-       << logger::White << ']'
-       <<
-    Ends;
-
-    std::size_t count = _text.words(tokens, ":;,|.+*?#", true);
-    utils::xstr::collection list;
-    logdebug << "building words list..." << ends;
+    std::size_t count = _Text.Words(tokens, ":;,|.+*?#", true);
+    String::Collection List;
+    Rem::Debug() << "building words list...";
     for (auto s : tokens)
-        list.push_back(s());
+        List.push_back(s());
     
     if (!count)
-    {
-        logerrorpfnx << " text has no words count. (internal error)" << ends;
-        return { (utils::notification::push(utils::notification::type::internal), "rules source code is empty!") };
-    }
+        return Rem::Fatal(__PRETTY_FUNCTION__ ) << ": No Tea Grammar. (internal error)";
+    
 
-    auto s = list.begin();
+    auto s = List.begin();
     _state = st_begin;
     do {
-        result r;
-        auto p = teacc_grammar::grammar_dictionary.find((*s)[0]);
+        Return r;
+        auto p = Grammar::TeaGrammarDictionary.find((*s)[0]);
 
-        if (p != teacc_grammar::grammar_dictionary.end()) {
+        if (p != Grammar::TeaGrammarDictionary.end()) {
             r = (this->*(p->second))(s);
         }
         else {
-            r = parse_identifier(s);
+            r = ParseIdentifier(s);
         }
         if (!r)
             return r;
-    } while (s != list.end());
-    dump();
-    return { utils::notification::code::accepted };
+    } while (s != List.end());
+    Dump();
+    return {Rem::Int::Accepted };
 }
 
-void teacc_grammar::dump()
+void Grammar::Dump()
 {
-   
-   loginfopfnx << Ends;
 
-   loginfo << logger::HBlue << "lexer::lexem::lexer::lexem::mnemonic" << logger::Yellow << ',' <<
-           logger::HRed << "rule" << logger::Yellow << ',' <<
-           logger::HGreen << "semantic" << logger::Reset << ":" << Ends;
+   Rem::Info() << Ansi::Color::Blue4 << "Mnemonic" << Ansi::Color::Yellow << ',' <<
+           Ansi::Color::Red4 << "rule" << Ansi::Color::Yellow6 << ',' <<
+           Ansi::Color::Green5 << "semantic" << Ansi::Color::Reset << ":\n";
 
-   for (auto rule : _rules) {
-       loginfo << logger::HCyan << rule.second->_id << logger::White << ':';
+   for (const auto& rule : _Rules) {
+       Rem::Info() << Ansi::Color::Orchid1 << rule.second->_id << Ansi::Color::White << ':';
+       String Out;
        for (auto seq : rule.second->sequences) {
-           logger() << logger::HCyan << "{ " << logger::Yellow;// << Ends;
+           Out << Ansi::Color::MediumOrchid3; Out << "{ " << Ansi::Color::Yellow;// << Ends;
            for (auto t : seq.terms) {
-               logger() << logger::Yellow << t() << ' ';// << Ends;
+               Out << Ansi::Color::Yellow; Out << t() << ' ';// << Ends;
            }
-           logger() << logger::HCyan << " }" << logger::White;// << Ends;
+           Out << Ansi::Color::MediumOrchid2; Out << " }" << Ansi::Color::White;// << Ends;
        }
-       logger() << logger::brk();
+       Out << "\n";
+       Rem::Debug() << Out();
    }
 }
 
-teacc_grammar::result teacc_grammar::parse_identifier(utils::xstr::iterator & crs)
+Return Grammar::ParseIdentifier(String::Iterator & crs)
 {
     //logdebugfn << logger::White << " : token: '" << logger::Yellow << *crs << logger::White << "':" << Ends;
-    rule_t* r = query_rule(*crs);
+    Rule* r = QueryRule(*crs);
     //logdebugfn << logger::White << " rule: " << logger::Yellow << (r ? r->_id : "null")  << logger::White << ":" << Ends;
     switch (_state) {
         case st_begin:
             if (r) {
                 if (!r->empty())
-                    return { (utils::notification::push(utils::notification::type::error), " rule, named: ", *crs, " already exists in the context of a new rule definition.") };
-                _rule = r;
+                    return Rem::Fatal(__PRETTY_FUNCTION__ ) <<  " rule, named: "<<  *crs << " already exists in the context of a new rule definition.";
+                _Rule = r;
             }
             else {
-                _rule = new rule_t(*crs);
-                _rules[*crs] = _rule;
-                //logdebugfn << logger::White << " : st_begin : rule '" << logger::Yellow << _rule->_id << logger::White << "' created. next machine-state : st_init_rule..." << Ends;
+                _Rule = new Rule(*crs);
+                _Rules[*crs] = _Rule;
             }
-            a.reset();
+            a.Reset();
             _state = st_init_rule; //  expect ':' as next token in main loop.
             break;
         case st_init_rule:
@@ -169,18 +153,19 @@ teacc_grammar::result teacc_grammar::parse_identifier(utils::xstr::iterator & cr
             // lexem::T ?
             /*lexer::lexem::lexer::lexem::mnemonic c = lexem::code(crs->c_str());
             if( c != lexer::lexem::lexer::lexem::mnemonic::knull ) {
-                _rule->a = a;
-                (*_rule) | c;
+                _Rule->a = a;
+                (*_Rule) | c;
                 a.reset();
                 break;
             }*/
-/*
-            lexer::type::T t = lexer::type::to_i(*crs);
+
+            Type::T t;
+            t << *crs;
             if (t != lexer::type::bloc) // Quick and dirty hack about bypassing the lexer::type::bloc type:
             {
                 if (t != 0) {
-                    _rule->a = a;
-                    (*_rule) | t;
+                    _Rule->a = a;
+                    (*_Rule) | t;
                     a.reset();
                     break;
                 }
@@ -188,27 +173,27 @@ teacc_grammar::result teacc_grammar::parse_identifier(utils::xstr::iterator & cr
 
             //logdebug << " ***code: " << static_cast<uint64_t>(c) << " ***" << Ends;
             if (r) {
-                _rule->a = a;
-                (*_rule) | r;
+                _Rule->a = a;
+                (*_Rule) | r;
                 a.reset();
                 break;
             }
             else {
                 r = new rule_t(*crs);
-                _rules[*crs] = r;
-                _rule->a = a;
+                _Rules[*crs] = r;
+                _Rule->a = a;
                 _state = st_seq; //  expect ':' as next token in main loop.
-                (*_rule) | r;
+                (*_Rule) | r;
                 a.reset();
             }
             break;
             //return { (utils::notification::push(utils::notification::type::error), "identifier '", *crs, "' is invalid in this context") };
     }
     ++crs;
-    return { utils::notification::code::accepted };
+    return {Rem::Int::Accepted };
 }
 
-teacc_grammar::result teacc_grammar::enter_rule_def(utils::xstr::iterator &crs)
+Return Grammar::enter_rule_def(utils::xstr::iterator &crs)
 {
         // logdebug
         //     << logger::HCyan << __FUNCTION__
@@ -222,10 +207,10 @@ teacc_grammar::result teacc_grammar::enter_rule_def(utils::xstr::iterator &crs)
     _state = st_seq;
     a.reset();
     ++crs;
-    return { utils::notification::code::accepted };
+    return {Rem::Int::Accepted };
 }
 
-teacc_grammar::result teacc_grammar::new_sequence(utils::xstr::iterator & crs)
+Return Grammar::new_sequence(utils::xstr::iterator & crs)
 {
         // logdebug
         //     << logger::HCyan << __FUNCTION__
@@ -237,14 +222,14 @@ teacc_grammar::result teacc_grammar::new_sequence(utils::xstr::iterator & crs)
     if (_state == st_option)
         return { (utils::notification::push(utils::notification::type::error), "syntax error '", *crs, "' is invalid in this context") };
 
-    _rule->new_sequence();
+    _Rule->new_sequence();
     _state = st_seq;
     a.reset();
     ++crs;
-    return { utils::notification::code::accepted };
+    return {Rem::Int::Accepted };
 }
 
-teacc_grammar::result teacc_grammar::end_rule(utils::xstr::iterator & crs)
+Return Grammar::end_rule(utils::xstr::iterator & crs)
 {
         // logdebug
         //     << logger::HCyan << __FUNCTION__
@@ -254,10 +239,10 @@ teacc_grammar::result teacc_grammar::end_rule(utils::xstr::iterator & crs)
         //     << Ends;
     _state = st_begin;
     ++crs;
-    return { utils::notification::code::accepted };
+    return {Rem::Int::Accepted };
 }
 
-teacc_grammar::result teacc_grammar::set_repeat(utils::xstr::iterator & crs)
+Return Grammar::set_repeat(utils::xstr::iterator & crs)
 {
     //logdebug
     //    << logger::HCyan << __FUNCTION__
@@ -268,10 +253,10 @@ teacc_grammar::result teacc_grammar::set_repeat(utils::xstr::iterator & crs)
     _state = st_option;
     +a;
     ++crs;
-    return { utils::notification::code::accepted };
+    return {Rem::Int::Accepted };
 }
 
-teacc_grammar::result teacc_grammar::set_directive(utils::xstr::iterator& crs)
+Return Grammar::set_directive(utils::xstr::iterator& crs)
 {
     !a;
     _state = st_option;
@@ -284,13 +269,13 @@ teacc_grammar::result teacc_grammar::set_directive(utils::xstr::iterator& crs)
     //    << Ends;
 
     ++crs;
-    return { utils::notification::code::accepted };
+    return {Rem::Int::Accepted };
 }
 
 
 
 
-teacc_grammar::result teacc_grammar::set_optional(utils::xstr::iterator & crs)
+Return Grammar::set_optional(utils::xstr::iterator & crs)
 {
     //logdebug
     //    << logger::HCyan << __FUNCTION__
@@ -301,10 +286,10 @@ teacc_grammar::result teacc_grammar::set_optional(utils::xstr::iterator & crs)
     *a;
     ++crs;
     _state = st_option;
-    return { utils::notification::code::accepted };
+    return {Rem::Int::Accepted };
 }
 
-teacc_grammar::result teacc_grammar::enter_litteral(utils::xstr::iterator & crs)
+Return Grammar::enter_litteral(utils::xstr::iterator & crs)
 {
 
         // logdebug
@@ -334,8 +319,8 @@ teacc_grammar::result teacc_grammar::enter_litteral(utils::xstr::iterator & crs)
     // logdebugfn << logger::White << " Checking token: '" << logger::Yellow << *i << logger::White << "'" << Ends;
     lexer::type::token_t token = lexer::type::token_t::scan(i->c_str());
     if (token) {
-        _rule->a = a;
-        (*_rule) | token.c;
+        _Rule->a = a;
+        (*_Rule) | token.c;
         a.reset();
     }
     else
@@ -346,17 +331,17 @@ teacc_grammar::result teacc_grammar::enter_litteral(utils::xstr::iterator & crs)
                          "' is not a valid xio++ grammar token"
                  ) };
 
-    // logdebugfn << logger::White << "term_t : '" << logger::Yellow << *i << logger::White << "':" << Ends;
+    // logdebugfn << logger::White << "Term : '" << logger::Yellow << *i << logger::White << "':" << Ends;
     crs = i;
     ++crs;
     if ((*crs == "'") || (*crs == "\""))
         ++crs;
     //++crs; // will be on the next token.
 
-    return { utils::notification::code::accepted };
+    return Rem::Int::Accepted;
 }
 
-teacc_grammar::result teacc_grammar::set_oneof(utils::xstr::iterator & crs)
+Return Grammar::set_oneof(utils::xstr::iterator & crs)
 {
     //     logdebug
     //         << logger::HCyan << __FUNCTION__
@@ -366,60 +351,60 @@ teacc_grammar::result teacc_grammar::set_oneof(utils::xstr::iterator & crs)
     //         << Ends;
     ~a;
     ++crs;
-    return { utils::notification::code::accepted };
+    return {Rem::Int::Accepted };
 }
 
-teacc_grammar::teacc_grammar()
+Grammar::Grammar()
 {
 }
 
-teacc_grammar::~teacc_grammar()
+Grammar::~Grammar()
 {
 }
 
-int teacc_grammar::init()
+int Grammar::Init()
 {
     return 0;
 }
 
-rule_t * teacc_grammar::query_rule(const std::string & a_id)
+rule_t * Grammar::QueryRule(const std::string & a_id)
 {
-    auto i = _rules.find(a_id);
-    return i == _rules.end() ? nullptr : i->second;
+    auto i = _Rules.find(a_id);
+    return i == _Rules.end() ? nullptr : i->second;
 }
 
-term_t::term_t()
+Term::Term()
 {
 }
 
-term_t::term_t(rule_t * r, attr a_)
+Term::Term(rule_t * r, Attr a_)
 {
     a = a_;
     mem.r = r;
-    _type = term_t::type::rule;
+    _type = Term::type::rule;
 }
 
-term_t::term_t(lexer::type::T a_sem, attr a_)
+Term::Term(lexer::type::T a_sem, Attr a_)
 {
     a = a_;
     mem.sem = a_sem;
-    _type = term_t::type::sem;
+    _type = Term::type::sem;
 }
 
-term_t::term_t(lexer::lexem::mnemonic a_code, attr a_)
+Term::Term(lexer::lexem::mnemonic a_code, Attr a_)
 {
     a = a_;
     mem.c = a_code;
-    _type = term_t::type::code;
+    _type = Term::type::code;
 }
 
-term_t::term_t(const std::string & a_lexem)
+Term::Term(const std::string & a_lexem)
 {
-    _type = term_t::type::code;
+    _type = Term::type::code;
     mem.c = lexer::lexem::code(a_lexem.c_str());
 }
 
-term_t::term_t(term_t && _t)
+Term::Term(Term && _t)
 {
     //     logdebugfn << ":" << Ends;
     using std::swap;
@@ -428,14 +413,14 @@ term_t::term_t(term_t && _t)
     swap(a, _t.a);
 }
 
-term_t::term_t(const term_t & _t)
+Term::Term(const Term & _t)
 {
     mem = _t.mem;
     _type = _t._type;
     a = _t.a;
 }
 
-term_t & term_t::operator=(term_t && _t)
+Term & Term::operator=(Term && _t)
 {
     using std::swap;
     swap(mem, _t.mem);
@@ -444,7 +429,7 @@ term_t & term_t::operator=(term_t && _t)
     return *this;
 }
 
-term_t & term_t::operator=(const term_t & _t)
+Term & Term::operator=(const Term & _t)
 {
     mem = _t.mem;
     _type = _t._type;
@@ -452,7 +437,7 @@ term_t & term_t::operator=(const term_t & _t)
     return *this;
 }
 
-bool term_t::operator==(const term_t& t) const
+bool Term::operator==(const Term& t) const
 {
     if (_type != t._type)
         return false;
@@ -470,7 +455,7 @@ bool term_t::operator==(const term_t& t) const
     return false;
 }
 
-bool term_t::operator==(const lexer::type::token_t& t) const
+bool Term::operator==(const lexer::type::token_t& t) const
 {
     switch (_type) {
         case type::code:
@@ -485,7 +470,7 @@ bool term_t::operator==(const lexer::type::token_t& t) const
     return false;
 }
 
-bool term_t::operator!=(const lexer::type::token_t& t) const
+bool Term::operator!=(const lexer::type::token_t& t) const
 {
     switch (_type) {
         case type::code:
@@ -500,35 +485,35 @@ bool term_t::operator!=(const lexer::type::token_t& t) const
     return true;
 }
 
-term_t::~term_t()
+Term::~Term()
 {
 }
 
-std::string term_t::operator()() const
+std::string Term::operator()() const
 {
     utils::xstr str;
     str << a();
 
-//    std::map<term_t::type, std::string> _{
-//        {term_t::type::rule, logger::attribute(logger::HRed)},
-//        {term_t::type::sem,  logger::attribute(logger::HGreen)},
-//        {term_t::type::code, logger::attribute(logger::HBlue)}
+//    std::map<Term::type, std::string> _{
+//        {Term::type::rule, logger::attribute(logger::HRed)},
+//        {Term::type::sem,  logger::attribute(logger::HGreen)},
+//        {Term::type::code, logger::attribute(logger::HBlue)}
 //    };
 //
 //    str << _[_type];
     switch (_type) {
-        case term_t::type::code:
+        case Term::type::code:
         {
             lexer::type::token_t tok = lexer::type::token_t()[mem.c];
             str << tok.attribute();
         }
             break;
-        case term_t::type::rule:
+        case Term::type::rule:
             // Can't happen but we never know: (nullptr)
             if (mem.r)
                 str << mem.r->_id;
             break;
-        case term_t::type::sem:
+        case Term::type::sem:
             str << lexer::type::to_s(mem.sem);
             break;
         default:
@@ -562,7 +547,7 @@ rule_t & rule_t::new_sequence()
 
 rule_t & rule_t::operator|(rule_t * _r)
 {
-    term_t t = term_t(_r);
+    Term t = Term(_r);
     t.a = a;
     a.reset();
     *seq << t;
@@ -571,7 +556,7 @@ rule_t & rule_t::operator|(rule_t * _r)
 
 rule_t & rule_t::operator|(lexer::type::T _t)
 {
-    term_t t = term_t(_t);
+    Term t = Term(_t);
     t.a = a;
     a.reset();
     *seq << t;
@@ -580,21 +565,21 @@ rule_t & rule_t::operator|(lexer::type::T _t)
 
 rule_t & rule_t::operator|(lexer::lexem::mnemonic _t)
 {
-    term_t t = term_t(_t);
+    Term t = Term(_t);
     t.a = a;
     a.reset();
     *seq << t;
     return *this;
 }
 
-term_t seq_t::next(term_t::const_iterator& it) const
+Term seq_t::next(Term::const_iterator& it) const
 {
     if (it != terms.end())
         ++it;
     return *it;
 }
 
-seq_t & seq_t::operator<<(term_t a_t)
+seq_t & seq_t::operator<<(Term a_t)
 {
     terms.push_back(a_t);
     return *this;
@@ -618,7 +603,7 @@ seq_t & seq_t::operator<<(rule_t * a_t)
     return *this;
 }
 
-std::string attr::operator()()
+std::string Attr::operator()()
 {
     utils::xstr str;
     if (z)

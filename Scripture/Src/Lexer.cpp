@@ -330,10 +330,10 @@ Return Lexer::_InputBinaryOperator(TokenData &Token_)
     Rem::Debug() << __PRETTY_FUNCTION__ << ":\n";
     if (Token_.M == Mnemonic::Sub || Token_.M == Mnemonic::Add)
     {
-        if (ScanSignPrefix(Token_)) 
+        if (*ScanSignPrefix(Token_) == Rem::Int::Accepted)
             return Rem::Int::Accepted;
     }
-
+    
     if (mCursor._F)
     {
         if (Token_.M == Mnemonic::Openpar)
@@ -342,7 +342,6 @@ Return Lexer::_InputBinaryOperator(TokenData &Token_)
             mCursor._F = false;
         }
     }
-
     return Push(Token_);
 }
 
@@ -597,9 +596,13 @@ Return Lexer::ScanFactorNotation(TokenData &Token_)
 
 Return Lexer::ScanSignPrefix(TokenData &Token_)
 {
-    Token_.T = Type::Prefix;
-    Token_.S = (Token_.S & ~Type::Binary) | Type::Sign | Type::Unary | Type::Prefix; // Type::Operator bit already set
-    return Push(Token_);
+    if(mConfig.Tokens->empty() || mConfig.Tokens->back().IsBinary() || mConfig.Tokens->back().IsPunctuation())
+    {
+        Token_.T = Type::Prefix;
+        Token_.S = (Token_.S & ~Type::Binary) | Type::Sign | Type::Unary | Type::Prefix; // Type::Operator bit already set
+        return Push(Token_);
+    }
+    return Rem::Int::Rejected;
 }
 
 /*!

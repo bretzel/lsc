@@ -22,7 +22,7 @@
 #include <Lsc/Rem/Rem.h>
 #include <Lsc/AppBook/Lib.h>
 
-// init text attributes/style for type/class of messages:
+// Init text attributes/style for type/class of messages:
 // info=0, err, critical, fatal, debug, excep, notice, warnings
 //journal::m_type_table.push_back(journal::m_attr_table[(int)hblue] + std::string("⚫") + " information: "); // information : light blue
 //journal::m_type_table.push_back(journal::m_attr_table[(int)red] + std::string("✘") + " error: "); // error
@@ -375,7 +375,7 @@ public:
      *
      * @code
      *      App::Instance().Config() = {
-     *          .Title = "The Application LogBook!", (c++-20 new init list syntax)
+     *          .Title = "The Application LogBook!", (c++-20 new Init list syntax)
      *          .Path = "Filename.log",
      *          .Name = App::Ansi,
      *          .Mode = 0,

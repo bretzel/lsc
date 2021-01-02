@@ -303,4 +303,9 @@ enum class Color : uint16_t
 
 }
 
+
+namespace Lsc
+{
+    std::string REM_LIB operator << (String&, Ansi::Color C);
+}
 //#endif //LSC_REMCOLOR_H

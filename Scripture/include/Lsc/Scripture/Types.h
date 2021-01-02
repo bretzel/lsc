@@ -61,6 +61,7 @@ constexpr T Octal       = 0x80000000000;
 constexpr T Bin         = 0x100000000000;
 
 std::string SCRIPTURE_LIB Name(T T_);
+T    SCRIPTURE_LIB FromStr(String);
 }
 
 enum class Mnemonic : uint16_t

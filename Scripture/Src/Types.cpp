@@ -135,6 +135,12 @@ std::string Name(T T_)
     return Str_;
 }
 
+T    SCRIPTURE_LIB FromStr(String Str)
+{
+    T types = 0;
+    
+}
+
 }}
 
 namespace Lsc

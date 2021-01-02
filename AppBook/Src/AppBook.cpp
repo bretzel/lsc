@@ -42,7 +42,7 @@ App &App::Init()
     else
         Book.mFile = &std::cout; // It's that simple!!
         
-    // Continue init...
+    // Continue Init...
     
     return *App::mStaticInstance;
 }

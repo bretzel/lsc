@@ -540,7 +540,7 @@ int String::Filter(const String::Collection &a_exp)
         return 0;
     auto i = a_exp.cbegin();
     
-    // array::front is the init of the match at the beginning of this string.
+    // array::front is the Init of the match at the beginning of this string.
     // if ...front() is Empty, then there is no required match at the beginning of this string
     // so proceed to the next substring to find.
     // if the last is not Empty, then match the last substring.

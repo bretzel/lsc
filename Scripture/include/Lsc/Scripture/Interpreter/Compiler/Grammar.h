@@ -62,11 +62,11 @@ struct  Attr
     }
     void Reset() { Z = R = L = X = S = 0; }
     std::string operator()();
-    bool IsOpt() const { return Z != 0; }
-    bool IsOneOf() const { return L != 0; }
-    bool IsStrict() const { return Z == 0 && L == 0 && R == 0; }
-    bool IsRepeat() const { return R != 0; }
-    bool Accepted() const { return X != 0; } 
+    [[nodiscard]] bool IsOpt() const { return Z != 0; }
+    [[nodiscard]] bool IsOneOf() const { return L != 0; }
+    [[nodiscard]] bool IsStrict() const { return Z == 0 && L == 0 && R == 0; }
+    [[nodiscard]] bool IsRepeat() const { return R != 0; }
+    [[nodiscard]] bool Accepted() const { return X != 0; }
     void Accept() { X = 1; }
     void Reject() { X = 0; }
 };
@@ -234,9 +234,9 @@ class  Grammar
 public:
     Grammar();
     ~Grammar();
-    String &text() { return _text; }
-    Return build();
-    void dump();
+    String &text() { return _Text; }
+    Return Build();
+    void Dump();
 
 private:
     enum state_mac
@@ -254,34 +254,34 @@ private:
 
     state_mac _state = Grammar::st_begin;
 
-    int init();
-    static Rule::collection _rules;
-    Rule *_rule = nullptr;
+    int Init();
+    static Rule::collection _Rules;
+    Rule                    *_Rule = nullptr;
     Rule *QueryRule(const std::string &a_id);
 
-    using grammar_t = Return (Grammar::*)(String::Iterator &);
+    using RuleScanner = Return (Grammar::*)(String::Iterator &);
     String::Word::Collection tokens;
-    String _text;
+    String                   _Text;
 
-    using dictionary_t = std::map<char, Grammar::grammar_t>;
-    static dictionary_t grammar_dictionary;
+    using Dictionary = std::map<char, Grammar::RuleScanner>;
+    static Dictionary TeaGrammarDictionary;
 
 public:
     const Rule *operator[](const std::string &r_id) const
     {
-        return _rules[r_id];
-        //Rule* r = _rules[r_id]; return (const Rule*)r;
+        return _Rules[r_id];
+        //Rule* r = _Rules[r_id]; return (const Rule*)r;
     }
 
-    static bool built() { return _rules.size() != 0; }
+    static bool Built() { return _Rules.size() != 0; }
 
 private:
-    Grammar::dictionary_t::iterator _rule_it;
+    Grammar::Dictionary::iterator RuleIt;
 
     //--------------- Rules builders -------------------
 
     Return ParseIdentifier(String::Iterator &crs);
-    Return EnterRule_def(String::Iterator &crs);
+    Return EnterRuleDef(String::Iterator &crs);
     Return NewSequence(String::Iterator &crs);
     Return EndRule(String::Iterator &crs);
     Return SetRepeat(String::Iterator &crs);

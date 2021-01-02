@@ -21,3 +21,11 @@ String ToString(Color C_)
 }
 
 }
+
+namespace Lsc
+{
+std::string REM_LIB operator << (String&, Ansi::Color C)
+{
+    return Lsc::Ansi::ToString(C)();
+}
+}
