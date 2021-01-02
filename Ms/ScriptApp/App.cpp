@@ -35,7 +35,18 @@ Return App::operator()()
     
     (void) App::Type("Binary/Operator/TypeId/Number/Float");
     (void) Tokens("<>;");
-    (void) LexerScan("Abcdere = 0xb09AFcfdaghj >< 0xabcd + -4.012ac * 4ac(x^2+y+b)");
+    (void) LexerScan(
+R"(
+if A 
+{
+    Abcdere = 0xb09AFcfdaghj >< 0xabcd + -4.012ac * 4ac(x^2+y+b);
+}
+else
+{
+   return .0001;
+}
+)"
+);
     (void) ArithmeticLogicalUnit();
     std::cout << "\n--------------------------------------------------------------------\n";
     return Rem::Int::Ok;

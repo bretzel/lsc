@@ -13,7 +13,11 @@ Lexer::ScanTable  Lexer::_ScanTable = {
 
     {Type::Null,    &Lexer::_InputDefault},
     {Type::Binary, &Lexer::_InputBinaryOperator },
-    {Type::Hex, &Lexer::_InputHex}
+    {Type::Hex, &Lexer::_InputHex},
+    {Type::Punctuation, &Lexer::_InputPunctuation},
+    {Type::Prefix, &Lexer::ScanPrefix},
+    {Type::Keyword, &Lexer::_InputKeyword}
+
 
 };
 
@@ -330,6 +334,15 @@ Return Lexer::_InputBinaryOperator(TokenData &Token_)
             return Rem::Int::Accepted;
     }
 
+    if (mCursor._F)
+    {
+        if (Token_.M == Mnemonic::Openpar)
+        {
+            InsertMultiply(Token_);
+            mCursor._F = false;
+        }
+    }
+
     return Push(Token_);
 }
 
@@ -339,7 +352,7 @@ Return Lexer::_InputBinaryOperator(TokenData &Token_)
  */
 Return Lexer::_InputDefault(TokenData &Token_)
 {
-    Rem::Debug() << ": " << __PRETTY_FUNCTION__ << ":\n";
+    Rem::Debug(__PRETTY_FUNCTION__) << ":\n";
     if(*ScanNumber(Token_) != Rem::Int::Accepted)
     {
         Rem::Debug() << " Not a Number Trying ScanIdentifier:";
@@ -353,16 +366,26 @@ Return Lexer::_InputDefault(TokenData &Token_)
     return Rem::Int::Rejected;
 }
 
-Return Lexer::_InputUnaryOperator(TokenData &)
+Return Lexer::_InputUnaryOperator(TokenData &T_)
 {
     
-    
-    return (Rem::Push() << Rem::Int::Implement);
+    // Possible Prefix and Postfix unary operators:
+    if ((T_.M == Mnemonic::Bitnot) || (T_.M == Mnemonic::Decr) || (T_.M == Mnemonic::Incr))
+    {
+        if (mConfig.Tokens->empty() || (mConfig.Tokens->back().S & Type::Binary))
+            return ScanPrefix(T_);
+        return ScanPostfix(T_);
+    }
+    if (T_.T == Type::Prefix)
+        return ScanPrefix(T_);
+    return ScanPostfix(T_);
 }
 
 Return Lexer::_InputPunctuation(TokenData &Token_)
 {
     Rem::Debug(__PRETTY_FUNCTION__) << '\n' << mCursor.Mark();
+    if (Token_.M == Mnemonic::Dot)
+        return ScanNumber(Token_);
     return Push(Token_);
 }
 
@@ -374,7 +397,7 @@ Return Lexer::_InputKeyword(TokenData &Token_)
 
 Return Lexer::_InputHex(TokenData &Token_)
 {    
-    Rem::Internal() << __PRETTY_FUNCTION__ << ":\n";
+    Rem::Debug(__PRETTY_FUNCTION__) << ":\n";
     const char *C_ = mCursor.C;
     C_ += Token_.Attr().length();
     const char* E_ = C_;
@@ -457,6 +480,7 @@ Return Lexer::ScanNumber(TokenData &Token_)
                 break;
         }
     }
+    Token_.M = Mnemonic::Noop;
     return Push(Token_);
     //return Rem::Int::Accepted;
 }
@@ -464,16 +488,13 @@ Return Lexer::ScanNumber(TokenData &Token_)
 Return Lexer::ScanIdentifier(TokenData &Token_)
 {
     
-    Rem::Debug() << __PRETTY_FUNCTION__ << ": ";
+    Rem::Debug(__PRETTY_FUNCTION__);
     const char *C = mCursor.C;
     if((!isalpha(*C)) && (*C != '_'))
         return Rem::Int::Rejected;
 
     if (mCursor._F)
-    {
-        ++C;
         goto IDOK;
-    }
     else
     {
         if (!mConfig.Tokens->empty())
@@ -512,12 +533,9 @@ void Lexer::InsertMultiply(TokenData& Token_)
     Mul.S = Type::Binary | Type::Operator;
     Mul.mFlags.M = Mul.mFlags.V = 1;
     Mul.M = Mnemonic::Mul;
-    mCursor.Sync();
-    Mul.mLoc.L = mCursor.L;
-    Mul.mLoc.C = mCursor.Col;
     mConfig.Tokens->push_back(Mul);
     mCursor.C = Mul.mLoc.Begin;
-    Push(Token_);
+    Rem::Debug(__PRETTY_FUNCTION__) << " Details:" << Mul.Details() << "\n" << Mul.Mark();
 }
 
 /*!
@@ -690,12 +708,13 @@ Return Lexer::Exec()
         //Rem::Debug() << "mCursor on '" << *mCursor.C << '\'';
 
         Token_ = TokenData::Scan(mCursor.C);
-
+        Rem::Debug(__PRETTY_FUNCTION__) << " Details: " << Token_.Details();
         Scanner S = GetScanner(Token_);
         if (S)
         {
+            
             if (!(R = (this->**S)(Token_)))
-                return Rem::Fatal("Lexer:") << "Aborted: Unexpected token:\n" << Token_.Mark();
+                return Rem::Fatal("Lexer:") << "Aborted: Unexpected token:\n" << mCursor.Mark();
         }
         else
         {
