@@ -35,7 +35,7 @@ Return App::operator()()
     
     (void) App::Type("Binary/Operator/TypeId/Number/Float");
     (void) Tokens("<>;");
-    (void) LexerScan("Abcdere = 0xb09AFcfdaghj >< 0xabcd + -4.012ac();");
+    (void) LexerScan("Abcdere = 0xb09AFcfdaghj >< 0xabcd + -4.012ac * 4ac(x^2+y+b)");
     (void) ArithmeticLogicalUnit();
     std::cout << "\n--------------------------------------------------------------------\n";
     return Rem::Int::Ok;
@@ -103,16 +103,20 @@ Return App::LexerScan(std::string Txt_)
 
 Return App::ArithmeticLogicalUnit()
 {
-    Rem::Debug() << __PRETTY_FUNCTION__  << ":\n";
+    Rem::Debug(__PRETTY_FUNCTION__)  << ":\n";
     Alu A = 1.1f;
     Alu B = .0f;
     Alu C = .00345f;
+    Alu D = A / B;
     Rem::Debug() << "A=" << A() << " => [" << Type::Name(A.TypeOf()) << "]";
     Rem::Debug() << "B=" << B() << " => [" << Type::Name(B.TypeOf()) << "]";
-    Rem::Debug() << "A / B:"  << " => " << (A/B)() ;
+    Rem::Debug() << "D = A / B:"  << " => " << D() ;
     
     Rem::Debug() << "C=" << C.Number<double>() << " => [" << Type::Name(C.TypeOf()) << "]";
-    Rem::Debug() << "A / C: => " << (A/C)() << "[" << Type::Name(C.TypeOf()) << "]";
+    B = .003;
+    Rem::Debug() << "Now with B = .003: \n";
+    D = A / B;
+    Rem::Debug() << "D = A / B: => " << D() << "[" << Type::Name(C.TypeOf()) << "]";
     return Rem::Int::Good;
 }
 

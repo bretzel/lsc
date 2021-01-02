@@ -37,12 +37,14 @@ Return VaultApp::operator()()
         Field();
         Rem::Message() << " Now the Entity:";
         Vault::Vault Vault("lab");
-        Vault.Open();
-        Vault::Entity E = Vault::Entity("User", &Vault);
-        
-        E += "User:UserName,A,Name, Mode:Name,Begin,End";
-        std::cout << "\n--------------------------------------------------------------------\n";
-        return Rem::Int::Ok;
+        if(Vault.Open())
+        {
+            Vault::Entity E = Vault::Entity("User", &Vault);
+
+            E += "User:UserName,A,Name, Mode:Name,Begin,End";
+            std::cout << "\n--------------------------------------------------------------------\n";
+            return Rem::Int::Ok;
+        }
     }
     catch(Rem &R)
     {

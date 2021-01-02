@@ -10,6 +10,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RemApp", "Ms\RemApp\RemApp.vcxproj", "{1F4332FF-82BF-4914-93AA-3E3AAE434E29}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ScriptApp", "Ms\ScriptApp\ScriptApp.vcxproj", "{C42A805E-1A94-42FE-82FC-77D2B8DC83CF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7A5EF1F1-1CFC-40D6-85C9-87F6C7E8D293} = {7A5EF1F1-1CFC-40D6-85C9-87F6C7E8D293}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AppBook", "AppBook\AppBook.vcxproj", "{80D76990-CF8F-4D90-819A-68019AEA0DF6}"
 EndProject

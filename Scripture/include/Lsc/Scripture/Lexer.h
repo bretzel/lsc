@@ -107,15 +107,16 @@ private:
     
     Return Push(TokenData& Token_) ;
     
-    using ScannerFn = Return(Lexer::*)(TokenData&);
-    using InputPair = std::pair<Type::T, Type::T>;
-    using ProductionAssocTable = std::vector<std::pair<Lexer::InputPair, Lexer::ScannerFn>>;
-    static std::map<Lexer::InputPair , ScannerFn> _ProductionTable;
-    static Lexer::ProductionAssocTable _AssocTable;
-    using Scanner = Expect<Lexer::ScannerFn>;
 
     #pragma region Scanners
-    Scanner GetScanner(InputPair Pair);
+
+    using ScannerFn = Return(Lexer::*)(TokenData&);
+    using Input = std::pair<Type::T, Lexer::ScannerFn>;
+    using ScanTable = std::vector<Lexer::Input>;
+    using Scanner = Expect<Lexer::ScannerFn>;
+    static Lexer::ScanTable  _ScanTable;
+
+    Scanner GetScanner(TokenData& T_);
     
     Return _InputBinaryOperator(TokenData&);
     Return _InputDefault(TokenData&);
@@ -131,13 +132,13 @@ private:
     Return ScanPrefix(TokenData&);
     Return ScanPostfix(TokenData&);
     
-    
     #pragma endregion Scanners
+
+    void InsertMultiply(TokenData&);
 };
 
 
 }
 
-bool operator && (std::pair<Lsc::Type::T, Lsc::Type::T>, std::pair<Lsc::Type::T, Lsc::Type::T>);
 
 //#endif //LSC_LEXER_H

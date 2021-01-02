@@ -110,7 +110,7 @@ std::string Rem::ToStr(Rem::Type T)
                                           {Rem::Type::Error,       "\033[0;38;5;124m✘ Error\033[0m"},
                                           {Rem::Type::SyntaxError, "\033[0;38;5;9m☠ Syntax Error\033[0m"},
                                           {Rem::Type::Warning,     "\033[0;38;5;106m⚠ Warning\033[0m"},
-                                          {Rem::Type::Fatal,       "\033[0;38;5;12m☠ Fatal Error\033[0m"},
+                                          {Rem::Type::Fatal,       "\033[0;38;5;1m☠ Fatal Error\033[0m"},
                                           {Rem::Type::Success,     "\033[0;38;5;12m✔ Success\033[0m"},
                                           {Rem::Type::Message,     "\033[0;38;5;70m@ Message\033[0m"},
                                           {Rem::Type::Return,      "\033[0;38;5;12m⏎ Return\033[0m"},
