@@ -474,14 +474,14 @@ template<typename T> String &String::Printf(const T &_argv)
     //[.precision]
     n = c;
     //% ([Length]) [specifier]
-    std::string BinaryStr;
+    
     switch(*c)
     {
         case 'b':
         {
             if constexpr (!std::is_same<T, const std::string &>::value)
             {
-                
+                std::string BinaryStr;
                 bool pad = fmt.F == '0';
                 BinaryStr = String::ToBinary<T>(_argv, pad, fmt.W <= 128 ? fmt.W : 128); // Limit grouping digits to 128 ...
 
