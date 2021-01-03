@@ -308,6 +308,7 @@ constexpr T Kobject      = "object";
 constexpr T Kstatic      = "static";
 constexpr T Kme          = "me";
 
+Mnemonic SCRIPTURE_LIB FromStr(const std::string& M_);
 }
 
 

@@ -4,6 +4,7 @@
 
 #include <Lsc/Scripture/Types.h>
 #include <map>
+#include <Lsc/Rem/Rem.h>
 
 namespace Lsc
 {
@@ -138,7 +139,15 @@ std::string Name(T T_)
 T    SCRIPTURE_LIB FromStr(String Str)
 {
     T types = 0;
+    String::Word::Collection W;
+    std::size_t s = Str.Words(W,"/",false);
     
+    for(auto I : W)
+    {
+        Rem::Debug() << "'" << I() << "'\n";
+        types |= STR_T[I()];
+    }
+    return types;
 }
 
 }}
@@ -256,6 +265,124 @@ std::string MnemonicName(Mnemonic M)
 }
     
 }
+
+namespace Lsc
+{
+    Mnemonic SCRIPTURE_LIB Lexem::FromStr(const std::string &M_)
+    {
+        std::map<Mnemonic, std::string> _ = {{Mnemonic::Knull,        "Knull"},
+                                              {Mnemonic::Lshift,       "Lshift,"},
+                                              {Mnemonic::Radical,      "Radical,"},
+                                              {Mnemonic::Exponent,     "Exponent,"},
+                                              {Mnemonic::Rshift,       "Rshift,"},
+                                              {Mnemonic::Decr,         "Decr"},
+                                              {Mnemonic::Incr,         "Incr"},
+                                              {Mnemonic::Assignadd,    "Assignadd"},
+                                              {Mnemonic::Assignsub,    "Assignsub"},
+                                              {Mnemonic::Assignmul,    "Assignmul"},
+                                              {Mnemonic::Assigndiv,    "Assigndiv"},
+                                              {Mnemonic::Assignmod,    "Assignmod"},
+                                              {Mnemonic::Assignand,    "Assignand"},
+                                              {Mnemonic::Assignor,     "Assignor"},
+                                              {Mnemonic::Assignxor,    "Assignxor"},
+                                              {Mnemonic::Assignx1,     "Assignx1"},
+                                              {Mnemonic::Assignlshift, "Assignlshift"},
+                                              {Mnemonic::Assignrshift, "Assignrshift"},
+                                              {Mnemonic::Leq,          "Leq"},
+                                              {Mnemonic::Geq,          "Geq"},
+                                              {Mnemonic::Eq,           "Eq"},
+                                              {Mnemonic::Neq,          "NEq"},
+                                              {Mnemonic::Add,          "Add"},
+                                              {Mnemonic::Sub,          "Sub"},
+                                              {Mnemonic::Mul,          "Mul"},
+                                              {Mnemonic::Cppcomment,   "Cppcomment"},
+                                              {Mnemonic::Modulo,       "Modulo"},
+                                              {Mnemonic::Lt,           "Lt"},
+                                              {Mnemonic::Gt,           "Gt"},
+                                              {Mnemonic::Assign,       "Assign"},
+                                              {Mnemonic::Binand,       "Binand"},
+                                              {Mnemonic::Binor,        "Binor"},
+                                              {Mnemonic::Bitxor,       "Bitxor"},
+                                              {Mnemonic::X1,           "X1,           // complement a 1"},// complement a 1
+                                              {Mnemonic::X2,           "X2"},
+                                              {Mnemonic::Bitnot,       "Bitnot,          //"},   //
+                                              {Mnemonic::Booland,      "Booland"},
+                                              {Mnemonic::Boolor,       "Boolor"},
+                                              {Mnemonic::Openabs,      "Openabs"},
+                                              {Mnemonic::Closeabs,     "Closeabs"},
+                                              {Mnemonic::Openpar,      "Openpar"},
+                                              {Mnemonic::Closepar,     "Closepar"},
+                                              {Mnemonic::Openindex,    "Openindex"},
+                                              {Mnemonic::Closeindex,   "Closeindex"},
+                                              {Mnemonic::Openbrace,    "Openbrace"},
+                                              {Mnemonic::Closebrace,   "Closebrace"},
+                                              {Mnemonic::Bcomment,     "Bcomment"},
+                                              {Mnemonic::Ecomment,     "Ecomment"},
+                                              {Mnemonic::Division,     "Division"},
+                                              {Mnemonic::Comma,        "Comma"},
+                                              {Mnemonic::Scope,        "Scope"},
+                                              {Mnemonic::Semicolon,    "Semicolon"},
+                                              {Mnemonic::Colon,        "Colon"},
+                                              {Mnemonic::Range,        "Range"},
+                                              {Mnemonic::Factorial,    "Factorial"},
+                                              {Mnemonic::Positive,     "Positive"},
+                                              {Mnemonic::Negative,     "Negative"},
+                                              {Mnemonic::Squote,       "Squote"},
+                                              {Mnemonic::Dquote,       "Dquote"},
+                                              {Mnemonic::Kternary,     "Kternary"},
+                                              {Mnemonic::Hash,         "Hash"},
+                                              {Mnemonic::Dollard,      "Dollard"},
+                                              {Mnemonic::Dot,          "Dot"},
+                                              {Mnemonic::Kreturn,      "Kreturn"},
+                                              {Mnemonic::Kif,          "Kif"},
+                                              {Mnemonic::Kpi,          "Kpi"},
+                                              {Mnemonic::Knumber,      "Knumber"},
+                                              {Mnemonic::Ku8,          "Ku8"},
+                                              {Mnemonic::Ku16,         "Ku16"},
+                                              {Mnemonic::Ku32,         "Ku32"},
+                                              {Mnemonic::Ku64,         "Ku64"},
+                                              {Mnemonic::Ki8,          "Ki8"},
+                                              {Mnemonic::Ki16,         "Ki16"},
+                                              {Mnemonic::Ki32,         "Ki32"},
+                                              {Mnemonic::Ki64,         "Ki64"},
+                                              {Mnemonic::Kreal,        "Kreal"},
+                                              {Mnemonic::Kstring,      "Kstring"},
+                                              {Mnemonic::Kthen,        "Kthen"},
+                                              {Mnemonic::Kelse,        "Kelse"},
+                                              {Mnemonic::Kconst,       "Kconst"},
+                                              {Mnemonic::Kinclude,     "Kinclude"},
+                                              {Mnemonic::Kmodule,      "Kmodule"},
+                                              {Mnemonic::Kat,          "Kat"},
+                                              {Mnemonic::Kprime,       "Kprime"},
+                                              {Mnemonic::Kdo,          "Kdo"},
+                                              {Mnemonic::Kwhile,       "Kwhile"},
+                                              {Mnemonic::Kfor,         "Kfor"},
+                                              {Mnemonic::Kuntil,       "Kuntil"},
+                                              {Mnemonic::Krepeat,      "Krepeat"},
+                                              {Mnemonic::Kswitch,      "Kswitch"},
+                                              {Mnemonic::Kcase,        "Kcase"},
+                                              {Mnemonic::Ktype,        "Ktype"},
+                                              {Mnemonic::Khex,         "Khex"},
+                                              {Mnemonic::KHex,         "KHex"},
+                                              {Mnemonic::Kcos,         "Kcos"},
+                                              {Mnemonic::Kacos,        "Kacos"},
+                                              {Mnemonic::Ktan,         "Ktan"},
+                                              {Mnemonic::Katan,        "Katan"},
+                                              {Mnemonic::Ksin,         "Ksin"},
+                                              {Mnemonic::Kasin,        "Kasin"},
+                                              {Mnemonic::Kobject,      "Kobject"},
+                                              {Mnemonic::Kstatic,      "Kstatic"},
+                                              {Mnemonic::Kme,          "Kme"},
+                                              {Mnemonic::Noop,         "Noop"}};
+        for(const auto& P : _)
+        {
+            if(P.second == M_)
+                return P.first;
+        }
+        return Mnemonic::Noop;
+    }
+}
+
 
 /*!
  * @brief Overload input operator

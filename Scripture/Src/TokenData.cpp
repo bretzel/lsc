@@ -145,13 +145,13 @@ std::string TokenData::Mark()
 std::string TokenData::SemanticTypes()
 {
     std::string Str;
-    return Str << S;
+    return Type::Name( S);
 }
 
 std::string TokenData::TypeName()
 {
     std::string Str;
-    return Str << T;
+    return Type::Name( T);
 }
 
 static TokenData::Collection tokens_table = {{Mnemonic::Knull,        Type::Keyword,     0x000040000,  Type::Delta::Identifier, Lexem::Knull,        1},
@@ -264,7 +264,7 @@ TokenData TokenData::Scan(const char *C_)
 {
     int unicode = 0;
     int index   = 0;
-    Rem::Debug() << __PRETTY_FUNCTION__ << ":\n";
+    //Rem::Debug() << __PRETTY_FUNCTION__ << ":\n";
     for(auto Tok : tokens_table)
     {
         const char  *crs  = C_;

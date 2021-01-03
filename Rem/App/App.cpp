@@ -71,6 +71,4 @@ Return App::LscObject()
     return Rem::Int::Ok;
 }
 
-
-
 }

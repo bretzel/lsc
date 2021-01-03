@@ -7,6 +7,7 @@
 #pragma once
 #include <Lsc/Rem/Rem.h>
 #include <Lsc/Scripture/Types.h>
+#include <Lsc/Scripture/Interpreter/Compiler/Grammar.h>
 
 
 namespace Lsc
@@ -29,7 +30,7 @@ private:
     Return LexerScan(std::string Txt_);
     Return ArithmeticLogicalUnit();
     Return ExIOCanUseShared();
-
+    Return TeaGrammar();
 };
 }
 //#endif //LSC_APP_H

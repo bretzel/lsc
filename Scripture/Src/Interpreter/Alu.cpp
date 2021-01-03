@@ -158,7 +158,7 @@ Alu Alu::operator==(const Alu &Rhs_)
 std::string Alu::Types() const
 {
     std::string str;
-    return str << T;
+    return Type::Name(T);
 }
 
 Alu Alu::operator+(const Alu &Rhs_)
@@ -168,7 +168,7 @@ Alu Alu::operator+(const Alu &Rhs_)
     else lr_number(Rhs_)
         return Alu(Number<double>() + Rhs_.Number<double>()); // Slow?
     std::string str;
-    Rem::Warning() << " [" << (str << T) << "] and [" << (str << Rhs_.T) << "] are incompatible.";
+    Rem::Warning() << " [" << Type::Name(T) << "] and [" << Type::Name( Rhs_.T) << "] are incompatible.";
     return Alu(false);
 }
 

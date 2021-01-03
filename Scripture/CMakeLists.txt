@@ -19,7 +19,7 @@ add_library(
         SHARED
         ${HDRS}
         ${SRCS}
-)
+		Src/Interpreter/Compiler/Ast.cpp include/Lsc/Scripture/Interpreter/Compiler/Ast.h)
 
 list(
     APPEND INCLUDE_PATHS

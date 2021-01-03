@@ -109,7 +109,7 @@ struct  Term
 
     Term(const std::string &a_lexem);
 
-    Term(Term &&_t);
+    Term(Term &&_t) noexcept;
     Term(const Term &_t);
 
     Term &operator=(Term &&_t);
@@ -232,8 +232,8 @@ struct SCRIPTURE_LIB Rule
 class  Grammar
 {
 public:
-    Grammar();
-    ~Grammar();
+    Grammar() = default;
+    ~Grammar() = default;
     String &text() { return _Text; }
     Return Build();
     void Dump();
@@ -253,11 +253,11 @@ private:
     Attr a = {0, 0, 0, 0, 0}; ///< default : punctual, strict match
 
     state_mac _state = Grammar::st_begin;
-
-    int Init();
+    
+    [[maybe_unused]] int Init();
     static Rule::collection _Rules;
     Rule                    *_Rule = nullptr;
-    Rule *QueryRule(const std::string &a_id);
+    static Rule *QueryRule(const std::string &a_id);
 
     using RuleScanner = Return (Grammar::*)(String::Iterator &);
     String::Word::Collection tokens;

@@ -8,6 +8,7 @@
 #include <Lsc/Scripture/Lexer.h>
 #include <Lsc/Scripture/Interpreter/Alu.h>
 #include <Lsc/Scripture/Interpreter/ExIO.h>
+#include <Lsc/Scripture/Interpreter/Compiler/Grammar.h>
 
 auto main(int arc, char**argv) -> int
 {
@@ -48,6 +49,7 @@ else
 })"
 );
     (void) ExIOCanUseShared();
+    (void) TeaGrammar();
     std::cout << "\n---------------------------------------------------------------------\n";
     return Rem::Int::Ok;
 }
@@ -55,14 +57,14 @@ else
 Return App::Type(std::string Txt_)
 {
     Type::T T;
-    T << Txt_;
+    Type::FromStr( Txt_);
     String Str_  = "[%08b]";
     Str_ << T;
     std::cout << "App::Type( [%08b]" << Txt_ << ") :" <<  Str_() << '\n';
     Str_.Clear();
     std::string Txt;
     Txt.clear();
-    Txt << T;
+    Type::FromStr(Txt);
     std::cout   << Txt << '\n';
     
     return Rem::Int::Ok;
@@ -123,6 +125,14 @@ Return App::ArithmeticLogicalUnit()
     return Rem::Int::Good;
 }
 
+Return App::TeaGrammar()
+{
+    Grammar G;
+    G.Build();
+    //G.Dump();
+    
+    return Rem::Int::Accepted;
+}
 
 
 Return App::ExIOCanUseShared()
