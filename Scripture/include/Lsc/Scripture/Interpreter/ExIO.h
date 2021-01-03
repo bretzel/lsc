@@ -25,8 +25,8 @@ namespace Lsc
  */
 class SCRIPTURE_LIB ExIO
 {
-    Alu::Shared mAlu = nullptr;
-    TokenData*  mToken = nullptr;
+    Alu::Shared _A = nullptr;
+    TokenData*  _T = nullptr;
     
     
 public:
@@ -47,15 +47,77 @@ public:
     
 private:
     // Parent-Child Hierarchical Links ( Recursive/Embedded Blocs; Ex.: The Interpreter's Bloc is the Root-Global Bloc)
-    ExIO::Shared           mParent = nullptr;
-    ExIO::SharedCollection mChildren;
+    ExIO::Shared          _Parent = nullptr;
+    ExIO::SharedCollection _Children;
     //----------------------------------------------------------------------
     
     // Binary Tree Links (Arithmetic Expression; Abstract Syntax Tree; ...) :
-    ExIO::Shared        mRSH = nullptr;
-    ExIO::Shared        mLSH = nullptr;
-    ExIO::Shared        mOp = nullptr;
+    ExIO::Shared        _R = nullptr;
+    ExIO::Shared        _L = nullptr;
+    ExIO::Shared        _O = nullptr;
     // ---------------------------------------------------------------------
+    
+    // Execution:
+    virtual Alu Exe();
+    // Arithmetics
+    
+    using ExeFN = Alu(ExIO::*)();
+    using ExeTable = std::map<Mnemonic, ExIO::ExeFN>;
+    static ExeTable _ExeTable;
+    
+    ExeFN* _Operator = nullptr; ///< Assigned at the creation of this instance.
+    
+    virtual Alu Lshift();
+    virtual Alu Radical();
+    virtual Alu Exponent();
+    virtual Alu Rshift();
+    virtual Alu Decr();
+    virtual Alu Incr();
+    virtual Alu Assignadd();
+    virtual Alu Assignsub();
+    virtual Alu Assignmul();
+    virtual Alu Assigndiv();
+    virtual Alu Assignmod();
+    virtual Alu Assignand();
+    virtual Alu Assignor();
+    virtual Alu Assignxor();
+    virtual Alu Assignx1();
+    virtual Alu Assignlshift();
+    virtual Alu Assignrshift();
+    virtual Alu Leq();
+    virtual Alu Geq();
+    virtual Alu Eq();
+    virtual Alu Neq();  // != <>
+    virtual Alu Add();
+    virtual Alu Sub();
+    virtual Alu Mul();
+    virtual Alu Modulo();
+    virtual Alu Lt();
+    virtual Alu Gt();
+    virtual Alu Assign();
+    virtual Alu Binand();
+    virtual Alu Binor();
+    virtual Alu Bitxor();
+    virtual Alu X1();           // complement a 1
+    virtual Alu X2();
+    virtual Alu Bitnot();          //
+    virtual Alu Booland();
+    virtual Alu Boolor();
+    virtual Alu Division();
+    virtual Alu Factorial();
+    virtual Alu Positive();
+    virtual Alu Negative();
+    virtual Alu Hash(); // #
+    virtual Alu Dollard();
+    virtual Alu Dot();
+    virtual Alu Kpi();
+    virtual Alu Kcos();
+    virtual Alu Kacos();
+    virtual Alu Ktan();
+    virtual Alu Katan();
+    virtual Alu Ksin();
+    virtual Alu Kasin();
+    virtual Alu Noop();
     
 };
 
