@@ -16,6 +16,20 @@ class Ast
     Grammar _G;
     TokenData* _Tokens = nullptr;
     
+    
+    struct Node
+    {
+        Node* Parent    = nullptr;
+        Node* Lhs       = nullptr;
+        Node* Rhs       = nullptr;
+        Node* Child     = nullptr;
+        TokenData* Token= nullptr;
+        
+    };
+    
+    Node*   _IP = nullptr; ///< Input Pointer;
+    
+    
 public:
     Ast() = default;
     ~Ast()  = default;
