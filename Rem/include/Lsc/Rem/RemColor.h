@@ -299,13 +299,13 @@ enum class Color : uint16_t
 //
 //};
 
-    String REM_LIB ToString(Color C_);
+REM_LIB String  ToString(Color C_);
 
 }
 
 
 namespace Lsc
 {
-    String& REM_LIB operator << (String&, Ansi::Color C);
+    REM_LIB  String&  operator << (String&, Ansi::Color C);
 }
 //#endif //LSC_REMCOLOR_H

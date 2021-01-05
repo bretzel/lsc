@@ -54,14 +54,14 @@ else
 Return App::Type(std::string Txt_)
 {
     Type::T T;
-    T << Txt_;
+    T = Lsc::Type::FromStr(Txt_);
     String Str_  = "[%08b]";
     Str_ << T;
     std::cout << "App::Type( [%08b]" << Txt_ << ") :" <<  Str_() << '\n';
     Str_.Clear();
     std::string Txt;
     Txt.clear();
-    Txt << T;
+    T = Type::FromStr(Txt_);
     std::cout   << Txt << '\n';
     
     return Rem::Int::Ok;

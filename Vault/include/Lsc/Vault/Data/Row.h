@@ -15,7 +15,7 @@ namespace Lsc::Vault
 
 class Entity; ///< External definition because it will creates mutual dependancy on Entity<->Field
 
-class Row
+class VAULT_LIB Row
 {
     Entity* mModel = nullptr;
     String::Collection           mStrData;

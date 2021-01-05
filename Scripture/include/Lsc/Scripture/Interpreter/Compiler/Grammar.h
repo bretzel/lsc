@@ -23,7 +23,7 @@ namespace Lsc
     class Grammar;
 
 
-struct  Attr
+struct SCRIPTURE_LIB Attr
 {
     int8_t Z : 1; ///< Zero or one (optional * )
     int8_t R : 1; ///< Repeat      (        + )
@@ -72,7 +72,7 @@ struct  Attr
 };
 
 
-struct  Term
+struct SCRIPTURE_LIB  Term
 {
     mutable Attr a = {0, 0, 0, 0, 0}; ///< default : punctual, strict match
 
@@ -156,7 +156,7 @@ struct  Term
 };
 
 
-struct  Seq
+struct SCRIPTURE_LIB Seq
 {
 
     Attr a = {0, 0, 0, 0, 0}; ///< default : punctual, strict match
@@ -229,7 +229,7 @@ struct SCRIPTURE_LIB Rule
 
 
 
-class  Grammar
+class SCRIPTURE_LIB Grammar
 {
 public:
     Grammar() = default;

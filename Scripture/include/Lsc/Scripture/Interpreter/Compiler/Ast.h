@@ -11,7 +11,7 @@
 namespace Lsc
 {
 
-class Ast
+class SCRIPTURE_LIB Ast
 {
     Grammar _G;
     TokenData* _Tokens = nullptr;

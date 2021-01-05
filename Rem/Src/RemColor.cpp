@@ -24,7 +24,7 @@ String ToString(Color C_)
 
 namespace Lsc
 {
-String& REM_LIB operator << (String& Out, Ansi::Color C)
+ REM_LIB String&  operator << (String& Out, Ansi::Color C)
 {
     Out << Lsc::Ansi::ToString(C)();
     return Out;
