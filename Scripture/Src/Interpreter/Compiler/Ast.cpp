@@ -13,4 +13,8 @@ Return Ast::Build()
 {
     return Rem::Int::Implement;
 }
+Ast::Node::~Node()
+{
+
+}
 }
