@@ -16,12 +16,14 @@ class SCRIPTURE_LIB Ast
     Grammar _G;
     TokenData* _Tokens = nullptr;
     using Shared = std::shared_ptr<Ast>;
-    
+    using Collection = std::vector<Ast::Shared>;
+    Ast::Shared    _Parent      = nullptr;
+    Collection     _Children;
     struct Node
     {
         using Shared = std::shared_ptr<Node>;
 
-        using Collection = std::vector<Ast::Node*>;
+        using Collection = std::vector<Ast::Node::Shared>;
         Node* Parent    = nullptr; ///< Parent Node. 
         Node* Lhs       = nullptr; ///< Lef Hand Side Operand
         Node* Rhs       = nullptr; ///< Right Hand Side Operand
@@ -33,12 +35,17 @@ class SCRIPTURE_LIB Ast
         ~Node();
     };
     
-    Node*   _IP = nullptr; ///< Input Pointer;
+    Node::Shared _Root = nullptr;  ///< Root of this Ast;
+    Node::Shared _IP    = nullptr; ///< Input Pointer;
     
     
 public:
     Ast() = default;
+    Ast(Ast&&) = default;
+
     ~Ast()  = default;
+    static Ast::Shared New(Ast::Shared Parent_);
+    
     
     Return Build();
     
