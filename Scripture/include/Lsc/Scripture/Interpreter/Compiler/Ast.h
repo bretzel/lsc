@@ -24,15 +24,17 @@ class SCRIPTURE_LIB Ast
         using Shared = std::shared_ptr<Node>;
 
         using Collection = std::vector<Ast::Node::Shared>;
-        Node* Parent    = nullptr; ///< Parent Node. 
-        Node* Lhs       = nullptr; ///< Lef Hand Side Operand
-        Node* Rhs       = nullptr; ///< Right Hand Side Operand
-        Node* Child     = nullptr; ///< Child Node.
-        TokenData* Token= nullptr; ///< TokenData (infos).
+        Node::Shared Parent    = nullptr; ///< Parent Node.
+        Node::Shared Lhs       = nullptr; ///< Lef Hand Side Operand
+        Node::Shared Rhs       = nullptr; ///< Right Hand Side Operand
+        Node::Shared Child     = nullptr; ///< Child Node.
+        TokenData* Info = nullptr; ///< TokenData (infos).
 
-        static Node::Shared New(Ast::Shared&& Ast_, TokenData* Token_);
-
-        ~Node();
+        static Node::Shared New(TokenData* Token_);
+        
+        Node() = default;
+        explicit Node(TokenData* Info_);
+        ~Node() = default;
     };
     
     Node::Shared _Root = nullptr;  ///< Root of this Ast;
@@ -48,7 +50,6 @@ public:
     
     
     Return Build();
-    
 };
 
 }
