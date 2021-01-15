@@ -7,7 +7,8 @@
 
 #include <Lsc/Scripture/Lexer.h>
 #include <Lsc/Scripture/Interpreter/Alu.h>
-
+#include <Lsc/Scripture/Interpreter/ExIO.h>
+#include <Lsc/Scripture/Interpreter/Compiler/Grammar.h>
 auto main(int arc, char**argv) -> int
 {
     Lsc::App mApp;
@@ -47,6 +48,9 @@ else
 })"
 );
     (void) ArithmeticLogicalUnit();
+    (void)ExIOCanUseShared();
+    (void)TeaGrammar();
+    
     std::cout << "\n--------------------------------------------------------------------\n";
     return Rem::Int::Ok;
 }
@@ -129,5 +133,24 @@ Return App::ArithmeticLogicalUnit()
     Rem::Debug() << "D = A / B: => " << D() << "[" << Type::Name(C.TypeOf()) << "]";
     return Rem::Int::Good;
 }
+
+
+
+Return App::TeaGrammar()
+{
+    Grammar G;
+    G.Build();
+    //G.Dump();
+
+    return Rem::Int::Accepted;
+}
+
+Return App::ExIOCanUseShared()
+{
+    ExIO::Shared Xio = ExIO::New(nullptr, nullptr, nullptr);
+
+    return Lsc::Return();
+}
+
 
 } // namespace [Lsc::]Type

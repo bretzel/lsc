@@ -32,13 +32,12 @@ Return Ast::Build()
 Ast::Node::Shared Ast::Node::New(TokenData* Token_)
 {
     Shared N = std::make_shared<Ast::Node>(Token_);
+    N->Info = Token_;
+    return N;
 }
 
 
-Ast::Node::~Node()
-{
 
-}
 Ast::Node::Node(TokenData *Info_)
 {
     Info = Info_;

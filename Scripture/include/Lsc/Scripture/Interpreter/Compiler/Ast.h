@@ -43,7 +43,7 @@ class SCRIPTURE_LIB Ast
     
 public:
     Ast() = default;
-    Ast(Ast&&) = default;
+    Ast(Ast&&) noexcept  = default;
 
     ~Ast()  = default;
     static Ast::Shared New(Ast::Shared Parent_);

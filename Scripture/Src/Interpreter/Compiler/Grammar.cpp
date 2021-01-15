@@ -85,13 +85,12 @@ Return Grammar::Build()
     if (!count)
         return Rem::Fatal(__PRETTY_FUNCTION__ ) << ": No Tea Grammar. (internal error)";
     
-
+    Rem::Debug("List done:") << List.size() << " words.";
     auto s = List.begin();
     _state = st_begin;
     do {
         Return r;
         auto p = Grammar::TeaGrammarDictionary.find((*s)[0]);
-
         if (p != Grammar::TeaGrammarDictionary.end()) {
             r = (this->*(p->second))(s);
         }
@@ -101,7 +100,8 @@ Return Grammar::Build()
         if (!r)
             return r;
     } while (s != List.end());
-    Dump();
+    Rem::Debug("Build complete:") << ":";
+ //   Dump();
     return Rem::Int::Accepted ;
 }
 
@@ -139,9 +139,7 @@ void Grammar::Dump()
 
 Return Grammar::ParseIdentifier(String::Iterator & crs)
 {
-    //logdebugfn << logger::White << " : token: '" << logger::Yellow << *crs << logger::White << "':" << Ends;
     Rule* r = QueryRule(*crs);
-    //logdebugfn << logger::White << " rule: " << logger::Yellow << (r ? r->_id : "null")  << logger::White << ":" << Ends;
     switch (_state) {
         case st_begin:
             if (r) {
@@ -181,7 +179,6 @@ Return Grammar::ParseIdentifier(String::Iterator & crs)
                 break;
             }
 
-            //logdebug << " ***code: " << static_cast<uint64_t>(c) << " ***" << Ends;
             if (r) {
                 _Rule->a = a;
                 (*_Rule) | r;
@@ -197,7 +194,6 @@ Return Grammar::ParseIdentifier(String::Iterator & crs)
                 a.Reset();
             }
             break;
-            //return { (utils::notification::push(utils::notification::Type::error), "identifier '", *crs, "' is invalid in this context") };
     }
     ++crs;
     return Rem::Int::Accepted;
@@ -310,22 +306,13 @@ Return Grammar::EnterLitteral(String::Iterator & crs)
         //     << Ends;
 
     if ((_state != st_seq) && (_state != st_option))
-        return
-                     Rem::Fatal(__PRETTY_FUNCTION__)<<
-                         "syntax error '"<<
-                         *crs<<
-                         "' is not a valid xio++ grammar token in context"<<
-                         "(state machine:"<<(int)_state<<
-                         ")";
+        return Rem::Fatal(__PRETTY_FUNCTION__)<< "syntax error '"<< *crs<< "' is not a valid xio++ grammar token in context"<< "(state machine:"<<(int)_state<< ")";
 
     String::Iterator i = crs;
-    // logdebugfn << logger::HBlue << "token: '" << logger::HRed << *i << logger::HBlue << "'" << Ends;
     ++i;
-    // logdebugfn << logger::HBlue << "token[++i]: '" << logger::HRed << *i << logger::HBlue << "'" << Ends;
     if ((*i == "'") || (*i == "\""))
         return Rem::Fatal(__PRETTY_FUNCTION__ ) << "error: litteral Tea Grammar element cannot be empty";
 
-    // logdebugfn << logger::White << " Checking token: '" << logger::Yellow << *i << logger::White << "'" << Ends;
     TokenData token = TokenData::Scan(i->c_str());
     if (token) {
         _Rule->a = a;
@@ -338,7 +325,6 @@ Return Grammar::EnterLitteral(String::Iterator & crs)
                          *i<<
                          "' is not a valid xio++ grammar token";
 
-    // logdebugfn << logger::White << "Term : '" << logger::Yellow << *i << logger::White << "':" << Ends;
     crs = i;
     ++crs;
     if ((*crs == "'") || (*crs == "\""))
@@ -419,7 +405,7 @@ Term::Term(const Term & _t)
     a = _t.a;
 }
 
-Term & Term::operator=(Term && _t)
+Term & Term::operator=(Term && _t) noexcept
 {
     using std::swap;
     swap(_Mem, _t._Mem);

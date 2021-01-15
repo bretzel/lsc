@@ -399,7 +399,6 @@ const char *String::ScanTo(const char *start, char c) const
     */
 std::size_t String::Words(String::Word::Collection &wcollection, const std::string &a_delimiters, bool keep_as_word) const
 {
-    //std::cout << __PRETTY_FUNCTION__ << ":\n";// << _D << "\n:\n";
     
     String::BCE Crs = String::BCE(_D);
     if(_D.empty())
@@ -409,7 +408,6 @@ std::size_t String::Words(String::Word::Collection &wcollection, const std::stri
     }
     Crs.Reset(_D);
     std::string token_separators = a_delimiters.empty() ? String::_DefaultSeparators : a_delimiters;
-    //std::cout << " contents after bce::Reset\n ------------- \n" << _D << "\n---------------\n: [\n" << *_Cursor.M << "\n]\n";
     if(!Crs.Skip())
     {
         //std::cout << " --> Contents Skip is false? (internal?)...\n";
@@ -421,17 +419,14 @@ std::size_t String::Words(String::Word::Collection &wcollection, const std::stri
     while(!Crs.End())
     {
         if(!wcollection.empty());
-        //std::cout << __FUNCTION__ << " last inserted Word: [" << wcollection.back()() << "] - _Cursor on [" << *_Cursor.M << "]\n";
         std::string::const_iterator cc = Crs.C;
         if(token_separators.find(*Crs.C) != string::npos)
         {
             cc = Crs.C;
-            //std::cout << __FUNCTION__ << " Delimiter:[" << *cc << "]\n";
             if(cc > w.B)
             {
                 --cc;
                 wcollection.push_back({w.B, cc, Crs.E, w.L, w.C, w.Pos});
-                //std::cout << __FUNCTION__ << ": pushed lhs Word:[" << wcollection.back()() << "];\n";
                 
                 Crs >> w;
                 cc = Crs.C;
@@ -444,7 +439,6 @@ std::size_t String::Words(String::Word::Collection &wcollection, const std::stri
             if(keep_as_word)
             {
                 wcollection.push_back({w.B, Crs.C, Crs.E, w.L, w.C, w.Pos});
-                //std::cout << __FUNCTION__ << ": pushed new token:[" << wcollection.back()() << "];\n";
             }
             ++Crs;
             //std::cout << "        Iterator eos: " << _Cursor.End() << "\n";
@@ -452,23 +446,18 @@ std::size_t String::Words(String::Word::Collection &wcollection, const std::stri
                 Crs >> w;
             else
             {
-                //std::cout << __FUNCTION__ << " - EOS: wcollection size: " << wcollection.size() << " = leaving. Done!\n";
                 return wcollection.size();
             }
             
-            //std::cout << " is eos?" << _Cursor.End() << "\n";
         }
         else if((*Crs.C == '\'') || (*Crs.C == '"'))
         { // Quoted litteral string...
             Crs >> w;
-            //std::cout << __FUNCTION__ << " In quoted litteral:\n";
             if(keep_as_word)
             {
                 // Create the three parts of the quoted string: (") + (litteral) + (") ( or ' )
                 // So, we save the Word coords anyway.
-                //std::cout << __FUNCTION__ << " Creating three parts quoted tokens: \n";
                 wcollection.push_back({w.B, w.B, Crs.E, w.L, w.C, w.Pos});
-                //std::cout << __FUNCTION__ << " 1:[" << wcollection.back()() << "]; ";
             }
             
             string::const_iterator p = ScanTo(w.B + (keep_as_word ? 0 : 1), *Crs.C); // w.B is the starting position, _Cursor.M is the quote delim.
@@ -479,18 +468,14 @@ std::size_t String::Words(String::Word::Collection &wcollection, const std::stri
             {
                 // then push the litteral that is inside the quotes.
                 wcollection.push_back({w.B + 1, p - 1, Crs.E, w.L, w.C, w.Pos});
-                //std::cout << " 2:[" << wcollection.back()() << "]; ";
                 //++_Cursor; // _Cursor now on the closing quote
                 Crs >> w; // Litteral is done, update w.
                 wcollection.push_back({w.B, p, Crs.E, w.L, w.C, w.Pos});
-                //std::cout << " 3:[" << wcollection.back()() << "]\n";
             }
             else
             {
                 // Push the entire quote delims surrounding the litteral as the Word.
-                //std::cout << __FUNCTION__ << " Creating single part quoted token: \n";
                 wcollection.push_back({w.B, Crs.C, Crs.E, w.L, w.C, w.Pos});
-                //std::cout << " :[" << wcollection.back()() << "]\n";
             }
             if(++Crs)
                 Crs >> w;
@@ -507,7 +492,6 @@ std::size_t String::Words(String::Word::Collection &wcollection, const std::stri
                 ++Crs.C;
                 break;
             }
-            //std::cout << __FUNCTION__ << " check whitespace :[" << *cc << "]\n";
             if(isspace(*cc))
             {
                 if(w.B < cc)
@@ -547,13 +531,11 @@ int String::Filter(const String::Collection &a_exp)
     std::string::size_type pos = 0;
     if(!(*i).empty())
     {
-        //lfnl << cwhite << "must begins with [" << cyellow << (*I) << cwhite << "]:\n";
         pos = _D.find((*i));
         if(pos != 0) // no match
             return false;
     }
     else;
-    //fnl << cwhite << "no requirement for the beginning\n";
     ++i;
     auto end = a_exp.cend();
     --end;

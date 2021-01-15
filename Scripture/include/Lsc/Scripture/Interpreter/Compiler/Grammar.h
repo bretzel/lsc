@@ -102,7 +102,7 @@ struct SCRIPTURE_LIB  Term
 
     // pas le choix... 'y faut un parser....
 
-    Term();
+    Term() = default;
     Term(Rule *r, Attr a_ = {0, 0, 0, 0, 0});
     Term(Lsc::Type::T a_sem, Attr a_ = {0, 0, 0, 0, 0});
     Term(Mnemonic a_code, Attr a_ = {0, 0, 0, 0, 0});
@@ -112,8 +112,8 @@ struct SCRIPTURE_LIB  Term
     Term(Term &&_t) noexcept;
     Term(const Term &_t);
 
-    Term &operator=(Term &&_t);
-    Term &operator=(const Term &_t);
+    Term &operator=(Term &&_t) noexcept;
+    Term &operator=(const Term &_t) ;
 
     bool operator==(const Term &t) const;
     bool operator==(const TokenData &t) const;
