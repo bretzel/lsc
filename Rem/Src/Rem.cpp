@@ -393,7 +393,7 @@ Rem &Rem::operator<<(Rem::Prefix P)
 Rem &Rem::Fatal(std::string &&CtxName)
 {
     Rem R;
-    R << "In " << std::string(std::move(CtxName)) << '\n' << Rem::Type::Fatal << ": ";
+    R << std::string(std::move(CtxName)) << '\n' << Rem::Type::Fatal << ": ";
     Rem::_Array.push_back(R);
     Rem::sType = Rem::Type::Fatal;
     return Rem::_Array.back();
@@ -401,7 +401,7 @@ Rem &Rem::Fatal(std::string &&CtxName)
 Rem &Rem::Debug(std::string &&CtxName)
 {
     Rem R;
-    R << "In " << std::string(std::move(CtxName)) << '\n' << Rem::Type::Debug << ": ";
+    R << std::string(std::move(CtxName)) << '\n' << Rem::Type::Debug << ": ";
     Rem::_Array.push_back(R);
     Rem::sType = Rem::Type::Debug;
     return Rem::_Array.back();
