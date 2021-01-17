@@ -6,41 +6,7 @@
 
 
 
-namespace Lsc
+namespace Lsc::Ast
 {
-
-    
-    
-
-
-
-Ast::Shared Ast::New(Ast::Shared Parent_)
-{
-    Ast::Shared A = std::make_shared<Ast>();
-    A->_Parent = Parent_;
-    Parent_->_Children.push_back(A);
-    return A;
-}
-
-
-Return Ast::Build()
-{
-    return Rem::Int::Implement;
-}
-
-
-Ast::Node::Shared Ast::Node::New(TokenData* Token_)
-{
-    Shared N = std::make_shared<Ast::Node>(Token_);
-    N->Info = Token_;
-    return N;
-}
-
-
-
-Ast::Node::Node(TokenData *Info_)
-{
-    Info = Info_;
-}
 
 }

@@ -8,48 +8,25 @@
 
 #include <Lsc/Scripture/Interpreter/Compiler/Grammar.h>
 
-namespace Lsc
+namespace Lsc::Ast
 {
 
-class SCRIPTURE_LIB Ast
+
+
+
+
+class SCRIPTURE_LIB Parser
 {
     Grammar _G;
-    TokenData* _Tokens = nullptr;
-    using Shared = std::shared_ptr<Ast>;
-    using Collection = std::vector<Ast::Shared>;
-    Ast::Shared    _Parent      = nullptr;
-    Collection     _Children;
-    struct Node
-    {
-        using Shared = std::shared_ptr<Node>;
+    TokenData::Collection* _Tokens = nullptr;
 
-        using Collection = std::vector<Ast::Node::Shared>;
-        Node::Shared Parent    = nullptr; ///< Parent Node.
-        Node::Shared Lhs       = nullptr; ///< Lef Hand Side Operand
-        Node::Shared Rhs       = nullptr; ///< Right Hand Side Operand
-        Node::Shared Child     = nullptr; ///< Child Node.
-        TokenData* Info = nullptr; ///< TokenData (infos).
+    
+};
 
-        static Node::Shared New(TokenData* Token_);
-        
-        Node() = default;
-        explicit Node(TokenData* Info_);
-        ~Node() = default;
-    };
-    
-    Node::Shared _Root = nullptr;  ///< Root of this Ast;
-    Node::Shared _IP    = nullptr; ///< Input Pointer;
-    
-    
-public:
-    Ast() = default;
-    Ast(Ast&&) noexcept  = default;
+class SCRIPTURE_LIB Node
+{
+    TokenData::Collection::iterator _Token; ///< Le tokens stream ne changera pas.
 
-    ~Ast()  = default;
-    static Ast::Shared New(Ast::Shared Parent_);
-    
-    
-    Return Build();
 };
 
 }
