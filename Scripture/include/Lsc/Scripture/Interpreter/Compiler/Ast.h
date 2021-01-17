@@ -23,9 +23,13 @@ class SCRIPTURE_LIB Parser
     
 };
 
-class SCRIPTURE_LIB Node
+struct SCRIPTURE_LIB Node
 {
+    using Shared = std::shared_ptr<Lsc::Ast::Node>;
     TokenData::Collection::iterator _Token; ///< Le tokens stream ne changera pas.
+
+
+
 
 };
 
