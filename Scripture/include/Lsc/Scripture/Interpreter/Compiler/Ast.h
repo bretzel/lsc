@@ -12,7 +12,34 @@ namespace Lsc::Ast
 {
 
 
+struct AstTree;
 
+struct SCRIPTURE_LIB Node
+{
+    using Shared = std::shared_ptr<Lsc::Ast::Node>;
+    TokenData::Collection::iterator _Token; ///< Informations; @note Le tokens stream ne changera pas.
+
+//  Exclusif aux expression arithmétiques
+    Node* Op = nullptr;
+    Node* L = nullptr;
+    Node* R = nullptr;
+// ---------------------------------------
+    AstTree* Tree = nullptr;
+
+};
+
+
+struct AstTree
+{
+    Node*    Root = nullptr;
+    AstTree* Parent = nullptr;
+    using List = std::vector<AstTree*>;
+
+    AstTree::List Children;
+
+
+
+};
 
 
 class SCRIPTURE_LIB Parser
@@ -23,15 +50,6 @@ class SCRIPTURE_LIB Parser
     
 };
 
-struct SCRIPTURE_LIB Node
-{
-    using Shared = std::shared_ptr<Lsc::Ast::Node>;
-    TokenData::Collection::iterator _Token; ///< Le tokens stream ne changera pas.
-
-
-
-
-};
 
 }
 //#endif //LSC_AST_H

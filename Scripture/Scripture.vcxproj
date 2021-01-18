@@ -150,7 +150,7 @@
     <ClInclude Include="include\Lsc\Scripture\Interpreter\Alu.h" />
     <ClInclude Include="include\Lsc\Scripture\Interpreter\Compiler\Ast.h" />
     <ClInclude Include="include\Lsc\Scripture\Interpreter\Compiler\Grammar.h" />
-    <ClInclude Include="include\Lsc\Scripture\Interpreter\ExIO.h" />
+    <ClInclude Include="include\Lsc\Scripture\Interpreter\Xio.h" />
     <ClInclude Include="include\Lsc\Scripture\Lexer.h" />
     <ClInclude Include="include\Lsc\Scripture\Lib.h" />
     <ClInclude Include="include\Lsc\Scripture\TokenData.h" />
@@ -160,7 +160,7 @@
     <ClCompile Include="Src\Interpreter\Alu.cpp" />
     <ClCompile Include="Src\Interpreter\Compiler\Ast.cpp" />
     <ClCompile Include="Src\Interpreter\Compiler\Grammar.cpp" />
-    <ClCompile Include="Src\Interpreter\ExIO.cpp" />
+    <ClCompile Include="Src\Interpreter\Xio.cpp" />
     <ClCompile Include="Src\Lexer.cpp" />
     <ClCompile Include="Src\TokenData.cpp" />
     <ClCompile Include="Src\Types.cpp" />

@@ -23,7 +23,7 @@ namespace Lsc
  * @note Avant de coder sur l'interpréteur, je voudrais bien implémenter Book pour y foutre le journal de développement UN MINIMUM
  * FONCTIONNEL ...
  */
-class SCRIPTURE_LIB ExIO
+class SCRIPTURE_LIB Xio
 {
     Alu::Shared _A = nullptr;
     TokenData*  _T = nullptr;
@@ -31,38 +31,38 @@ class SCRIPTURE_LIB ExIO
     
 public:
     
-    using Shared = std::shared_ptr<ExIO>;
-    using SharedCollection = std::vector<ExIO::Shared>;
-    using Collection = std::vector<ExIO*>;
+    using Shared = std::shared_ptr<Xio>;
+    using SharedCollection = std::vector<Xio::Shared>;
+    using Collection = std::vector<Xio*>;
     
     
-    ExIO() = delete;
-    ExIO(ExIO&&) = delete;
-    ExIO(const ExIO&) = delete;
+    Xio() = delete;
+    Xio(Xio&&) = delete;
+    Xio(const Xio&) = delete;
     
-    virtual ~ExIO();
+    virtual ~Xio();
     
-    explicit ExIO(ExIO::Shared ExIO_, TokenData* Token_, Alu::Shared Alu_);
-    static ExIO::Shared New(ExIO::Shared Parent_, TokenData* Token_, Alu::Shared Alu_);
+    explicit Xio(Xio::Shared xIO_, TokenData* Token_, Alu::Shared Alu_);
+    static Xio::Shared New(Xio::Shared Parent_, TokenData* Token_, Alu::Shared Alu_);
     
 private:
     // Parent-Child Hierarchical Links ( Recursive/Embedded Blocs; Ex.: The Interpreter's Bloc is the Root-Global Bloc)
-    ExIO::Shared          _Parent = nullptr;
-    ExIO::SharedCollection _Children;
+    Xio::Shared          _Parent = nullptr;
+    Xio::SharedCollection _Children;
     //----------------------------------------------------------------------
     
     // Binary Tree Links (Arithmetic Expression; Abstract Syntax Tree; ...) :
-    ExIO::Shared        _R = nullptr;
-    ExIO::Shared        _L = nullptr;
-    ExIO::Shared        _O = nullptr;
+    Xio::Shared        _R = nullptr;
+    Xio::Shared        _L = nullptr;
+    Xio::Shared        _O = nullptr;
     // ---------------------------------------------------------------------
     
     // Execution:
     virtual Alu Exe();
     // Arithmetics
     
-    using ExeFN = Alu(ExIO::*)();
-    using ExeTable = std::map<Mnemonic, ExIO::ExeFN>;
+    using ExeFN = Alu(Xio::*)();
+    using ExeTable = std::map<Mnemonic, Xio::ExeFN>;
     static ExeTable _ExeTable;
     
     ExeFN* _Operator = nullptr; ///< Assigned at the creation of this instance.

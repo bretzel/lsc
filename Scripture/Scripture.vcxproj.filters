@@ -30,13 +30,13 @@
     <ClInclude Include="include\Lsc\Scripture\Interpreter\Alu.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="include\Lsc\Scripture\Interpreter\ExIO.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="include\Lsc\Scripture\Interpreter\Compiler\Grammar.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="include\Lsc\Scripture\Interpreter\Compiler\Ast.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Lsc\Scripture\Interpreter\Xio.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
@@ -53,13 +53,13 @@
     <ClCompile Include="Src\Interpreter\Alu.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Interpreter\ExIO.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Interpreter\Compiler\Grammar.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Src\Interpreter\Compiler\Ast.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Interpreter\Xio.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

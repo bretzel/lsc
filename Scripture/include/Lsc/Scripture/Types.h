@@ -13,11 +13,11 @@ namespace Lsc
 namespace Type
 {
 using T = uint64_t;
-constexpr T Null        = 0x1000000000000000;
-constexpr T Number      = 0x000000001;
-constexpr T Text        = 0x000000002;
-constexpr T Voidptr     = 0x000000004;
-constexpr T Any         = 0x000000008;
+constexpr T Null     = 0x1000000000000000;
+constexpr T Number   = 0x000000001;
+constexpr T Text     = 0x000000002;
+constexpr T Voidptr  = 0x000000004;
+constexpr T Any      = 0x000000008;
 constexpr T Leaf     = 0x000000010;
 constexpr T Sign     = 0x000000020;
 constexpr T I8       = 0x000000040;

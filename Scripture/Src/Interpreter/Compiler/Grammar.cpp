@@ -101,7 +101,7 @@ Return Grammar::Build()
             return r;
     } while (s != List.end());
     Rem::Debug("Build complete:") << ":";
- //   Dump();
+    Dump();
     return Rem::Int::Accepted ;
 }
 
