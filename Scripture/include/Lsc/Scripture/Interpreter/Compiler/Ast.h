@@ -18,7 +18,7 @@ struct SCRIPTURE_LIB Node
 {
     TokenData::Collection::iterator _Token; ///< Informations; @note Le tokens stream ne changera pas.
 
-//  Exclusif aux expression arithmétiques
+//  Exclusif aux expression arithmï¿½tiques
     using Maker = std::function<Node*(Lsc::Ast::AstTree*, TokenData*)>;
 
     Node* Op = nullptr;
