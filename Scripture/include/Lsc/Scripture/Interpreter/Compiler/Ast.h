@@ -16,16 +16,37 @@ struct AstTree;
 
 struct SCRIPTURE_LIB Node
 {
-    using Shared = std::shared_ptr<Lsc::Ast::Node>;
     TokenData::Collection::iterator _Token; ///< Informations; @note Le tokens stream ne changera pas.
 
 //  Exclusif aux expression arithmétiques
+    using Maker = std::function<Node*(Lsc::Ast::AstTree*, TokenData*)>;
+
     Node* Op = nullptr;
     Node* L = nullptr;
     Node* R = nullptr;
 // ---------------------------------------
     AstTree* Tree = nullptr;
 
+    Node() = default;
+    Node(Node&&) = delete;
+    Node(const Node&) = delete;
+    Node(AstTree* Tree_, TokenData* Token_);
+
+    ~Node() = default;
+
+    Return Input(TokenData*, Ast::Node::Maker Maker_);
+
+
+#pragma region ExprInput
+// First : declare associatibn pair:
+    using InputType = std::pair<Type::T, Type::T>;
+    using InputFn = Return(Node::*)(Node*);        ///< callable Node tree input function ptr
+    using InputPair = std::pair < Node::InputType, Node::InputFn>;
+
+    using InputTable = std::vector<InputPair>;
+    static InputTable _InputTable;
+
+#pragma endregion ExprInput
 };
 
 
@@ -39,15 +60,6 @@ struct AstTree
 
 
 
-};
-
-
-class SCRIPTURE_LIB Parser
-{
-    Grammar _G;
-    TokenData::Collection* _Tokens = nullptr;
-
-    
 };
 
 
