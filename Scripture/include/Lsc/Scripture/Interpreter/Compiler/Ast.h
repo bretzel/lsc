@@ -34,7 +34,7 @@ struct SCRIPTURE_LIB Node
 
     ~Node() = default;
 
-    Return Input(TokenData*, Ast::Node::Maker Maker_);
+    
 
 
 #pragma region ExprInput
@@ -45,6 +45,8 @@ struct SCRIPTURE_LIB Node
 
     using InputTable = std::vector<InputPair>;
     static InputTable _InputTable;
+
+    Return Input(TokenData* Token_, Ast::Node::Maker Maker_);
 
 #pragma endregion ExprInput
 };
