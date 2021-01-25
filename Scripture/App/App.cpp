@@ -7,7 +7,7 @@
 
 #include <Lsc/Scripture/Lexer.h>
 #include <Lsc/Scripture/Interpreter/Alu.h>
-#include <Lsc/Scripture/Interpreter/ExIO.h>
+#include <Lsc/Scripture/Interpreter/Xio.h>
 #include <Lsc/Scripture/Interpreter/Compiler/Grammar.h>
 
 auto main(int arc, char**argv) -> int
@@ -137,7 +137,7 @@ Return App::TeaGrammar()
 
 Return App::ExIOCanUseShared()
 {
-    ExIO::Shared Xio = ExIO::New(nullptr, nullptr, nullptr);
+   Xio::Shared Xio = Xio::New(nullptr, nullptr, nullptr);
     
     return Lsc::Return();
 }

@@ -83,7 +83,7 @@ Return Grammar::Build()
         List.push_back(s());
     
     if (!count)
-        return Rem::Fatal(__PRETTY_FUNCTION__ ) << ": No Tea Grammar. (internal error)";
+        return Rem::Fatal(__PRETTY_FUNCTION__ ) << ": No Tea++ Grammar. (internal error)";
     
     Rem::Debug("List done:") << List.size() << " words.";
     auto s = List.begin();
