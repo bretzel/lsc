@@ -144,7 +144,7 @@ T    SCRIPTURE_LIB FromStr(String Str)
     
     for(auto I : W)
     {
-        Rem::Debug() << "'" << I() << "'\n";
+        //Rem::Debug() << "'" << I() << "'\n";
         types |= STR_T[I()];
     }
     return types;
