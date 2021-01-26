@@ -46,7 +46,24 @@ struct SCRIPTURE_LIB Node
     using InputTable = std::vector<InputPair>;
     static InputTable _InputTable;
 
-    Return Input(TokenData* Token_, Ast::Node::Maker Maker_);
+    Return Input(TokenData* Token_, Node::Maker Maker_);
+    
+    Return InputBinary(Node* x);
+    Return InputLeaf(xio::shared x);
+    Return SetLeft(xio::shared x);
+    Return SetRight(xio::shared x);
+    Return SetRightToOper(xio::shared x);
+
+    InputFn Associate(Node* a_lhs, Node* a_rhs);
+
+    Return InputLeftParBinary(Node* x);
+
+    Return InputRPar(Node*);
+    Return InputLParNode*);
+    Return ClosePar(Node*);
+    Return RParInputPostfix(Node*);
+    Return RParInputLeaf(Node*);
+    Return RParRPar(Node*);
 
 #pragma endregion ExprInput
 };
