@@ -22,14 +22,20 @@ namespace Lsc
     struct Rule;
     class Grammar;
 
-
+/*!
+ * @brief
+ *
+ * @todo Holly shit!! Confused on X flag: Accept state and Directive Flag!!!! ^^ ?
+ *
+ */
 struct SCRIPTURE_LIB Attr
 {
     int8_t Z : 1; ///< Zero or one (optional * )
     int8_t R : 1; ///< Repeat      (        + )
     int8_t L : 1; ///< List        (one of  ~ ?)
-    int8_t X : 1; ///< directive    ( ast direcive )
-    int8_t S : 8; ///< Litteral List Separator
+    int8_t X : 1; ///< directive    ( ast directive [Implicit Parser(specific) rule)
+    int8_t S : 1; ///< State!! 0 = unset/rejected; 1 = set/accepted !!!
+    
     Attr &operator|(Attr const &_)
     {
         Z |= _.Z;
@@ -66,9 +72,9 @@ struct SCRIPTURE_LIB Attr
     [[nodiscard]] bool IsOneOf() const { return L != 0; }
     [[nodiscard]] bool IsStrict() const { return Z == 0 && L == 0 && R == 0; }
     [[nodiscard]] bool IsRepeat() const { return R != 0; }
-    [[nodiscard]] bool Accepted() const { return X != 0; }
-    void Accept() { X = 1; }
-    void Reject() { X = 0; }
+    [[nodiscard]] bool Accepted() const { return S != 0; }
+    void Accept() { S = 1; }
+    void Reject() { S = 0; }
 };
 
 

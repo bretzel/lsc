@@ -36,7 +36,7 @@ std::string TeaccGrammarText = R"(
 expression         : +#expr_token.
 stmts              : +statement.
 statement          : assignstmt ';', declvar ';', expression ';', instruction ';', var_id ';', ';'.
-assignstmt         : declvar assign expression, var_id assign expression.
+assignstmt         : declvar Assign expression, var_id Assign expression.
 declvar            : *typename #newvar.
 funcsig            : *typename function_id '(' *params ')'.
 declfunc           : funcsig ';', funcsig bloc.
@@ -127,7 +127,11 @@ void Grammar::Dump()
                        if(t.a.IsStrict())
                            Out << Ansi::Color::Thistle3;
                        else
-                           Out << Ansi::Color::White;
+                           if(t.a.X)
+                               Out << Ansi::Color::Yellow6;
+                           else
+                               Out << Ansi::Color::White;
+                           
                Out <<  t() << ' ';// << Ends;
            }
            Out << Ansi::Color::Aquamarine3 << " }" << Ansi::Color::White;// << Ends;
@@ -266,13 +270,11 @@ Return Grammar::SetDirective(String::Iterator& crs)
 {
     !a;
     _state = st_option;
-    //logdebug
-    //    << logger::HCyan << __FUNCTION__
-    //    << logger::Yellow << a()
-    //    << logger::White << ": ["
-    //    << logger::Yellow << *crs
-    //    << logger::White << ']'
-    //    << Ends;
+    Rem::Debug(__PRETTY_FUNCTION__)
+        << Ansi::Color::Yellow << a()
+        << Ansi::Color::White << ": ["
+        << Ansi::Color::Yellow << *crs
+        << Ansi::Color::White << ']';
 
     ++crs;
     return Rem::Int::Accepted;
@@ -488,7 +490,7 @@ std::string Term::operator()() const
         case Term::Type::M:
         {
             TokenData tok = TokenData()[_Mem.c];
-            str << tok.Attr();
+            str << tok.Attr(); // String (TEXT)
         }
             break;
         case Term::Type::R:

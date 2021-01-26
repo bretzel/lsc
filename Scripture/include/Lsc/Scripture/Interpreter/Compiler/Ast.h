@@ -49,17 +49,17 @@ struct SCRIPTURE_LIB Node
     Return Input(TokenData* Token_, Node::Maker Maker_);
     
     Return InputBinary(Node* x);
-    Return InputLeaf(xio::shared x);
-    Return SetLeft(xio::shared x);
-    Return SetRight(xio::shared x);
-    Return SetRightToOper(xio::shared x);
+    Return InputLeaf(Node* x);
+    Return SetLeft(Node* x);
+    Return SetRight(Node* x);
+    Return SetRightToOper(Node* x);
 
     InputFn Associate(Node* a_lhs, Node* a_rhs);
 
     Return InputLeftParBinary(Node* x);
 
     Return InputRPar(Node*);
-    Return InputLParNode*);
+    Return InputLPar(Node*);
     Return ClosePar(Node*);
     Return RParInputPostfix(Node*);
     Return RParInputLeaf(Node*);

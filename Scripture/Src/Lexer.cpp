@@ -596,6 +596,7 @@ Return Lexer::ScanFactorNotation(TokenData &Token_)
 
 Return Lexer::ScanSignPrefix(TokenData &Token_)
 {
+    Rem::Debug(__PRETTY_FUNCTION__);
     if(mConfig.Tokens->empty() || mConfig.Tokens->back().IsBinary() || mConfig.Tokens->back().IsPunctuation())
     {
         Token_.T = Type::Prefix;
