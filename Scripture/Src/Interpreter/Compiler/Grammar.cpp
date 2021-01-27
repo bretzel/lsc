@@ -33,30 +33,28 @@ static bool built = false;
 
 std::string TeaccGrammarText = R"(
 
-expression         : +#expr_token.
 stmts              : +statement.
-statement          : assignstmt ';', declvar ';', expression ';', instruction ';', var_id ';', ';'.
-assignstmt         : declvar Assign expression, var_id Assign expression.
+statement          : ';', assignstmt ';', declvar ';', #expression ';', instruction, #var_id ';'.
+assignstmt         : declvar Assign #expression, var_id Assign #expression.
 declvar            : *typename #newvar.
 funcsig            : *typename function_id '(' *params ')'.
 declfunc           : funcsig ';', funcsig bloc.
 paramseq           : ',' param.
 param              : *typename identifier.
 params             : param *+paramseq.
-objcarg            : identifier ':' expression.
-arg                : objcarg, expression.
+objcarg            : identifier ':' #expression.
+arg                : objcarg, #expression.
 argseq             : ',' arg.
 args               : arg *+argseq.
 typename           : *'static' ?'i8' ?'u8' ?'i16' ?'u16' ?'i32' ?'u32' ?'i64' ?'u64' ?'real' ?'number' ?'string' ?#objectid.
-instruction        : ?'if' ?'then'  ?'switch' ?'case' ?'for' ?'while' ?'repeat' ?'until' ?'do'.
+instruction        : ?'if' ?'then'  ?'switch' ?'case' ?'for' ?'while' ?'repeat' ?'until' ?'do' ?'return'.
 if                 : 'if' condexpr ifbody, 'if' '(' condexpr ')' ifbody.
 bloc               :  '{' stmts '}'.
 truebloc           : *'then' bloc, *'then' statement.
 elsebloc           : 'else' bloc, 'else' statement.
 ifbody             : truebloc *elsebloc.
-condexpr           : assignstmt, expression.
+condexpr           : assignstmt, #expression.
 var_id             : identifier.
-objectid           : identifier.
 function_id        : *'::' #functionid, #objectid '::' #functionid, #var_id '.' #functionid.
 objcfncall         : '[' function_id  *args ']'.
 
@@ -174,9 +172,8 @@ Return Grammar::ParseIdentifier(String::Iterator & crs)
             }*/
 
             Type::T t = Type::FromStr(*crs);
-            if (t & Type::Bloc) // Quick and dirty hack about bypassing the lexer::Type::bloc type:
+            if (t)// & Type::Bloc) // Quick and dirty hack about bypassing the lexer::Type::bloc type:
             {
-                
                 _Rule->a = a;
                 (*_Rule) | t;
                 a.Reset();

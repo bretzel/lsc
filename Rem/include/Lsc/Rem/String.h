@@ -36,7 +36,7 @@ class REM_LIB String
     std::string::size_type _ArgPosition = 0; // Initialize Argument index position...
     static std::string _DefaultSeparators;
     uint8_t _Precision = 4;
-
+    //char* __buff = nullptr;
 private:
     // %[flags][width][.precision][Length]specifier
     struct Format_t
@@ -381,7 +381,7 @@ public:
             if((x == 1 && !padd && !seq) || (stream.empty() && !padd && !seq))
                 continue;
             for(int y = 7; y >= 0; y--)
-            { // est-ce que le bit #y est � 1 ?
+            { // est-ce que le bit #y est à 1 ?
                 if(s >= f)
                 {
                     stream += ' ';

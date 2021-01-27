@@ -116,14 +116,12 @@ String &String::operator=(string &&a_str)
 
 String &String::operator<<(char c)
 {
-    
     if(ScanArg() == std::string::npos)
     {
         _D += c;
         return *this;
     }
     return Printf<char>(c);
-    
 }
 
 String &String::operator=(const char *a_str)
@@ -320,9 +318,7 @@ std::string String::Word::operator*()
         _s.insert(_s.begin(), B, E + 1);
     else
         _s.insert(_s.begin(), B, E + 1);
-    
     return _s;
-    
 }
 
 std::string String::Word::Mark()
