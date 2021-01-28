@@ -28,6 +28,12 @@ class SCRIPTURE_LIB Xio
     Alu::Shared _A = nullptr;
     TokenData*  _T = nullptr;
     
+    struct storage_attr {
+        uint8_t lvalue : 1; // 0 = rvalue non-assignable (such as const,leaf). 1= left value; assignable.
+        uint8_t leave  : 1; // 1 = leave flag because this xio is a return statement.
+        uint8_t sstatic: 1; // 1 = static storage.
+        // ...
+    }mem = { 0,0,0 }; ///< Storage types of this xio.
     
 public:
     

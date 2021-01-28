@@ -35,14 +35,14 @@ std::string TeaccGrammarText = R"(
 
 stmts              : +statement.
 statement          : ';', assignstmt ';', declvar ';', #expression ';', instruction, #var_id ';'.
-assignstmt         : declvar Assign #expression, var_id Assign #expression.
+assignstmt         : declvar Assign #expression, #var_id Assign #expression.
 declvar            : *typename #newvar.
 funcsig            : *typename function_id '(' *params ')'.
 declfunc           : funcsig ';', funcsig bloc.
 paramseq           : ',' param.
-param              : *typename identifier.
+param              : *typename Id.
 params             : param *+paramseq.
-objcarg            : identifier ':' #expression.
+objcarg            : Id ':' #expression.
 arg                : objcarg, #expression.
 argseq             : ',' arg.
 args               : arg *+argseq.
@@ -54,17 +54,14 @@ truebloc           : *'then' bloc, *'then' statement.
 elsebloc           : 'else' bloc, 'else' statement.
 ifbody             : truebloc *elsebloc.
 condexpr           : assignstmt, #expression.
-var_id             : identifier.
-function_id        : *'::' #functionid, #objectid '::' #functionid, #var_id '.' #functionid.
+function_id        : *'::' #functionid, #objectid '::' #functionid, #obj_instance '.' #functionid.
 objcfncall         : '[' function_id  *args ']'.
 
 )";
 
-//scnotation         : 'E' *?'+' *?'-' number.
 
 Return Grammar::Build()
 {
- 
     if (Built())
         return Rem::Warning() << "Tea Grammar is already Built";
     
@@ -203,10 +200,10 @@ Return Grammar::ParseIdentifier(String::Iterator & crs)
 Return Grammar::EnterRuleDef(String::Iterator &crs)
 {
         // logdebug
-        //     << logger::HCyan << __FUNCTION__
-        //     << logger::White << ": ["
-        //     << logger::Yellow << *crs
-        //     << logger::White << ']'
+        //     << Ansi::Color::HCyan << __FUNCTION__
+        //     << Ansi::Color::White << ": ["
+        //     << Ansi::Color::Yellow << *crs
+        //     << Ansi::Color::White << ']'
         //     << Ends;
     if (_state != st_init_rule)
         return Rem::Fatal(__PRETTY_FUNCTION__ ) <<  " syntax error: '" <<  *crs <<  "' is invalid in this context";
@@ -220,10 +217,10 @@ Return Grammar::EnterRuleDef(String::Iterator &crs)
 Return Grammar::NewSequence(String::Iterator & crs)
 {
         // logdebug
-        //     << logger::HCyan << __FUNCTION__
-        //     << logger::White << ": ["
-        //     << logger::Yellow << *crs
-        //     << logger::White << ']'
+        //     << Ansi::Color::HCyan << __FUNCTION__
+        //     << Ansi::Color::White << ": ["
+        //     << Ansi::Color::Yellow << *crs
+        //     << Ansi::Color::White << ']'
         //     << Ends;
 
     if (_state == st_option)
@@ -239,10 +236,10 @@ Return Grammar::NewSequence(String::Iterator & crs)
 Return Grammar::EndRule(String::Iterator & crs)
 {
         // logdebug
-        //     << logger::HCyan << __FUNCTION__
-        //     << logger::White << ": ["
-        //     << logger::Yellow << *crs
-        //     << logger::White << ']'
+        //     << Ansi::Color::HCyan << __FUNCTION__
+        //     << Ansi::Color::White << ": ["
+        //     << Ansi::Color::Yellow << *crs
+        //     << Ansi::Color::White << ']'
         //     << Ends;
     _state = st_begin;
     ++crs;
@@ -252,10 +249,10 @@ Return Grammar::EndRule(String::Iterator & crs)
 Return Grammar::SetRepeat(String::Iterator & crs)
 {
     //logdebug
-    //    << logger::HCyan << __FUNCTION__
-    //    << logger::White << ": ["
-    //    << logger::Yellow << *crs
-    //    << logger::White << ']'
+    //    << Ansi::Color::HCyan << __FUNCTION__
+    //    << Ansi::Color::White << ": ["
+    //    << Ansi::Color::Yellow << *crs
+    //    << Ansi::Color::White << ']'
     //    << Ends;
     _state = st_option;
     +a;
@@ -283,10 +280,10 @@ Return Grammar::SetDirective(String::Iterator& crs)
 Return Grammar::SetOptional(String::Iterator & crs)
 {
     //logdebug
-    //    << logger::HCyan << __FUNCTION__
-    //    << logger::White << ": ["
-    //    << logger::Yellow << *crs
-    //    << logger::White << ']'
+    //    << Ansi::Color::HCyan << __FUNCTION__
+    //    << Ansi::Color::White << ": ["
+    //    << Ansi::Color::Yellow << *crs
+    //    << Ansi::Color::White << ']'
     //    << Ends;
     *a;
     ++crs;
@@ -297,12 +294,10 @@ Return Grammar::SetOptional(String::Iterator & crs)
 Return Grammar::EnterLitteral(String::Iterator & crs)
 {
 
-        // logdebug
-        //     << logger::HCyan << __FUNCTION__
-        //     << logger::White << ": ["
-        //     << logger::Yellow << *crs
-        //     << logger::White << ']'
-        //     << Ends;
+//    Rem::Debug(__PRETTY_FUNCTION__)
+//    << Ansi::Color::White << ": ["
+//    << Ansi::Color::Yellow << *crs
+//    << Ansi::Color::White << ']';
 
     if ((_state != st_seq) && (_state != st_option))
         return Rem::Fatal(__PRETTY_FUNCTION__)<< "syntax error '"<< *crs<< "' is not a valid xio++ grammar token in context"<< "(state machine:"<<(int)_state<< ")";
@@ -336,10 +331,10 @@ Return Grammar::EnterLitteral(String::Iterator & crs)
 Return Grammar::SetOneof(String::Iterator & crs)
 {
     //     logdebug
-    //         << logger::HCyan << __FUNCTION__
-    //         << logger::White << ": ["
-    //         << logger::Yellow << *crs
-    //         << logger::White << ']'
+    //         << Ansi::Color::HCyan << __FUNCTION__
+    //         << Ansi::Color::White << ": ["
+    //         << Ansi::Color::Yellow << *crs
+    //         << Ansi::Color::White << ']'
     //         << Ends;
     ~a;
     ++crs;
@@ -477,9 +472,9 @@ std::string Term::operator()() const
     str << a();
 
 //    std::map<Term::type, std::string> _{
-//        {Term::Type::rule, logger::attribute(logger::HRed)},
-//        {Term::Type::S,  logger::attribute(logger::HGreen)},
-//        {Term::Type::M, logger::attribute(logger::HBlue)}
+//        {Term::Type::rule, Ansi::Color::attribute(Ansi::Color::HRed)},
+//        {Term::Type::S,  Ansi::Color::attribute(Ansi::Color::HGreen)},
+//        {Term::Type::M, Ansi::Color::attribute(Ansi::Color::HBlue)}
 //    };
 //
 //    str << _[_type];

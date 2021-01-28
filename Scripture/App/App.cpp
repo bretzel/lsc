@@ -36,7 +36,7 @@ Return App::operator()()
     std::cout << mString();
     
     (void) App::Type("Binary/Operator/TypeId/Number/Float");
-    //(void) Tokens("<>;");
+    
     (void) LexerScan(
 R"(
 if A
@@ -46,8 +46,8 @@ if A
 else
 {
    return .0001;
-})"
-);
+}
+)");
     (void) ExIOCanUseShared();
     (void) TeaGrammar();
     std::cout << "\n---------------------------------------------------------------------\n";
